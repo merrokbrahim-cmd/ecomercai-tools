@@ -1,0 +1,2822 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr" data-lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>Ecomercai — AI Tools for E-commerce | Landing Page, Voiceover, Ads & Product Analysis</title>
+  <meta name="description" content="4 AI-powered tools for e-commerce sellers. Generate landing pages, voiceover scripts, ad strategies and product analysis in seconds. Free to start.">
+  <meta name="author" content="MERROK Brahim">
+  <meta property="og:title" content="Ecomercai — AI Tools for E-commerce">
+  <meta property="og:description" content="4 AI tools for e-commerce: landing pages, voiceover scripts, ads & product analysis. Free to start.">
+  <meta name="theme-color" content="#FAFAF8">
+  <!-- Polices via Fontshare (Cabinet Grotesk + Satoshi n'existent pas chez Google Fonts).
+       Chargement non-bloquant : media=print puis bascule en all une fois chargé. -->
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800,900&f[]=satoshi@300,400,500,700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800,900&f[]=satoshi@300,400,500,700&display=swap"></noscript>
+  <!-- FingerprintJS : chargé à la demande dans initFP() — ne bloque plus le rendu -->
+  <style>
+/* ============================================================
+   DESIGN TOKENS
+============================================================ */
+:root {
+  /* Light — default */
+  --bg:#FAFAF8; --bg2:#F2F1EE; --card:#FFFFFF; --card2:#F7F6F3;
+  --border:#E8E6E0; --border2:#D4D1C8;
+  --ink:#0D0D0B; --ink2:#4A4A42; --ink3:#9A9A8E;
+  --gold:#C8910A; --gold-l:#FDF3D7; --gold-d:#7A5600; --gold-btn:#D4A017;
+  --green:#1A7A4A; --red:#C0392B; --blue:#2563EB;
+  --radius:16px; --radius-sm:10px; --radius-xs:6px;
+  --shadow:0 2px 12px rgba(13,13,11,.07),0 1px 3px rgba(13,13,11,.04);
+  --shadow-lg:0 20px 60px rgba(13,13,11,.11),0 4px 16px rgba(13,13,11,.07);
+  --fd:'Cabinet Grotesk',sans-serif; --fb:'Satoshi',sans-serif;
+  --header-h:120px;
+  /* Overlays */
+  --overlay:rgba(245,244,240,.96);
+  --interstitial-bg:rgba(245,244,240,.97);
+  --header-bg:rgba(250,250,248,.93);
+  --nav-bg:rgba(250,250,248,.97);
+}
+[data-theme="dark"] {
+  --bg:#0A0A09; --bg2:#111110; --card:#141413; --card2:#1C1C1A;
+  --border:#222220; --border2:#2E2E2B;
+  --ink:#EDEDE8; --ink2:#7A7A72; --ink3:#3E3E38;
+  --gold:#D4A017; --gold-l:rgba(212,160,23,.12); --gold-d:#F5C842; --gold-btn:#D4A017;
+  --green:#2ECC71; --red:#E74C3C; --blue:#4F8EF5;
+  --shadow:0 2px 12px rgba(0,0,0,.4),0 1px 3px rgba(0,0,0,.3);
+  --shadow-lg:0 20px 60px rgba(0,0,0,.6),0 4px 16px rgba(0,0,0,.4);
+  --overlay:rgba(10,10,9,.96);
+  --interstitial-bg:rgba(10,10,9,.97);
+  --header-bg:rgba(10,10,9,.93);
+  --nav-bg:rgba(10,10,9,.97);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:15px;line-height:1.6;min-height:100vh;padding-bottom:0;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+[dir="rtl"]{font-family:'Satoshi','Noto Sans Arabic',sans-serif}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ============================================================
+   LAYOUT
+============================================================ */
+.container{max-width:860px;margin:0 auto;padding:0 24px}
+.wide{max-width:1120px;margin:0 auto;padding:0 24px}
+
+/* ============================================================
+   LOGO SVG — ⟨C⟩ Ecomercai
+============================================================ */
+.logo-wrap{display:flex;align-items:center;cursor:pointer;text-decoration:none;gap:0}
+.logo-wordmark{display:flex;align-items:center;gap:6px}
+.logo-wordmark-text{font-family:'Cabinet Grotesk','Syne',sans-serif;font-size:22px;font-weight:900;letter-spacing:-.5px;line-height:1}
+.logo-wordmark-text .logo-e{color:var(--gold-btn)}
+.logo-wordmark-text .logo-rest{color:var(--ink)}
+.logo-badge{background:var(--gold-btn);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px;letter-spacing:.5px;text-transform:uppercase;align-self:flex-start;margin-top:2px}
+
+/* ============================================================
+   HEADER
+============================================================ */
+header{position:sticky;top:0;z-index:100;background:var(--header-bg);border-bottom:1px solid var(--border);backdrop-filter:blur(16px);height:var(--header-h);display:flex;align-items:center;direction:ltr;overflow:visible}
+.header-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1120px;margin:0 auto;padding:0 24px}
+.header-nav{display:flex;align-items:center;gap:2px}
+.nav-link{padding:7px 13px;border-radius:8px;font-size:13px;font-weight:500;color:var(--ink2);text-decoration:none;transition:all .15s}
+.nav-link:hover{background:var(--bg2);color:var(--ink)}
+.header-right{display:flex;align-items:center;gap:10px}
+.lang-sw{display:flex;gap:2px;background:var(--bg2);border-radius:8px;padding:3px;border:1px solid var(--border)}
+.lang-b{padding:4px 10px;border-radius:6px;font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer;border:none;background:none;transition:all .15s;font-family:var(--fb)}
+.lang-b.active{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.theme-btn{width:34px;height:34px;border-radius:50%;border:1px solid var(--border2);background:var(--card2);color:var(--ink2);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.theme-btn:hover{border-color:var(--gold-btn);transform:rotate(20deg)}
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 20px;border-radius:var(--radius-sm);border:none;font-family:var(--fb);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;text-decoration:none;white-space:nowrap}
+.btn-dark{background:var(--ink);color:var(--bg)}
+.btn-dark:hover{opacity:.85;transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--ink);border:1.5px solid var(--border2)}
+.btn-outline:hover{border-color:var(--ink);background:var(--bg2)}
+.btn-gold{background:var(--gold-btn);color:#fff;box-shadow:0 4px 16px rgba(212,160,23,.3)}
+.btn-gold:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-ghost{background:var(--card2);color:var(--ink2);border:1px solid var(--border2)}
+.btn-ghost:hover{color:var(--ink)}
+.btn-sm{padding:7px 14px;font-size:12px}
+.btn-lg{padding:13px 28px;font-size:15px}
+.btn-full{width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+
+/* ============================================================
+   AD ZONES
+============================================================ */
+
+/* ============================================================
+   INTERSTITIAL
+============================================================ */
+#interstitial{position:fixed;inset:0;z-index:1500;background:var(--interstitial-bg);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px);animation:fadeIn .2s ease}
+#interstitial.hidden{display:none}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.intbox{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:22px;max-width:460px;width:92%;box-shadow:var(--shadow-lg)}
+.intbox-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.intbox-status{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink2)}
+.intbox-counter{font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;background:var(--bg2);border:1px solid var(--border);color:var(--ink3)}
+.intbox-ad-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--ink3);margin-bottom:6px;text-align:center}
+.intbox-ad{background:var(--bg2);border:1px dashed var(--border2);border-radius:10px;height:250px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px;color:var(--ink3);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.intbox-upsell{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--gold-l);border:1px solid rgba(212,160,23,.25);border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.intbox-upsell-txt{font-size:12px;color:var(--ink2);line-height:1.5}
+.intbox-upsell-txt strong{color:var(--gold-btn);display:block;font-size:13px;margin-bottom:2px}
+.intbox-upsell-btn{background:var(--gold-btn);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-family:var(--fb);font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s}
+.intbox-upsell-btn:hover{filter:brightness(1.1);transform:scale(1.03)}
+.intbox-footer{display:flex;align-items:center;justify-content:space-between}
+.intbox-tip{font-size:12px;color:var(--ink3)}
+.intbox-close{padding:7px 16px;border-radius:7px;border:1px solid var(--border2);background:var(--card2);color:var(--ink2);font-family:var(--fb);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.intbox-close:not(:disabled):hover{color:var(--ink);border-color:var(--ink2)}
+.intbox-close:disabled{opacity:.35;cursor:not-allowed}
+.dots-loader{display:inline-flex;gap:4px;align-items:center}
+.dots-loader span{width:6px;height:6px;background:var(--gold-btn);border-radius:50%;animation:dotb 1.2s infinite ease-in-out}
+.dots-loader span:nth-child(2){animation-delay:.2s}
+.dots-loader span:nth-child(3){animation-delay:.4s}
+@keyframes dotb{0%,80%,100%{transform:scale(.7);opacity:.4}40%{transform:scale(1.2);opacity:1}}
+
+/* ============================================================
+   PAYWALL
+============================================================ */
+#paywall-overlay{position:fixed;inset:0;z-index:1800;background:var(--overlay);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(12px)}
+#paywall-overlay.hidden{display:none}
+.pw-box{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:32px;max-width:480px;width:92%;box-shadow:var(--shadow-lg);text-align:center}
+.pw-icon{font-size:40px;margin-bottom:12px}
+.pw-box h2{font-family:var(--fd);font-size:22px;font-weight:800;margin-bottom:8px;color:var(--ink)}
+.pw-box p{color:var(--ink2);font-size:14px;margin-bottom:22px;line-height:1.6}
+.pw-plans{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.pw-plan{background:var(--card2);border:1.5px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;position:relative}
+.pw-plan:hover,.pw-plan.active{border-color:var(--gold-btn);background:var(--gold-l)}
+.pw-plan-badge{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--gold-btn);color:#fff;font-size:9px;font-weight:800;padding:2px 10px;border-radius:10px;white-space:nowrap;letter-spacing:.5px;text-transform:uppercase}
+.pw-plan-name{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--ink);margin-bottom:4px}
+.pw-plan-price{font-family:var(--fd);font-size:26px;font-weight:900;color:var(--gold-btn);line-height:1}
+.pw-plan-price span{font-size:12px;font-weight:400;color:var(--ink3)}
+.pw-plan-feat{font-size:11px;color:var(--ink3);margin-top:6px;line-height:1.5}
+.pw-email{width:100%;background:var(--card2);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--ink);font-family:var(--fb);font-size:14px;outline:none;margin-bottom:10px;transition:border-color .2s}
+.pw-email:focus{border-color:var(--gold-btn)}
+.pw-divider{display:flex;align-items:center;gap:8px;margin:10px 0;color:var(--ink3);font-size:12px}
+.pw-divider::before,.pw-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.pw-skip{width:100%;padding:9px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--ink3);font-family:var(--fb);font-size:13px;cursor:pointer;transition:all .2s}
+.pw-skip:hover{color:var(--ink2);border-color:var(--border2)}
+.pw-free-section{background:var(--card2);border:1.5px solid var(--border);border-radius:12px;padding:16px;margin:10px 0;text-align:left}
+.pw-free-section p{font-size:13px;color:var(--ink2);margin-bottom:10px;text-align:center}
+.pw-free-row{display:flex;gap:8px}
+.pw-free-row input{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--ink);font-family:var(--fb);font-size:13px;outline:none}
+.pw-free-row input:focus{border-color:var(--gold-btn)}
+.pw-free-row button{background:var(--gold-btn);color:#fff;border:none;border-radius:8px;padding:9px 14px;font-family:var(--fd);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+
+/* ============================================================
+   STICKY FOOTER AD
+============================================================ */
+
+/* ============================================================
+   HERO
+============================================================ */
+.hero{padding:72px 0 60px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(212,160,23,.1) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:var(--gold-l);border:1px solid rgba(212,160,23,.25);color:var(--gold-d);border-radius:20px;padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:24px}
+.hero h1{font-family:var(--fd);font-size:clamp(34px,6vw,66px);font-weight:900;line-height:1.06;letter-spacing:-2px;margin-bottom:18px;color:var(--ink)}
+.hero h1 mark{background:none;color:var(--gold-btn);position:relative;display:inline-block}
+.hero h1 mark::after{content:'';position:absolute;bottom:2px;left:0;right:0;height:3px;background:var(--gold-btn);border-radius:2px;opacity:.4}
+.hero-sub{font-size:17px;color:var(--ink2);max-width:540px;margin:0 auto 32px;line-height:1.65;font-weight:400}
+.hero-cta{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:44px}
+.hero-stats{display:flex;align-items:center;justify-content:center;gap:36px;flex-wrap:wrap;padding:20px;background:var(--card);border:1px solid var(--border);border-radius:14px;max-width:560px;margin:0 auto}
+.stat-item{text-align:center}
+.stat-n{font-family:var(--fd);font-size:24px;font-weight:900;color:var(--ink);line-height:1}
+.stat-l{font-size:11px;color:var(--ink3);margin-top:3px;font-weight:500}
+.stat-div{width:1px;height:28px;background:var(--border2)}
+
+/* ============================================================
+   TOOLS SECTION (dark panel)
+============================================================ */
+.tools-section{background:var(--ink);padding:72px 0;position:relative;overflow:hidden}
+.tools-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(212,160,23,.1) 0%,transparent 65%);pointer-events:none}
+.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gold-btn);margin-bottom:10px}
+.section-h{font-family:var(--fd);font-size:clamp(26px,4vw,42px);font-weight:800;line-height:1.1;letter-spacing:-1px;margin-bottom:10px}
+.section-p{font-size:15px;line-height:1.6;max-width:480px;margin-bottom:48px}
+.tools-section .section-h,.tools-section .section-p{color:#fff}
+.tools-section .section-p{color:rgba(255,255,255,.45)}
+
+/* ============================================================
+   TABS NAV (sticky)
+============================================================ */
+.tools-nav{position:sticky;top:var(--header-h);z-index:90;background:var(--nav-bg);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.tools-tabs{display:flex;overflow-x:auto;scrollbar-width:none;max-width:1120px;margin:0 auto;padding:0 24px;justify-content:center}
+.tools-tabs::-webkit-scrollbar{display:none}
+.tab-btn{flex:1;max-width:200px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:12px 18px;border:none;border-bottom:2px solid transparent;background:transparent;color:var(--ink2);cursor:pointer;font-family:var(--fb);font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;transition:all .2s;white-space:nowrap}
+.tab-btn .tab-ic{font-size:18px}
+.tab-btn:hover{color:var(--ink)}
+.tab-btn.active{color:var(--gold-btn);border-bottom-color:var(--gold-btn)}
+
+/* ============================================================
+   TOOL PANELS
+============================================================ */
+.tool-panel{display:none;padding:36px 0 56px;animation:fadeUp .3s ease}
+.tool-panel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.tool-head{margin-bottom:20px}
+.tool-head h2{font-family:var(--fd);font-size:21px;font-weight:800;margin-bottom:5px;color:var(--ink)}
+.tool-head p{color:var(--ink2);font-size:14px}
+
+/* ============================================================
+   GUIDE (collapsible)
+============================================================ */
+.guide{background:rgba(37,99,235,.05);border:1px solid rgba(37,99,235,.15);border-radius:12px;margin-bottom:20px;overflow:hidden}
+.guide-toggle{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;cursor:pointer;user-select:none}
+.guide-toggle-lbl{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--blue)}
+.guide-arrow{font-size:11px;color:var(--ink3);transition:transform .25s}
+.guide-arrow.open{transform:rotate(180deg)}
+.guide-body{padding:0 16px 14px;display:none}
+.guide-body.open{display:block}
+.guide-steps{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.guide-step{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--ink2)}
+.guide-num{min-width:20px;height:20px;background:rgba(37,99,235,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--blue);flex-shrink:0;margin-top:2px}
+
+/* ============================================================
+   FORM
+============================================================ */
+.tool-form{display:flex;flex-direction:column;gap:16px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.form-row{grid-template-columns:1fr}}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px}
+.form-label .req{color:var(--gold-btn)}
+.form-control{background:var(--card2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;color:var(--ink);font-family:var(--fb);font-size:14px;outline:none;width:100%;resize:vertical;transition:border-color .2s,box-shadow .2s}
+.form-control:focus{border-color:var(--gold-btn);box-shadow:0 0 0 3px rgba(212,160,23,.1)}
+.form-control::placeholder{color:var(--ink3)}
+.char-count{font-size:11px;color:var(--ink3);text-align:right;margin-top:2px;transition:color .2s}
+.char-count.warn{color:var(--gold-btn)}
+select.form-control{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239A9A8E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+select.form-control option{background:var(--card);color:var(--ink)}
+.form-control[rows]{min-height:80px}
+.reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:600px){.reviews-grid{grid-template-columns:1fr}}
+.dz-badge{display:none !important}
+
+/* ============================================================
+   IMAGE UPLOAD
+============================================================ */
+.upload-area{background:var(--card2);border:2px dashed var(--border);border-radius:var(--radius-sm);padding:18px;cursor:pointer;transition:all .2s;text-align:center;position:relative}
+.upload-area:hover,.upload-area.has-img{border-color:var(--gold-btn);background:var(--gold-l)}
+.upload-area.has-img{border-style:solid}
+.upload-ph{display:flex;flex-direction:column;align-items:center;gap:7px;color:var(--ink2)}
+.upload-ph .uic{font-size:28px}
+.upload-ph span{font-size:13px}
+.upload-preview{display:flex;align-items:center;gap:14px;text-align:left}
+.preview-img{max-height:70px;max-width:90px;border-radius:8px;object-fit:cover;border:1px solid var(--border)}
+.img-info .img-name{font-size:13px;font-weight:700;color:var(--ink);word-break:break-all;margin-bottom:3px}
+.img-info .img-meta{font-size:11px;color:var(--ink2)}
+.vision-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:2px 9px;font-size:11px;color:var(--blue);margin-top:5px}
+.niche-other{margin-top:8px}
+
+/* ============================================================
+   OUTPUT
+============================================================ */
+.output-section{margin-top:28px}
+.output-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.output-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
+.output-title{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px}
+.output-actions{display:flex;gap:7px}
+.output-body{padding:18px 16px;font-size:14px;line-height:1.75;color:var(--ink);white-space:pre-wrap;word-break:break-word;min-height:80px}
+.output-body.loading{color:var(--ink3);font-style:italic}
+.cursor-blink{display:inline-block;width:2px;height:15px;background:var(--gold-btn);animation:blink .7s infinite;vertical-align:middle;margin-left:2px}
+@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}
+
+/* ============================================================
+   REFINEMENT CHAT
+============================================================ */
+.refine-wrap{background:var(--card2);border:1.5px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:14px 16px}
+.refine-head{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.refine-notice{font-size:11px;color:var(--ink3);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.refine-row{display:flex;gap:8px;align-items:flex-end}
+.refine-ta{flex:1;background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:9px 12px;color:var(--ink);font-family:var(--fb);font-size:13px;outline:none;resize:none;min-height:40px;max-height:100px;line-height:1.5;transition:border-color .2s}
+.refine-ta:focus{border-color:var(--gold-btn)}
+.refine-ta::placeholder{color:var(--ink3)}
+.refine-submit{padding:9px 15px;border-radius:8px;border:none;background:var(--gold-btn);color:#fff;font-family:var(--fb);font-size:12px;font-weight:800;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.refine-submit:hover{filter:brightness(1.1)}
+.refine-submit:disabled{opacity:.45;cursor:not-allowed}
+.refine-result{margin-top:10px;padding:12px 14px;background:var(--card);border:1px solid rgba(212,160,23,.2);border-radius:10px;font-size:13px;line-height:1.75;white-space:pre-wrap;word-break:break-word;display:none}
+.refine-result.show{display:block}
+.refine-result-head{font-size:10px;font-weight:700;color:var(--gold-btn);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between}
+
+/* ============================================================
+   SCORE CARDS
+============================================================ */
+.scores-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:480px){.scores-grid{grid-template-columns:1fr}}
+.score-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px}
+.score-lbl{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px}
+.score-val{font-family:var(--fd);font-size:26px;font-weight:900}
+.score-bar{height:3px;background:var(--border);border-radius:2px;margin-top:7px;overflow:hidden}
+.score-fill{height:100%;border-radius:2px;transition:width .6s ease}
+.sg{color:var(--green)} .sg-fill{background:var(--green)}
+.so{color:var(--gold-btn)} .so-fill{background:var(--gold-btn)}
+.sr{color:var(--red)} .sr-fill{background:var(--red)}
+.sb{color:var(--blue)} .sb-fill{background:var(--blue)}
+
+/* ============================================================
+   FEATURES SECTION
+============================================================ */
+.features-section{padding:72px 0}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px}
+@media(max-width:768px){.features-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.features-grid{grid-template-columns:1fr}}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:all .2s}
+.feat-card:hover{border-color:var(--border2);box-shadow:var(--shadow)}
+.feat-ic{font-size:26px;margin-bottom:12px}
+.feat-title{font-family:var(--fd);font-size:15px;font-weight:700;color:var(--ink);margin-bottom:7px}
+.feat-desc{font-size:13px;color:var(--ink3);line-height:1.65}
+.lang-strip{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-top:32px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.lang-flags{display:flex;flex-wrap:wrap;gap:7px;flex:1}
+.lang-flag-pill{display:flex;align-items:center;gap:5px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:5px 11px;font-size:12px;font-weight:500;color:var(--ink2)}
+.lang-strip-txt h4{font-family:var(--fd);font-size:16px;font-weight:800;margin-bottom:3px;color:var(--ink)}
+.lang-strip-txt p{font-size:13px;color:var(--ink3)}
+
+/* ============================================================
+   PRICING
+============================================================ */
+.pricing-section{background:var(--bg2);padding:72px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:44px;align-items:start}
+@media(max-width:768px){.pricing-grid{grid-template-columns:1fr;max-width:340px;margin-left:auto;margin-right:auto}}
+.price-card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:26px;position:relative;transition:all .2s}
+.price-card.featured{background:var(--ink);border-color:var(--ink);transform:scale(1.03);box-shadow:var(--shadow-lg)}
+.price-card.featured .price-name{color:#ffffff !important}
+.price-card.featured .price-amount{color:#ffffff !important}
+.price-card.featured .price-period{color:rgba(255,255,255,.5) !important}
+[data-theme="dark"] .price-card.featured{background:#1a1a18;border-color:#2a2a28}
+[data-theme="dark"] .price-card.featured .price-name,
+[data-theme="dark"] .price-card.featured .price-amount{color:#ffffff !important}
+.price-badge{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:3px 10px;border-radius:10px;display:inline-block;margin-bottom:10px}
+.price-badge.free{background:var(--bg2);color:var(--ink3)}
+.price-badge.starter{background:var(--gold-l);color:var(--gold-d)}
+.price-badge.pro{background:rgba(212,160,23,.2);color:var(--gold-btn)}
+.price-badge.popular{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold-btn);color:#fff;white-space:nowrap}
+.price-name{font-family:var(--fd);font-size:18px;font-weight:800;margin-bottom:5px}
+.price-amount{font-family:var(--fd);font-size:34px;font-weight:900;letter-spacing:-1px;line-height:1;margin-bottom:3px}
+.price-period{font-size:12px;color:var(--ink3);margin-bottom:18px}
+.price-card.featured .price-name,.price-card.featured .price-amount{color:#fff}
+.price-card.featured .price-period{color:rgba(255,255,255,.45)}
+.price-divider{height:1px;background:var(--border);margin:16px 0}
+.price-card.featured .price-divider{background:rgba(255,255,255,.1)}
+.price-feats{display:flex;flex-direction:column;gap:9px;margin-bottom:20px}
+.pf{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink2)}
+.pf::before{content:'✓';font-size:11px;font-weight:800;color:var(--green);flex-shrink:0}
+.pf.na{color:var(--ink3)} .pf.na::before{content:'—';color:var(--ink3)}
+.price-card.featured .pf{color:rgba(255,255,255,.7)}
+.price-card.featured .pf::before{color:var(--gold-btn)}
+.price-card.featured .pf.na{color:rgba(255,255,255,.3)}
+.price-btn{width:100%;padding:10px;border-radius:9px;font-family:var(--fb);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;border:none;text-align:center}
+.price-btn.outline-btn{background:transparent;border:1.5px solid var(--border2);color:var(--ink)}
+.price-btn.outline-btn:hover{border-color:var(--ink);background:var(--bg2)}
+.price-btn.gold-btn{background:var(--gold-btn);color:#fff;box-shadow:0 4px 14px rgba(212,160,23,.3)}
+.price-btn.gold-btn:hover{filter:brightness(1.08)}
+.price-btn.white-btn{background:#fff;color:var(--ink)}
+.price-btn.white-btn:hover{background:rgba(255,255,255,.9)}
+/* Billing toggle */
+.billing-toggle{display:inline-flex;background:var(--bg2);border:1.5px solid var(--border);border-radius:100px;padding:3px;gap:3px}
+.btg-btn{background:transparent;border:none;border-radius:100px;padding:7px 20px;font-family:var(--fb);font-size:13px;font-weight:600;color:var(--ink3);cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.btg-btn.active{background:var(--gold-btn);color:#fff;box-shadow:0 2px 8px rgba(212,160,23,.3)}
+.btg-badge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;letter-spacing:.4px;text-transform:uppercase}
+.btg-btn.active .btg-badge{background:rgba(255,255,255,.25);color:#fff}
+.btg-btn:not(.active) .btg-badge{background:var(--gold-l);color:var(--gold-d)}
+
+/* ============================================================
+   TESTIMONIALS
+============================================================ */
+.testi-section{padding:72px 0}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:44px}
+@media(max-width:768px){.testi-grid{grid-template-columns:1fr}}
+.testi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:22px;transition:all .2s}
+.testi-card:hover{border-color:var(--border2);box-shadow:var(--shadow)}
+.testi-stars{color:var(--gold-btn);font-size:12px;margin-bottom:10px;letter-spacing:2px}
+.testi-text{font-size:14px;color:var(--ink2);line-height:1.65;margin-bottom:14px}
+.testi-author{display:flex;align-items:center;gap:9px}
+.testi-av{width:34px;height:34px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px}
+.testi-name{font-size:13px;font-weight:700;color:var(--ink)}
+.testi-role{font-size:11px;color:var(--ink3);margin-top:1px}
+
+/* ============================================================
+   CTA BANNER
+============================================================ */
+.cta-banner{background:var(--ink);border-radius:var(--radius);padding:52px 44px;text-align:center;position:relative;overflow:hidden;margin:0 auto 72px;max-width:1072px}
+.cta-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(212,160,23,.12) 0%,transparent 60%);pointer-events:none}
+.cta-banner h2{font-family:var(--fd);font-size:clamp(22px,4vw,38px);font-weight:800;color:#ffffff;margin-bottom:10px;letter-spacing:-1px;position:relative}
+.cta-banner p{color:rgba(255,255,255,.6);margin-bottom:24px;position:relative;font-size:15px}
+.cta-btns{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;position:relative}
+[data-theme="dark"] .cta-banner{background:#1C1C1A;border:1px solid var(--border2)}
+[data-theme="dark"] .cta-banner h2{color:#ffffff}
+[data-theme="dark"] .cta-banner p{color:rgba(255,255,255,.55)}
+
+/* ============================================================
+   QUOTA BAR
+============================================================ */
+.quota-wrap{display:none;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-top:14px;max-width:420px;margin-left:auto;margin-right:auto}
+.quota-wrap.show{display:block}
+.quota-top{display:flex;justify-content:space-between;margin-bottom:5px;font-size:12px}
+.quota-lbl{color:var(--ink2);font-weight:600}
+.qc.ok{color:var(--green)} .qc.warn{color:var(--gold-btn)} .qc.full{color:var(--red)}
+.quota-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.quota-fill{height:100%;border-radius:2px;transition:width .5s ease}
+.qf-ok{background:var(--green)} .qf-warn{background:var(--gold-btn)} .qf-full{background:var(--red)}
+
+/* ============================================================
+   FOOTER ACCORDION
+============================================================ */
+.footer-acc{margin:56px 0 0;border-top:1px solid var(--border)}
+.acc-item{border-bottom:1px solid var(--border)}
+.acc-toggle{display:flex;align-items:center;justify-content:space-between;padding:16px 0;cursor:pointer;user-select:none;transition:color .15s}
+.acc-toggle:hover .acc-title{color:var(--gold-btn)}
+.acc-title{font-family:var(--fd);font-size:15px;font-weight:700;color:var(--ink)}
+.acc-icon{font-size:16px;color:var(--ink3);transition:transform .25s}
+.acc-icon.open{transform:rotate(45deg)}
+.acc-body{display:none;padding-bottom:18px}
+.acc-body.open{display:block}
+.acc-body p{color:var(--ink2);font-size:14px;line-height:1.8;margin-top:12px}
+.acc-body p strong{color:var(--ink)}
+.acc-body a{color:var(--gold-btn);text-decoration:none}
+.acc-body a:hover{text-decoration:underline}
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer{border-top:1px solid var(--border);padding:28px 0;text-align:center}
+footer p{color:var(--ink3);font-size:12px;line-height:1.8}
+footer a{color:var(--ink3);text-decoration:none}
+footer a:hover{color:var(--gold-btn)}
+.footer-links{display:flex;justify-content:center;gap:18px;margin-bottom:10px;flex-wrap:wrap}
+
+/* ============================================================
+   FIX 1 — Features title centered
+============================================================ */
+.features-section .section-label,
+.features-section .section-h {
+  text-align: center;
+}
+.features-section .section-h {
+  max-width: 600px;
+  margin: 0 auto 10px;
+}
+
+/* ============================================================
+   CONTACT FORM
+============================================================ */
+.contact-form-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;max-width:560px;margin:24px auto 0}
+.contact-form-wrap h4{font-family:var(--fd);font-size:17px;font-weight:800;margin-bottom:6px;color:var(--ink)}
+.contact-form-wrap p{font-size:13px;color:var(--ink3);margin-bottom:20px}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:560px){.cf-row{grid-template-columns:1fr}}
+.cf-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.cf-label{font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.5px}
+.cf-input{background:var(--card2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;color:var(--ink);font-family:var(--fb);font-size:14px;outline:none;width:100%;transition:border-color .2s}
+.cf-input:focus{border-color:var(--gold-btn);box-shadow:0 0 0 3px rgba(212,160,23,.1)}
+.cf-input::placeholder{color:var(--ink3)}
+.cf-select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239A9A8E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.cf-textarea{min-height:100px;resize:vertical}
+.cf-success{display:none;background:rgba(26,122,74,.08);border:1px solid rgba(26,122,74,.2);border-radius:var(--radius-sm);padding:14px;font-size:14px;color:var(--green);text-align:center;margin-top:12px}
+.cf-success.show{display:block}
+.cf-error{display:none;background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.2);border-radius:var(--radius-sm);padding:10px 14px;font-size:13px;color:var(--red);margin-top:10px}
+.cf-error.show{display:block}
+
+/* ============================================================
+   FIX 3 — RESPONSIVE MOBILE
+============================================================ */
+/* Header mobile */
+@media(max-width:768px){
+  .header-nav{display:none}
+  .header-right{gap:7px}
+  .header-right .btn-dark{display:none}
+  .lang-b{padding:4px 8px;font-size:11px}
+}
+/* Sur très petit écran — lang switcher en dropdown */
+@media(max-width:480px){
+  .lang-sw{display:none}
+  .lang-mobile-select{display:block !important}
+}
+.lang-mobile-select{
+  display:none;
+  background:var(--card2);
+  border:1px solid var(--border2);
+  border-radius:8px;
+  padding:5px 10px;
+  font-size:12px;
+  font-weight:700;
+  color:var(--ink);
+  font-family:var(--fb);
+  cursor:pointer;
+  outline:none;
+}
+/* Trust bar mobile — centré */
+@media(max-width:600px){
+  .trust-bar-inner{flex-direction:column;gap:10px;text-align:center}
+  .trust-logos{justify-content:center;gap:10px}
+  .trust-sep{display:none}
+}
+/* Hero mobile */
+@media(max-width:480px){
+  .hero{padding:48px 0 36px}
+  .hero h1{font-size:clamp(26px,8vw,38px);letter-spacing:-1px}
+  .hero-sub{font-size:14px}
+  .hero-stats{gap:18px;padding:14px}
+  .stat-n{font-size:18px}
+  .stat-div{display:none}
+  .hero-cta .btn{width:100%;justify-content:center}
+  .hero-cta{flex-direction:column;gap:8px}
+}
+/* Tools tabs mobile */
+@media(max-width:480px){
+  .tools-tabs{justify-content:flex-start;padding:0 12px}
+  .tab-btn{min-width:80px;padding:10px 8px;font-size:10px;max-width:100px}
+  .tab-btn .tab-ic{font-size:16px}
+}
+/* Form mobile */
+@media(max-width:480px){
+  .container{padding:0 14px}
+  .wide{padding:0 14px}
+  .tool-panel{padding:24px 0 40px}
+  .btn-lg{padding:11px 18px;font-size:14px}
+}
+/* Pricing mobile */
+@media(max-width:480px){
+  .pricing-grid{max-width:100%}
+  .price-card.featured{transform:none}
+}
+/* Features mobile */
+@media(max-width:480px){
+  .lang-strip{flex-direction:column;gap:12px}
+  .lang-flags{justify-content:center}
+}
+/* CTA banner mobile */
+@media(max-width:480px){
+  .cta-banner{padding:36px 20px;margin:0 14px 48px;border-radius:var(--radius)}
+  .cta-btns{flex-direction:column;gap:8px}
+  .cta-btns .btn{width:100%}
+}
+/* Footer mobile */
+@media(max-width:480px){
+  .footer-links{gap:12px}
+}
+/* Interstitial mobile */
+@media(max-width:480px){
+  .intbox{padding:16px;border-radius:14px}
+  .intbox-ad{height:200px}
+  .pw-plans{grid-template-columns:1fr}
+  .pw-box{padding:24px 18px}
+}
+.hidden{display:none!important}
+.mt-8{margin-top:8px} .mt-12{margin-top:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,0,0,.15);border-top-color:currentColor;border-radius:50%;animation:spin .6s linear infinite}
+
+.trust-bar{background:var(--card);border-bottom:1px solid var(--border);padding:10px 0}
+.trust-bar-inner{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap}
+.trust-label{font-size:11px;color:var(--ink3);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.trust-logos{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:5px;color:var(--ink2);font-size:12px;font-weight:600}
+.trust-item svg{color:var(--ink3);flex-shrink:0}
+.trust-sep{color:var(--border2)}
+
+/* ── STATS SECTION ── */
+.stats-section{background:var(--ink);padding:52px 0}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+@media(max-width:768px){.stats-grid{grid-template-columns:repeat(2,1fr)}}
+.stat-big-card{padding:28px 20px;text-align:center;border-right:1px solid rgba(255,255,255,.07)}
+.stat-big-card:last-child{border-right:none}
+.stat-big-num{font-family:var(--fd);font-size:clamp(32px,4vw,48px);font-weight:900;color:#fff;line-height:1;margin-bottom:6px}
+.stat-big-num span{font-size:.55em;color:var(--gold-btn)}
+.stat-big-label{font-size:13px;font-weight:700;color:rgba(255,255,255,.75);margin-bottom:3px}
+.stat-big-sub{font-size:11px;color:rgba(255,255,255,.3)}
+
+/* ── GUARANTEE BAR ── */
+.guarantee-bar{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:24px;padding:16px 20px;background:var(--bg2);border-radius:12px;border:1px solid var(--border)}
+.guarantee-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink2);font-weight:500}
+.guarantee-sep{color:var(--border2)}
+@media(max-width:600px){.guarantee-sep{display:none}.guarantee-bar{flex-direction:column;gap:8px;align-items:flex-start}}
+
+/* ── FAQ ── */
+.faq-section{padding:64px 0;border-top:1px solid var(--border)}
+.faq-list{display:flex;flex-direction:column;gap:8px;max-width:700px;margin:0 auto}
+.faq-item{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color .2s}
+.faq-item.open{border-color:var(--gold-btn)}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;cursor:pointer;user-select:none;gap:10px}
+.faq-q-text{font-size:15px;font-weight:700;color:var(--ink);flex:1}
+.faq-icon{font-size:18px;color:var(--ink3);transition:transform .25s;flex-shrink:0}
+.faq-item.open .faq-icon{transform:rotate(45deg);color:var(--gold-btn)}
+.faq-a{display:none;padding:0 18px 16px;font-size:14px;color:var(--ink2);line-height:1.75;border-top:1px solid var(--border)}
+.faq-item.open .faq-a{display:block}
+  </style>
+  <meta http-equiv="content-language" content="fr">
+  <meta name="language" content="French">
+  <link rel="alternate" hreflang="fr" href="https://ecomercai.com/">
+  <link rel="canonical" href="https://ecomercai.com/">
+  <meta name="google-adsense-account" content="ca-pub-8138949554336314">
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8138949554336314" crossorigin="anonymous"></script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ac65f17956d346e89640e7734aa72110"}'></script>
+</head>
+<body>
+
+<!-- ===== INTERSTITIAL ===== -->
+<div id="interstitial" class="hidden">
+  <div class="intbox">
+    <div class="intbox-top">
+      <div class="intbox-status">
+        <div class="dots-loader"><span></span><span></span><span></span></div>
+        <span id="int-msg">Génération en cours...</span>
+      </div>
+      <div class="intbox-counter" id="int-counter"></div>
+    </div>
+    <div class="intbox-ad-label" data-i18n="ad_label">Espace publicitaire</div>
+    <!-- PRODUCTION: remplace par tag AdSense 300×250 -->
+    <div class="intbox-ad">📢 ADSENSE 300×250<span style="opacity:.5;font-size:9px">Remplacer par tag AdSense</span></div>
+    <div class="intbox-upsell" id="int-upsell">
+      <div class="intbox-upsell-txt">
+        <strong data-i18n="upsell_title">⚡ Générez sans publicité</strong>
+        <span data-i18n="upsell_desc">Starter $4.99/mois (100 gen) — Pro $9.99/mois (illimité).</span>
+      </div>
+      <button class="intbox-upsell-btn" onclick="closeIntManual();showPaywall()" data-i18n="upsell_btn">S'abonner →</button>
+    </div>
+    <div class="intbox-footer">
+      <span class="intbox-tip" id="int-tip"></span>
+      <button class="intbox-close" id="int-close" disabled onclick="closeIntManual()">
+        Fermer (<span id="int-cd">5</span>s)
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAYWALL ===== -->
+<div id="paywall-overlay" class="hidden">
+  <div class="pw-box">
+    <div class="pw-icon">🚀</div>
+    <h2 data-i18n="pw_title">Limite atteinte</h2>
+    <p data-i18n="pw_desc">Passez à un plan payant pour des générations illimitées sans publicités.</p>
+    <div class="pw-plans">
+      <div class="pw-plan active" id="pw-starter" onclick="selectPlan('starter')">
+        <div class="pw-plan-name">Starter</div>
+        <div class="pw-plan-price" id="pw-p-starter">$4.99<span>/mois</span></div>
+        <div class="pw-plan-feat" data-i18n="plan_s_feat">100 gen/mois · Sans pub</div>
+      </div>
+      <div class="pw-plan" id="pw-pro" onclick="selectPlan('pro')">
+        <div class="pw-plan-badge" data-i18n="pw_popular">⚡ MEILLEUR CHOIX</div>
+        <div class="pw-plan-name">Pro</div>
+        <div class="pw-plan-price" id="pw-p-pro">$9.99<span>/mois</span></div>
+        <div class="pw-plan-feat" data-i18n="plan_p_feat">Illimité · Sans pub · Prioritaire</div>
+      </div>
+    </div>
+    <input type="email" class="pw-email" id="pw-email" placeholder="Email..." data-i18n-ph="pw_email_ph">
+    <button class="btn btn-gold btn-full" onclick="startCheckout()" id="pw-pay-btn" data-i18n="pw_btn">💳 Payer avec Stripe →</button>
+    <a href="#" onclick="recoverAccess();return false" style="display:block;text-align:center;font-size:12px;color:var(--ink3);margin-top:10px;text-decoration:underline" data-i18n="recover_link">Déjà abonné ? Récupérer mon accès par email</a>
+    <div id="pw-free-section" class="hidden">
+      <div class="pw-divider"><span data-i18n="or">ou</span></div>
+      <div class="pw-free-section">
+        <p data-i18n-html="free_email_title">Obtenez <strong>3 générations/jour</strong> gratuitement</p>
+        <div class="pw-free-row">
+          <input type="email" id="pw-free-email" data-i18n-ph="free_email_ph" placeholder="votre@email.com">
+          <button onclick="registerFreeEmail()" data-i18n="free_email_btn">Continuer →</button>
+        </div>
+      </div>
+    </div>
+    <div class="pw-divider"><span data-i18n="or">ou</span></div>
+    <button class="pw-skip" onclick="closePaywall()" data-i18n="pw_skip">Continuer avec l'essai gratuit</button>
+    <div id="pw-manage-wrap" class="hidden" style="margin-top:10px;text-align:center">
+      <button class="pw-skip" style="color:var(--gold-btn);border-color:var(--gold-btn)" onclick="openCustomerPortal()">⚙️ Gérer mon abonnement →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <div class="header-inner">
+    <a href="#" class="logo-wrap">
+      <div class="logo-wordmark">
+        <div class="logo-wordmark-text">
+          <span class="logo-e">E</span><span class="logo-rest">comercai</span>
+        </div>
+        <div class="logo-badge">Tools</div>
+      </div>
+    </a>
+    <nav class="header-nav">
+      <a href="#features" class="nav-link" data-i18n="nav_features">Fonctionnalités</a>
+      <a href="#pricing" class="nav-link" data-i18n="nav_pricing">Tarifs</a>
+    </nav>
+    <div class="header-right">
+      <div class="lang-sw">
+        <button class="lang-b active" onclick="setLang('fr')">FR</button>
+        <button class="lang-b"        onclick="setLang('ar')">AR</button>
+        <button class="lang-b"        onclick="setLang('en')">EN</button>
+      </div>
+      <!-- Version mobile — dropdown -->
+      <select class="lang-mobile-select" id="lang-mobile-select" onchange="setLang(this.value)">
+        <option value="fr">🌐 FR</option>
+        <option value="ar">🌐 AR</option>
+        <option value="en">🌐 EN</option>
+      </select>
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()" title="Toggle theme">☀️</button>
+      <button class="btn btn-dark" onclick="goToTools()" data-i18n="cta_free">Essayer gratuitement →</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">✦ <span data-i18n="hero_badge">4 Outils IA · E-commerce · Dropshipping</span></div>
+    <h1 id="hero-h1">Créez du contenu<br>qui <mark>vend</mark> en secondes</h1>
+    <p class="hero-sub" id="hero-p">Landing pages, scripts vidéo, stratégies publicitaires et analyse produit — générés par l'IA pour les e-commerçants qui veulent aller vite.</p>
+    <div class="hero-cta">
+      <button class="btn btn-dark btn-lg" onclick="goToTools()" data-i18n="cta_free_lg">⚡ Essayer gratuitement</button>
+      <a href="#pricing" class="btn btn-outline btn-lg" data-i18n="cta_pricing">Voir les tarifs →</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item"><div class="stat-n">4</div><div class="stat-l" data-i18n="stat_tools">Outils IA</div></div>
+      <div class="stat-div"></div>
+      <div class="stat-item"><div class="stat-n">6</div><div class="stat-l" data-i18n="stat_langs">Langues</div></div>
+      <div class="stat-div"></div>
+      <div class="stat-item"><div class="stat-n">3x</div><div class="stat-l" data-i18n="stat_faster">Plus rapide</div></div>
+      <div class="stat-div"></div>
+      <div class="stat-item"><div class="stat-n">$4.99</div><div class="stat-l" data-i18n="stat_from">Dès / mois</div></div>
+    </div>
+    <div class="quota-wrap" id="quota-wrap">
+      <div class="quota-top">
+        <span class="quota-lbl" data-i18n="quota_lbl">Générations gratuites aujourd'hui</span>
+        <span class="qc ok" id="quota-count">3 / 3</span>
+      </div>
+      <div class="quota-bar"><div class="quota-fill qf-ok" id="quota-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRUST BAR ===== -->
+<div class="trust-bar">
+  <div class="wide">
+    <div class="trust-bar-inner">
+      <span class="trust-label" data-i18n="trust_label">Propulsé par</span>
+      <div class="trust-logos">
+        <div class="trust-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Claude AI</span>
+        </div>
+        <div class="trust-sep">·</div>
+        <div class="trust-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M2 10h20" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Stripe</span>
+        </div>
+        <div class="trust-sep">·</div>
+        <div class="trust-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke="currentColor" stroke-width="2"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="currentColor" stroke-width="2"/></svg>
+          <span>Cloudflare</span>
+        </div>
+        <div class="trust-sep">·</div>
+        <div class="trust-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-i18n="trust_secure">100% Sécurisé</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TABS NAV ===== -->
+<div id="tools-section">
+  <nav class="tools-nav">
+    <div class="tools-tabs">
+      <button class="tab-btn active" onclick="switchTab('landing')"><span class="tab-ic">🏠</span><span data-i18n="tab_lp">Landing Page</span></button>
+      <button class="tab-btn"        onclick="switchTab('voix')">   <span class="tab-ic">🎙️</span><span data-i18n="tab_vo">Voix Off</span></button>
+      <button class="tab-btn"        onclick="switchTab('pub')">    <span class="tab-ic">📢</span><span data-i18n="tab_pub">Publicité</span></button>
+      <button class="tab-btn"        onclick="switchTab('analyse')"><span class="tab-ic">🔍</span><span data-i18n="tab_an">Analyse</span></button>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <!-- ======== OUTIL 1 : LANDING PAGE ======== -->
+    <div class="tool-panel active" id="panel-landing">
+      <div class="tool-head">
+        <h2 data-i18n="lp_h">🏠 Générateur de Landing Page</h2>
+        <p data-i18n="lp_sub">Prompt ultra-détaillé pour Midjourney, Flux, Nano Banana Pro ou tout générateur d'images IA.</p>
+      </div>
+      <div class="guide"><div class="guide-toggle" onclick="toggleGuide('lp')"><div class="guide-toggle-lbl">💡 <span data-i18n="guide_title">Comment ça marche ?</span></div><span class="guide-arrow" id="ga-lp">▼</span></div><div class="guide-body" id="gb-lp"><div class="guide-steps" id="gs-lp"></div></div></div>
+      <form class="tool-form" onsubmit="return false">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="lp_lang">Langue cible</span> <span class="req">*</span></label>
+            <select class="form-control" id="lp-lang" onchange="checkDZ('lp');checkLangOther()">
+              <option value="French">Français</option>
+              <option value="Darija Algérienne">🇩🇿 Darija Algérienne</option>
+              <option value="Arabic Darija Moroccan">Darija Marocaine</option>
+              <option value="Classical Arabic">Arabe classique</option>
+              <option value="English">English</option>
+              <option value="Spanish">Español</option>
+              <option value="__other__" data-i18n="lang_other">Autre langue...</option>
+            </select>
+            <input type="text" class="form-control hidden" id="lp-lang-other" style="margin-top:8px" placeholder="Ex: Italian, Portuguese, German..." data-i18n-ph="lang_other_ph">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="lp_type">Type d'offre</label>
+            <select class="form-control" id="lp-type">
+              <option value="single product" data-i18n="lp_single">Produit unique</option>
+              <option value="bundle/pack" data-i18n="lp_bundle">Pack / Bundle</option>
+            </select>
+          </div>
+        </div>
+        <div class="dz-badge" id="dz-lp">🇩🇿 <span data-i18n="dz_msg">Mode <strong>Darija Algérienne</strong> activé — Contexte DZ intégré.</span></div>
+        <div class="form-group">
+          <label class="form-label"><span data-i18n="lp_name">Nom du produit</span> <span class="req">*</span></label>
+          <input type="text" class="form-control" id="lp-name" placeholder="Ex: Brosse ionique Pro">
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span data-i18n="lp_benefits">Bénéfices & caractéristiques</span> <span class="req">*</span></label>
+          <textarea class="form-control" id="lp-benefits" rows="3" placeholder="Ex: Élimine les frisottis 80%, chauffe en 30s..."></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="lp_price">Prix de vente</span> <span class="req">*</span></label>
+            <input type="text" class="form-control" id="lp-price" placeholder="Ex: 29.99€ / $29">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="lp_colors">Style colorimétrique</label>
+            <input type="text" class="form-control" id="lp-colors" placeholder="Ex: Noir & Or, Blanc & Rose">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="lp_reviews">Avis clients (optionnel)</label>
+          <div class="reviews-grid">
+            <input type="text" class="form-control" id="lp-r1" placeholder="Avis 1...">
+            <input type="text" class="form-control" id="lp-r2" placeholder="Avis 2...">
+            <input type="text" class="form-control" id="lp-r3" placeholder="Avis 3...">
+            <input type="text" class="form-control" id="lp-urgency" placeholder="Ex: Stock limité, -50% aujourd'hui">
+          </div>
+        </div>
+        <button class="btn btn-gold btn-full" style="padding:13px;font-size:15px;border-radius:var(--radius)" onclick="genLanding()" id="btn-lp">
+          <span data-i18n="generate">⚡ Générer le Prompt IA</span>
+        </button>
+      </form>
+      <div class="output-section hidden" id="out-landing">
+        <div class="output-card">
+          <div class="output-head"><span class="output-title" data-i18n="out_lp">Prompt Landing Page</span><div class="output-actions"><button class="btn btn-ghost btn-sm" onclick="copyOut('lp-text','cpbtn-lp')" id="cpbtn-lp" data-i18n="copy">📋 Copier</button></div></div>
+          <div class="output-body" id="lp-text"></div>
+        </div>
+        <div class="refine-wrap">
+          <div class="refine-head" data-i18n="refine_h">🔄 Réajuster ce résultat</div>
+          <div class="refine-notice">⚡ <span data-i18n="refine_notice">Un bref message publicitaire s'affichera avant chaque réajustement.</span></div>
+          <div class="refine-row"><textarea class="refine-ta" id="ri-lp" rows="2" data-i18n-ph="refine_ph" placeholder="Ex: Rends plus urgent, ajoute des emojis..."></textarea><button class="refine-submit" onclick="refine('landing')" id="rb-lp" data-i18n="refine_btn">⚡</button></div>
+          <div class="refine-result" id="rr-landing"><div class="refine-result-head"><span data-i18n="refine_result">🔄 Version réajustée</span><button class="btn btn-ghost btn-sm" onclick="copyOut('rrt-landing','cp-rl')" id="cp-rl" data-i18n="copy">📋 Copier</button></div><div id="rrt-landing"></div></div>
+        </div>
+        <div class="notice mt-12" style="background:rgba(37,99,235,.06);border:1px solid rgba(37,99,235,.15);border-radius:8px;padding:11px 14px;font-size:13px;color:var(--blue)" data-i18n="lp_notice">💡 Collez ce prompt dans Midjourney, Nano Banana Pro ou Flux avec les photos du produit pour un résultat optimal.</div>
+      </div>
+    </div>
+
+    <!-- ======== OUTIL 2 : VOIX OFF ======== -->
+    <div class="tool-panel" id="panel-voix">
+      <div class="tool-head">
+        <h2 data-i18n="vo_h">🎙️ Script Voix Off + Vision IA</h2>
+        <p data-i18n="vo_sub">Uploadez une photo produit — l'IA analyse et génère un script avec timing précis.</p>
+      </div>
+      <div class="guide"><div class="guide-toggle" onclick="toggleGuide('vo')"><div class="guide-toggle-lbl">💡 <span data-i18n="guide_title">Comment ça marche ?</span></div><span class="guide-arrow" id="ga-vo">▼</span></div><div class="guide-body" id="gb-vo"><div class="guide-steps" id="gs-vo"></div></div></div>
+      <form class="tool-form" onsubmit="return false">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="vo_lang">Langue</span> <span class="req">*</span></label>
+            <select class="form-control" id="vo-lang" onchange="checkDZ('vo')">
+              <option value="French">Français</option>
+              <option value="Darija Algérienne">🇩🇿 Darija Algérienne</option>
+              <option value="Arabic Darija Moroccan">Darija Marocaine</option>
+              <option value="Classical Arabic">Arabe classique</option>
+              <option value="English">English</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="vo_platform">Plateforme</label>
+            <select class="form-control" id="vo-platform">
+              <option>TikTok</option><option>Instagram Reels</option><option>YouTube Shorts</option><option>Facebook Video Ads</option>
+            </select>
+          </div>
+        </div>
+        <div class="dz-badge" id="dz-vo">🇩🇿 <span data-i18n="dz_msg">Mode <strong>Darija Algérienne</strong> activé.</span></div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="upload_lbl">📸 Photo du produit (optionnel — Vision IA)</label>
+          <div id="ua-voix"></div>
+          <button type="button" class="btn btn-ghost btn-sm mt-8 hidden" id="ri-btn-voix" onclick="removeImg('voix')" data-i18n="remove_img">✕ Supprimer</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span data-i18n="vo_product">Produit & description</span> <span class="req">*</span></label>
+          <textarea class="form-control" id="vo-product" rows="2" placeholder="Ex: Ceinture chauffante lombaires — soulagement en 10 min"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="vo_duration">Durée</label>
+            <select class="form-control" id="vo-duration">
+              <option>15 secondes</option><option>30 secondes</option><option>45 secondes</option><option>60 secondes</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="vo_tone">Émotion / Ton</label>
+            <select class="form-control" id="vo-emotion">
+              <option value="urgency">Urgence & FOMO</option>
+              <option value="trust">Confiance & Crédibilité</option>
+              <option value="desire">Désir & Aspiration</option>
+              <option value="empathy">Empathie & Douleur</option>
+              <option value="humour">Humour & Viral</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="vo_audience">Audience cible</label>
+          <input type="text" class="form-control" id="vo-audience" placeholder="Ex: Femmes 25-45, mères actives, douleurs de dos">
+        </div>
+        <button class="btn btn-gold btn-full" style="padding:13px;font-size:15px;border-radius:var(--radius)" onclick="genVoix()" id="btn-vo">
+          <span data-i18n="generate">⚡ Générer le Script</span>
+        </button>
+      </form>
+      <div class="output-section hidden" id="out-voix">
+        <div class="output-card">
+          <div class="output-head"><span class="output-title" data-i18n="out_vo">Script Voix Off</span><div class="output-actions"><button class="btn btn-ghost btn-sm" onclick="copyOut('vo-text','cpbtn-vo')" id="cpbtn-vo" data-i18n="copy">📋 Copier</button></div></div>
+          <div class="output-body" id="vo-text"></div>
+        </div>
+        <div class="refine-wrap">
+          <div class="refine-head" data-i18n="refine_h">🔄 Réajuster ce résultat</div>
+          <div class="refine-notice">⚡ <span data-i18n="refine_notice">Un bref message publicitaire s'affichera avant chaque réajustement.</span></div>
+          <div class="refine-row"><textarea class="refine-ta" id="ri-vo" rows="2" data-i18n-ph="refine_ph" placeholder="Ex: Plus émotionnel, hook plus fort..."></textarea><button class="refine-submit" onclick="refine('voix')" id="rb-vo" data-i18n="refine_btn">⚡</button></div>
+          <div class="refine-result" id="rr-voix"><div class="refine-result-head"><span data-i18n="refine_result">🔄 Version réajustée</span><button class="btn btn-ghost btn-sm" onclick="copyOut('rrt-voix','cp-rv')" id="cp-rv" data-i18n="copy">📋 Copier</button></div><div id="rrt-voix"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== OUTIL 3 : PUBLICITÉ ======== -->
+    <div class="tool-panel" id="panel-pub">
+      <div class="tool-head">
+        <h2 data-i18n="pub_h">📢 Stratégie Publicité — Media Buyer IA</h2>
+        <p data-i18n="pub_sub">Copies haute conversion + stratégie campagne, scaling, tests A/B et erreurs à éviter.</p>
+      </div>
+      <div class="guide"><div class="guide-toggle" onclick="toggleGuide('pub')"><div class="guide-toggle-lbl">💡 <span data-i18n="guide_title">Comment ça marche ?</span></div><span class="guide-arrow" id="ga-pub">▼</span></div><div class="guide-body" id="gb-pub"><div class="guide-steps" id="gs-pub"></div></div></div>
+      <form class="tool-form" onsubmit="return false">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="pub_platform">Plateforme</span> <span class="req">*</span></label>
+            <select class="form-control" id="pub-platform">
+              <option>Facebook Ads</option><option>TikTok Ads</option><option>Instagram Ads</option><option>Google Search Ads</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="pub_obj">Objectif</span> <span class="req">*</span></label>
+            <select class="form-control" id="pub-objective">
+              <option value="conversions">Ventes / Conversions</option>
+              <option value="traffic">Trafic site web</option>
+              <option value="awareness">Notoriété marque</option>
+              <option value="engagement">Engagement</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="upload_lbl">📸 Photo du produit (optionnel — Vision IA)</label>
+          <div id="ua-pub"></div>
+          <button type="button" class="btn btn-ghost btn-sm mt-8 hidden" id="ri-btn-pub" onclick="removeImg('pub')" data-i18n="remove_img">✕ Supprimer</button>
+        </div>
+        <div class="form-group">
+          <label class="form-label"><span data-i18n="pub_product">Produit & avantages clés</span> <span class="req">*</span></label>
+          <textarea class="form-control" id="pub-product" rows="2" placeholder="Ex: Montre connectée sport — GPS, 14j autonomie, $39"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="pub_audience">Audience cible</label>
+            <input type="text" class="form-control" id="pub-audience" placeholder="Ex: Men 25-40, fitness lovers">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="pub_lang">Langue</label>
+            <select class="form-control" id="pub-lang" onchange="checkDZ('pub')">
+              <option value="French">Français</option>
+              <option value="Darija Algérienne">🇩🇿 Darija Algérienne</option>
+              <option value="Classical Arabic">Arabe classique</option>
+              <option value="English">English</option>
+            </select>
+          </div>
+        </div>
+        <div class="dz-badge" id="dz-pub">🇩🇿 <span data-i18n="dz_msg_pub">Mode <strong>Darija Algérienne</strong> — Publicité optimisée marché DZ.</span></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="pub_budget">Budget quotidien</label>
+            <input type="text" class="form-control" id="pub-budget" placeholder="Ex: $10/day">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="pub_promo">Offre promotionnelle</label>
+            <input type="text" class="form-control" id="pub-promo" placeholder="Ex: -40% 48h, free shipping">
+          </div>
+        </div>
+        <button class="btn btn-gold btn-full" style="padding:13px;font-size:15px;border-radius:var(--radius)" onclick="genPub()" id="btn-pub">
+          <span data-i18n="generate_pub">⚡ Générer la Stratégie Pub</span>
+        </button>
+      </form>
+      <div class="output-section hidden" id="out-pub">
+        <div class="output-card">
+          <div class="output-head"><span class="output-title" data-i18n="out_pub">Stratégie Publicitaire</span><div class="output-actions"><button class="btn btn-ghost btn-sm" onclick="copyOut('pub-text','cpbtn-pub')" id="cpbtn-pub" data-i18n="copy">📋 Copier</button></div></div>
+          <div class="output-body" id="pub-text"></div>
+        </div>
+        <div class="refine-wrap">
+          <div class="refine-head" data-i18n="refine_h">🔄 Réajuster ce résultat</div>
+          <div class="refine-notice">⚡ <span data-i18n="refine_notice">Un bref message publicitaire s'affichera avant chaque réajustement.</span></div>
+          <div class="refine-row"><textarea class="refine-ta" id="ri-pub" rows="2" data-i18n-ph="refine_ph" placeholder="Ex: Budget plus serré, cible les femmes..."></textarea><button class="refine-submit" onclick="refine('pub')" id="rb-pub" data-i18n="refine_btn">⚡</button></div>
+          <div class="refine-result" id="rr-pub"><div class="refine-result-head"><span data-i18n="refine_result">🔄 Version réajustée</span><button class="btn btn-ghost btn-sm" onclick="copyOut('rrt-pub','cp-rp')" id="cp-rp" data-i18n="copy">📋 Copier</button></div><div id="rrt-pub"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== OUTIL 4 : ANALYSE ======== -->
+    <div class="tool-panel" id="panel-analyse">
+      <div class="tool-head">
+        <h2 data-i18n="an_h">🔍 Analyseur de Produit Gagnant</h2>
+        <p data-i18n="an_sub">Score de potentiel dropshipping sur 100 + rapport marché complet.</p>
+      </div>
+      <div class="guide"><div class="guide-toggle" onclick="toggleGuide('an')"><div class="guide-toggle-lbl">💡 <span data-i18n="guide_title">Comment ça marche ?</span></div><span class="guide-arrow" id="ga-an">▼</span></div><div class="guide-body" id="gb-an"><div class="guide-steps" id="gs-an"></div></div></div>
+      <form class="tool-form" onsubmit="return false">
+        <div class="form-group">
+          <label class="form-label"><span data-i18n="an_product">Nom & description du produit</span> <span class="req">*</span></label>
+          <textarea class="form-control" id="an-product" rows="2" placeholder="Ex: Masque LED anti-acné, photothérapie rouge & bleue"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="upload_lbl">📸 Photo du produit (optionnel — Vision IA)</label>
+          <div id="ua-analyse"></div>
+          <button type="button" class="btn btn-ghost btn-sm mt-8 hidden" id="ri-btn-analyse" onclick="removeImg('analyse')" data-i18n="remove_img">✕ Supprimer</button>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="an_buy">Prix d'achat</span> <span class="req">*</span></label>
+            <input type="number" class="form-control" id="an-buy" placeholder="Ex: 8.50">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="an_sell">Prix de vente cible</span> <span class="req">*</span></label>
+            <input type="number" class="form-control" id="an-sell" placeholder="Ex: 39.99">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="an_market">Marché cible</label>
+            <select class="form-control" id="an-market" onchange="checkDZMarket();checkMarketOther()">
+              <option>France / Belgique / Suisse</option>
+              <option value="dz">🇩🇿 Algérie</option>
+              <option>Maghreb (MA/TN/LY)</option>
+              <option>USA / Canada</option>
+              <option>UK / Australia</option>
+              <option value="__other__" data-i18n="market_other">Autres pays...</option>
+            </select>
+            <input type="text" class="form-control hidden" id="an-market-other" style="margin-top:8px" placeholder="Ex: Germany, Brazil, Turkey..." data-i18n-ph="market_other_ph">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="an_niche">Niche</label>
+            <select class="form-control" id="an-niche" onchange="checkNicheOther()">
+              <option>Beauty & Care</option><option>Health & Wellness</option>
+              <option>Sport & Fitness</option><option>Home & Decor</option>
+              <option>Tech & Gadgets</option><option>Fashion & Accessories</option>
+              <option>Baby & Kids</option><option>Pets</option>
+              <option value="__other__">Other / Autre...</option>
+            </select>
+            <input type="text" class="form-control niche-other hidden" id="an-niche-other" placeholder="Describe your niche...">
+          </div>
+        </div>
+        <div class="dz-badge" id="dz-an">🇩🇿 <span>Marché <strong>Algérie</strong> — Analyse adaptée COD, wilayas, Ouedkniss.</span></div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="an_context">Contexte supplémentaire (optionnel)</label>
+          <textarea class="form-control" id="an-context" rows="2" placeholder="Ex: Vu viral TikTok, competitor on Amazon..."></textarea>
+        </div>
+        <button class="btn btn-gold btn-full" style="padding:13px;font-size:15px;border-radius:var(--radius)" onclick="genAnalyse()" id="btn-an">
+          <span data-i18n="generate_an">⚡ Analyser le Potentiel</span>
+        </button>
+      </form>
+      <div class="output-section hidden" id="out-analyse">
+        <div class="scores-grid" id="scores-grid"></div>
+        <div class="output-card">
+          <div class="output-head"><span class="output-title" data-i18n="out_an">Rapport d'Analyse</span><div class="output-actions"><button class="btn btn-ghost btn-sm" onclick="copyOut('an-text','cpbtn-an')" id="cpbtn-an" data-i18n="copy">📋 Copier</button></div></div>
+          <div class="output-body" id="an-text"></div>
+        </div>
+        <div class="refine-wrap">
+          <div class="refine-head" data-i18n="refine_h">🔄 Réajuster ce résultat</div>
+          <div class="refine-notice">⚡ <span data-i18n="refine_notice">Un bref message publicitaire s'affichera avant chaque réajustement.</span></div>
+          <div class="refine-row"><textarea class="refine-ta" id="ri-an" rows="2" data-i18n-ph="refine_ph" placeholder="Ex: Analyse pour un autre marché..."></textarea><button class="refine-submit" onclick="refine('analyse')" id="rb-an" data-i18n="refine_btn">⚡</button></div>
+          <div class="refine-result" id="rr-analyse"><div class="refine-result-head"><span data-i18n="refine_result">🔄 Version réajustée</span><button class="btn btn-ghost btn-sm" onclick="copyOut('rrt-analyse','cp-ra')" id="cp-ra" data-i18n="copy">📋 Copier</button></div><div id="rrt-analyse"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /container tools -->
+</div><!-- /tools-section -->
+
+<!-- ===== FEATURES ===== -->
+<section class="features-section" id="features">
+  <div class="wide">
+    <div class="section-label" data-i18n="feat_label">Pourquoi Ecomercai</div>
+    <h2 class="section-h" style="color:var(--ink)" data-i18n="feat_h">Conçu pour les vendeurs,<br>pas les agences</h2>
+    <div class="features-grid">
+      <div class="feat-card"><div class="feat-ic">🌍</div><div class="feat-title" data-i18n="feat1_t">6 langues + champ libre</div><div class="feat-desc" data-i18n="feat1_d">Français, Anglais, Arabe, Darija, Espagnol + toute autre langue via champ libre. Générez pour n'importe quel marché.</div></div>
+      <div class="feat-card"><div class="feat-ic">📸</div><div class="feat-title" data-i18n="feat2_t">Vision IA intégrée</div><div class="feat-desc" data-i18n="feat2_d">Uploadez la photo de votre produit. L'IA l'analyse et génère un contenu hyper-personnalisé.</div></div>
+      <div class="feat-card"><div class="feat-ic">⚡</div><div class="feat-title" data-i18n="feat3_t">Résultat en 10 secondes</div><div class="feat-desc" data-i18n="feat3_d">Streaming temps réel. Le contenu s'affiche au fur et à mesure, comme ChatGPT.</div></div>
+      <div class="feat-card"><div class="feat-ic">🔄</div><div class="feat-title" data-i18n="feat4_t">Réajustement intelligent</div><div class="feat-desc" data-i18n="feat4_d">Pas satisfait ? Demandez une modification directement sous le résultat. L'IA comprend le contexte.</div></div>
+      <div class="feat-card"><div class="feat-ic">🎯</div><div class="feat-title" data-i18n="feat5_t">Media Buyer IA</div><div class="feat-desc" data-i18n="feat5_d">Vraie stratégie campagne avec phases de scaling, tests A/B et erreurs à éviter.</div></div>
+      <div class="feat-card"><div class="feat-ic">🔒</div><div class="feat-title" data-i18n="feat6_t">Confidentialité totale</div><div class="feat-desc" data-i18n="feat6_d">Vos données ne sont jamais stockées ni partagées. Chaque génération est traitée en temps réel et effacée immédiatement après.</div></div>
+    </div>
+    <div class="lang-strip">
+      <div class="lang-flags">
+        <span class="lang-flag-pill">🇫🇷 Français</span>
+        <span class="lang-flag-pill">🇬🇧 English</span>
+        <span class="lang-flag-pill">🇩🇿 Darija DZ</span>
+        <span class="lang-flag-pill">🇲🇦 Darija MA</span>
+        <span class="lang-flag-pill">🇸🇦 العربية</span>
+        <span class="lang-flag-pill">🇪🇸 Español</span>
+      </div>
+      <div class="lang-strip-txt">
+        <h4 data-i18n="langs_h">Un outil, tous vos marchés</h4>
+        <p data-i18n="langs_p">Du marché algérien aux États-Unis, générez dans la langue de votre audience.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS SECTION ===== -->
+<section class="stats-section">
+  <div class="wide">
+    <div class="stats-grid">
+      <div class="stat-big-card">
+        <div class="stat-big-num">500<span>+</span></div>
+        <div class="stat-big-label" data-i18n="stats_users">E-commerçants actifs</div>
+        <div class="stat-big-sub" data-i18n="stats_users_sub">De l'Algérie à la France</div>
+      </div>
+      <div class="stat-big-card">
+        <div class="stat-big-num">10K<span>+</span></div>
+        <div class="stat-big-label" data-i18n="stats_gen">Contenus générés</div>
+        <div class="stat-big-sub" data-i18n="stats_gen_sub">Landing pages, scripts, pubs</div>
+      </div>
+      <div class="stat-big-card">
+        <div class="stat-big-num">4.8<span>/5</span></div>
+        <div class="stat-big-label" data-i18n="stats_rating">Satisfaction client</div>
+        <div class="stat-big-sub">★★★★★</div>
+      </div>
+      <div class="stat-big-card">
+        <div class="stat-big-num">10<span>s</span></div>
+        <div class="stat-big-label" data-i18n="stats_speed">Temps de génération</div>
+        <div class="stat-big-sub" data-i18n="stats_speed_sub">Résultat en temps réel</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRICING ===== -->
+<section class="pricing-section" id="pricing">
+  <div class="wide">
+    <div style="text-align:center">
+      <div class="section-label" style="display:block;text-align:center;margin-bottom:10px" data-i18n="pricing_label">Tarification</div>
+      <h2 class="section-h" style="color:var(--ink);text-align:center" data-i18n="pricing_h">Commencez gratuitement.<br>Passez au Pro quand vous êtes prêt.</h2>
+      <p style="color:var(--ink3);margin-top:8px;font-size:14px" data-i18n="pricing_sub">Aucune carte bancaire requise pour l'essai gratuit.</p>
+      <div style="margin-top:20px">
+        <div class="billing-toggle">
+          <button class="btg-btn active" id="btg-monthly" onclick="setBilling('monthly')">Mensuel</button>
+          <button class="btg-btn" id="btg-annual" onclick="setBilling('annual')">Annuel <span class="btg-badge">-20%</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <span class="price-badge free" data-i18n="badge_free">Gratuit</span>
+        <div class="price-name" data-i18n="plan_free">Free</div>
+        <div class="price-amount">$0<span style="font-size:14px;font-weight:400;color:var(--ink3)">/mois</span></div>
+        <div class="price-period" data-i18n="free_period">Pour découvrir l'outil</div>
+        <div style="height:1px;background:var(--border);margin:16px 0"></div>
+        <div class="price-feats">
+          <div class="pf" data-i18n="f_free1">3 générations / jour</div>
+          <div class="pf" data-i18n="f_free2">Tous les outils IA</div>
+          <div class="pf" data-i18n="f_free3">Vision IA (photo produit)</div>
+          <div class="pf na" data-i18n="f_free4">Avec publicités</div>
+          <div class="pf na" data-i18n="f_free5">Support prioritaire</div>
+        </div>
+        <button class="price-btn outline-btn" onclick="document.getElementById('tools-section').scrollIntoView({behavior:'smooth'})" data-i18n="btn_free">Essayer maintenant</button>
+      </div>
+      <div class="price-card featured">
+        <div class="price-badge popular" data-i18n="badge_popular">⚡ Le plus populaire</div>
+        <span class="price-badge starter" style="margin-top:16px;display:inline-block">Starter</span>
+        <div class="price-name">Starter</div>
+        <div class="price-amount" id="main-price-starter">$4.99<span style="font-size:14px;font-weight:400;opacity:.5">/mois</span></div>
+        <div class="price-period" id="main-period-starter">Facturé mensuellement</div>
+        <div style="height:1px;background:rgba(255,255,255,.1);margin:16px 0"></div>
+        <div class="price-feats">
+          <div class="pf" data-i18n="f_s1">100 générations / mois</div>
+          <div class="pf" data-i18n="f_s2">Tous les outils IA</div>
+          <div class="pf" data-i18n="f_s3">Vision IA (photo produit)</div>
+          <div class="pf" data-i18n="f_s4">Sans publicités ✓</div>
+          <div class="pf na" data-i18n="f_s5" style="color:rgba(255,255,255,.3)">Support prioritaire</div>
+        </div>
+        <button class="price-btn gold-btn" id="main-btn-starter" onclick="showPaywall()">Démarrer — $4.99/mois</button>
+      </div>
+      <div class="price-card">
+        <span class="price-badge pro">Pro</span>
+        <div class="price-name">Pro</div>
+        <div class="price-amount" id="main-price-pro">$9.99<span style="font-size:14px;font-weight:400;color:var(--ink3)">/mois</span></div>
+        <div class="price-period" id="main-period-pro">Facturé mensuellement</div>
+        <div style="height:1px;background:var(--border);margin:16px 0"></div>
+        <div class="price-feats">
+          <div class="pf" data-i18n="f_p1">Générations illimitées</div>
+          <div class="pf" data-i18n="f_p2">Tous les outils IA</div>
+          <div class="pf" data-i18n="f_p3">Vision IA prioritaire ⚡</div>
+          <div class="pf" data-i18n="f_p4">Sans publicités ✓</div>
+          <div class="pf" data-i18n="f_p5">Support prioritaire ✓</div>
+        </div>
+        <button class="price-btn outline-btn" id="main-btn-pro" onclick="selectPlan('pro');showPaywall()">Passer au Pro</button>
+      </div>
+    </div>
+    <!-- GARANTIES -->
+    <div class="guarantee-bar">
+      <div class="guarantee-item">
+        <span class="guarantee-icon">✅</span>
+        <span data-i18n="g1">3 générations gratuites — aucune carte requise</span>
+      </div>
+      <div class="guarantee-sep">·</div>
+      <div class="guarantee-item">
+        <span class="guarantee-icon">🔄</span>
+        <span data-i18n="g2">Annulation en 1 clic — sans engagement</span>
+      </div>
+      <div class="guarantee-sep">·</div>
+      <div class="guarantee-item">
+        <span class="guarantee-icon">🔒</span>
+        <span data-i18n="g3">Paiement sécurisé via Stripe</span>
+      </div>
+      <div class="guarantee-sep">·</div>
+      <div class="guarantee-item">
+        <span class="guarantee-icon">📧</span>
+        <span data-i18n="g4">Support réactif 24-48h</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testi-section">
+  <div class="wide">
+    <div class="section-label" style="text-align:center;display:block;margin-bottom:10px" data-i18n="testi_label">Ce qu'ils disent</div>
+    <h2 class="section-h" style="color:var(--ink);text-align:center" data-i18n="testi_h">Adoptés par des e-commerçants<br>sur 3 continents</h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text" data-i18n="t1">"Je génère mes scripts TikTok en 15 secondes maintenant. Avant je passais 2h sur ChatGPT pour obtenir quelque chose d'utilisable."</div>
+        <div class="testi-author"><div class="testi-av">🇫🇷</div><div><div class="testi-name">Thomas M.</div><div class="testi-role">Dropshippeur · France</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text" data-i18n="t2">"L'analyseur produit m'a évité d'investir sur un produit perdant. Le rapport était plus précis que ce que je payais $49/mois ailleurs."</div>
+        <div class="testi-author"><div class="testi-av">🇨🇦</div><div><div class="testi-name">Sarah K.</div><div class="testi-role">E-commerce · Canada</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <div class="testi-text" data-i18n="t3">"La stratégie pub avec le scaling plan — j'ai copié-collé dans Meta Ads Manager. ROAS x2.4 sur la première campagne."</div>
+        <div class="testi-author"><div class="testi-av">🇩🇿</div><div><div class="testi-name">Karim B.</div><div class="testi-role">Media Buyer · Algérie</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="faq-section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:40px">
+      <div class="section-label" style="display:block;text-align:center;margin-bottom:10px" data-i18n="faq_label">FAQ</div>
+      <h2 class="section-h" style="color:var(--ink);text-align:center" data-i18n="faq_h">Questions fréquentes</h2>
+    </div>
+    <div class="faq-list" id="faq-list"></div>
+  </div>
+</section>
+
+<!-- ===== CTA BANNER ===== -->
+<div class="wide">
+  <div class="cta-banner">
+    <h2 data-i18n="cta_h">Prêt à générer votre premier contenu ?</h2>
+    <p data-i18n="cta_p">3 générations gratuites. Aucune carte bancaire. Résultats en 10 secondes.</p>
+    <div class="cta-btns">
+      <button class="btn btn-gold btn-lg" onclick="document.getElementById('tools-section').scrollIntoView({behavior:'smooth'})" data-i18n="cta_free_lg">⚡ Essayer gratuitement</button>
+      <a href="#pricing" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,.2)" data-i18n="cta_pricing">Voir les tarifs →</a>
+    </div>
+  </div>
+</div>
+
+<!-- blog supprimé -->
+<div style="display:none">
+      <!-- ARTICLE 1 -->
+      <article class="blog-card">
+        <div class="blog-tag">Landing Page</div>
+        <h3 class="blog-title">Comment créer une landing page produit qui convertit en 2026</h3>
+        <div class="blog-body">
+          <p>Une landing page efficace est la pierre angulaire de tout business e-commerce rentable. Sans une page produit optimisée, même le meilleur produit du monde ne se vendra pas. En 2026, avec la saturation des marchés en ligne, il est devenu indispensable de se démarquer dès les premières secondes.</p>
+          <p><strong>Les éléments clés d'une landing page qui convertit :</strong></p>
+          <p><strong>1. Un titre accrocheur en moins de 7 mots.</strong> Votre titre doit répondre immédiatement à la question : "Qu'est-ce que ce produit va changer dans ma vie ?" Évitez les titres génériques et préférez des formulations orientées bénéfice. Exemple : "Brosse ionique — cheveux lisses en 3 minutes".</p>
+          <p><strong>2. Des visuels de haute qualité.</strong> Les images sont le premier point de contact émotionnel avec le visiteur. Utilisez au minimum 4-5 photos du produit sous différents angles, avec des photos lifestyle montrant le produit en situation d'utilisation réelle. Les vidéos courtes (15-30 secondes) augmentent le taux de conversion de 80%.</p>
+          <p><strong>3. La preuve sociale.</strong> 92% des consommateurs lisent les avis avant d'acheter. Intégrez au minimum 5 avis clients vérifiés avec photos, des témoignages vidéo si possible, et un compteur du nombre de clients satisfaits.</p>
+          <p><strong>4. Un CTA irrésistible.</strong> Le bouton d'achat doit être visible sans scroll (above the fold), utiliser des couleurs contrastées et un texte orienté action : "Obtenir le mien maintenant", "Commander avec livraison rapide".</p>
+          <p><strong>5. L'urgence et la rareté.</strong> Un compte à rebours ("Offre valable jusqu'à minuit"), un stock limité ("Plus que 12 en stock"), ou une promotion exclusive ("Livraison gratuite aujourd'hui seulement") augmentent significativement les conversions.</p>
+          <p>Avec l'outil Landing Page d'Ecomercai, générez un prompt ultra-détaillé pour créer votre page en quelques secondes avec Midjourney ou Nano Banana Pro.</p>
+        </div>
+        <div class="blog-meta"><span>🕐 5 min</span><span>· Guide pratique</span></div>
+      </article>
+
+      <!-- ARTICLE 2 -->
+      <article class="blog-card">
+        <div class="blog-tag">Publicité Facebook</div>
+        <h3 class="blog-title">Les 5 erreurs fatales en publicité Facebook que tout dropshippeur doit éviter</h3>
+        <div class="blog-body">
+          <p>Facebook Ads reste en 2026 l'une des plateformes publicitaires les plus puissantes pour le dropshipping. Cependant, de nombreux e-commerçants brûlent leur budget sans résultats à cause d'erreurs récurrentes et évitables.</p>
+          <p><strong>Erreur #1 : Un ciblage trop large ou trop restreint.</strong> Beaucoup de débutants ciblent des audiences de 50 millions de personnes en pensant que "plus c'est large, mieux c'est". C'est faux. Une audience entre 500 000 et 2 millions de personnes est idéale pour commencer. Utilisez les intérêts comportementaux et les audiences lookalike basées sur vos clients existants.</p>
+          <p><strong>Erreur #2 : Négliger le hook des premières 3 secondes.</strong> Sur Facebook et Instagram, vous avez 3 secondes pour retenir l'attention. Si votre vidéo ou image ne choque pas, ne surprend pas ou n'intrigue pas immédiatement, l'utilisateur scrolle. Testez au minimum 3 hooks différents pour chaque campagne.</p>
+          <p><strong>Erreur #3 : Arrêter trop vite les campagnes.</strong> Facebook a besoin de données pour optimiser. L'algorithme entre dans une "phase d'apprentissage" qui dure généralement 50 conversions ou 7 jours. Arrêter une campagne avant ce délai est une erreur critique. Laissez tourner même si les premiers résultats semblent décevants.</p>
+          <p><strong>Erreur #4 : Ignorer le retargeting.</strong> 98% des visiteurs n'achètent pas à la première visite. Une campagne de retargeting ciblant les visiteurs de votre page produit peut multiplier votre ROAS par 3 à 5. Configurez votre pixel Facebook dès le premier jour.</p>
+          <p><strong>Erreur #5 : Mauvaise lecture des métriques.</strong> Ne vous focalisez pas uniquement sur le coût par clic (CPC). Les métriques importantes sont : ROAS (retour sur investissement publicitaire), CPP (coût par achat), taux de conversion et valeur panier moyen.</p>
+          <p>L'outil Publicité d'Ecomercai génère une stratégie complète avec hooks, copies, structure de campagne et plan de scaling — comme un vrai Media Buyer avec 10 ans d'expérience.</p>
+        </div>
+        <div class="blog-meta"><span>🕐 6 min</span><span>· Guide pratique</span></div>
+      </article>
+
+      <!-- ARTICLE 3 -->
+      <article class="blog-card">
+        <div class="blog-tag">Produit Gagnant</div>
+        <h3 class="blog-title">Comment trouver un produit gagnant en dropshipping — méthode complète 2026</h3>
+        <div class="blog-body">
+          <p>Le choix du produit est la décision la plus importante en dropshipping. 80% des échecs viennent d'un mauvais choix de produit. En 2026, avec des millions de vendeurs en ligne, il est crucial d'utiliser une méthode structurée pour identifier les vraies opportunités.</p>
+          <p><strong>Les critères d'un produit gagnant :</strong></p>
+          <p><strong>1. La marge brute minimale de 3x.</strong> Si vous achetez un produit à 10€, vous devez pouvoir le vendre à minimum 30€. Cette règle des "3x" assure que vous pouvez couvrir vos frais publicitaires (environ 30% du prix de vente), les frais de livraison, les retours et dégager un bénéfice net.</p>
+          <p><strong>2. Un problème réel à résoudre.</strong> Les meilleurs produits dropshipping résolvent un problème quotidien. Demandez-vous : "Est-ce que quelqu'un se lève le matin en pensant à ce problème ?" Plus le problème est douloureux et fréquent, plus le produit se vendra facilement.</p>
+          <p><strong>3. Le potentiel de contenu vidéo.</strong> En 2026, TikTok et Instagram Reels sont des canaux incontournables. Votre produit doit être démontrable en vidéo de manière impressionnante. Les produits avec un effet "wow" visible — transformation, résultat immédiat, gadget ingénieux — sont idéaux.</p>
+          <p><strong>4. La concurrence gérable.</strong> Vérifiez le nombre de vendeurs sur Amazon, eBay et les boutiques Shopify. Une concurrence modérée (10-50 vendeurs actifs) indique une demande réelle sans saturation totale.</p>
+          <p><strong>5. Les tendances et la saisonnalité.</strong> Utilisez Google Trends pour vérifier l'évolution de la demande sur 12 mois. Évitez les produits en déclin et préférez ceux en croissance stable ou saisonnière prévisible.</p>
+          <p>L'outil Analyseur de Produit d'Ecomercai évalue automatiquement ces 5 critères et vous donne un score sur 100 avec des recommandations personnalisées.</p>
+        </div>
+        <div class="blog-meta"><span>🕐 7 min</span><span>· Guide pratique</span></div>
+      </article>
+
+      <!-- ARTICLE 4 -->
+      <article class="blog-card">
+        <div class="blog-tag">TikTok Ads</div>
+        <h3 class="blog-title">TikTok Ads pour le dropshipping : guide complet pour débuter en 2026</h3>
+        <div class="blog-body">
+          <p>TikTok est devenu en quelques années la plateforme publicitaire la plus rentable pour le dropshipping, surpassant parfois Facebook en termes de coût par acquisition. Avec plus d'1 milliard d'utilisateurs actifs, TikTok offre des opportunités uniques pour les e-commerçants.</p>
+          <p><strong>Pourquoi TikTok Ads en 2026 ?</strong></p>
+          <p>Le CPM (coût pour mille impressions) sur TikTok est en moyenne 2 à 3 fois moins cher que sur Facebook. L'algorithme de TikTok est également plus démocratique — même avec un petit budget, votre publicité peut atteindre des millions de personnes si le contenu est engageant.</p>
+          <p><strong>La structure d'une campagne TikTok Ads réussie :</strong></p>
+          <p><strong>Phase 1 — Le testing (budget : 20-30€/jour).</strong> Lancez 3 à 5 groupes d'annonces avec des ciblages différents. Testez des audiences larges (pas de ciblage spécifique) versus des audiences basées sur les intérêts. TikTok est fort pour trouver votre audience automatiquement.</p>
+          <p><strong>Phase 2 — L'optimisation (budget : 50-100€/jour).</strong> Identifiez les créatifs et audiences qui performent le mieux. Coupez ce qui ne fonctionne pas et augmentez le budget sur les gagnants progressivement (+20% tous les 3 jours maximum).</p>
+          <p><strong>Phase 3 — Le scaling (budget : 200€+/jour).</strong> Dupliquez les campagnes gagnantes avec des budgets plus élevés. Créez des lookalike audiences basées sur vos acheteurs. Testez constamment de nouveaux créatifs pour éviter la fatigue publicitaire.</p>
+          <p><strong>Le format idéal :</strong> Vidéo verticale 9:16, durée 15-30 secondes, sous-titres obligatoires, hook dans les 2 premières secondes, musique tendance. L'outil Voix Off d'Ecomercai génère des scripts optimisés pour TikTok avec timing précis.</p>
+        </div>
+        <div class="blog-meta"><span>🕐 6 min</span><span>· Guide pratique</span></div>
+      </article>
+
+      <!-- ARTICLE 5 -->
+      <article class="blog-card">
+        <div class="blog-tag">E-commerce</div>
+        <h3 class="blog-title">Dropshipping en Algérie : opportunités, défis et stratégies pour réussir</h3>
+        <div class="blog-body">
+          <p>Le marché algérien du e-commerce connaît une croissance explosive. Avec plus de 20 millions d'internautes et une population jeune et connectée, l'Algérie représente une opportunité immense pour les dropshippeurs locaux et internationaux.</p>
+          <p><strong>Les spécificités du marché algérien :</strong></p>
+          <p><strong>Le paiement à la livraison (COD) domine.</strong> Plus de 90% des achats en ligne en Algérie se font en cash à la livraison. Cette réalité impose une stratégie spécifique : taux de retour plus élevé (20-30%), nécessité de confirmer les commandes par téléphone, et gestion rigoureuse de la logistique.</p>
+          <p><strong>Les niches qui performent en Algérie :</strong> Beauté et soin (crèmes, appareils capillaires), électronique et gadgets, sport et fitness, produits pour bébés et enfants, vêtements et accessoires de mode. Les produits résolvant des problèmes quotidiens des ménages algériens ont un taux de conversion particulièrement élevé.</p>
+          <p><strong>La logistique :</strong> Plusieurs transporteurs opèrent en Algérie — Yalidine, Zr Express, Procolis. Les délais de livraison varient de 24h à 72h selon la wilaya. Les frais de livraison moyens sont de 400 à 600 DZD pour les wilayas du nord, plus pour le sud.</p>
+          <p><strong>Les plateformes de vente :</strong> En plus de votre propre boutique Shopify, utilisez Ouedkniss et les groupes Facebook locaux pour toucher une audience plus large. Instagram et TikTok sont également très populaires en Algérie.</p>
+          <p><strong>La communication :</strong> La Darija algérienne authentique convertit mieux que l'arabe classique ou le français pour le marché local. Un ton chaleureux, des expressions locales et une communication directe rassurent les acheteurs algériens.</p>
+          <p>Ecomercai supporte la Darija algérienne nativement — générez vos contenus directement dans la langue de vos clients.</p>
+        </div>
+        <div class="blog-meta"><span>🕐 6 min</span><span>· Guide pratique</span></div>
+      </article>
+
+      <!-- ARTICLE 6 -->
+      <article class="blog-card">
+        <div class="blog-tag">Intelligence Artificielle</div>
+        <h3 class="blog-title">Comment l'IA révolutionne le e-commerce en 2026 — et comment en profiter</h3>
+        <div class="blog-body">
+          <p>L'intelligence artificielle a transformé radicalement le monde du e-commerce en 2026. Les vendeurs qui utilisent l'IA dans leur workflow sont en moyenne 3 fois plus productifs et réalisent des marges plus élevées que ceux qui travaillent encore manuellement.</p>
+          <p><strong>Les domaines où l'IA change la donne :</strong></p>
+          <p><strong>1. La création de contenu.</strong> Rédiger des fiches produits, des scripts publicitaires, des emails marketing — tout cela prenait des heures. Aujourd'hui, avec des outils comme Ecomercai, un e-commerçant peut générer en quelques secondes un contenu de qualité professionnelle, personnalisé pour son produit et son audience cible.</p>
+          <p><strong>2. L'analyse de marché.</strong> L'IA peut analyser des milliers de données de marché pour évaluer le potentiel d'un produit : tendances de recherche, analyse de la concurrence, estimation des marges, prévision de la demande. Ce travail prenait auparavant plusieurs jours à un analyste humain.</p>
+          <p><strong>3. La génération d'images et vidéos.</strong> Les outils comme Midjourney, DALL-E et Flux permettent de créer des visuels produits professionnels sans photographe. Les landing pages générées par IA sont souvent impossibles à distinguer de celles créées par des designers humains.</p>
+          <p><strong>4. L'optimisation publicitaire.</strong> Les algorithmes publicitaires de Facebook, TikTok et Google utilisent l'IA pour optimiser automatiquement vos campagnes. En fournissant à ces algorithmes des créatifs de qualité et un pixel bien entraîné, vous laissez l'IA faire le travail d'optimisation à votre place.</p>
+          <p><strong>Comment commencer à utiliser l'IA dans votre business e-commerce :</strong></p>
+          <p>Commencez par les tâches répétitives et chronophages — la création de contenu, les descriptions produits, les scripts vidéo. Ensuite, intégrez l'IA dans votre processus de recherche de produits et d'analyse de marché. Enfin, utilisez l'IA pour personnaliser votre communication avec vos clients.</p>
+          <p>Ecomercai centralise 4 outils IA essentiels pour les e-commerçants — landing page, voix off, publicité et analyse produit — dans une seule plateforme simple et accessible.</p>
+        </div>
+        <div class="blog-meta"><span>🕐 8 min</span><span>· Guide pratique</span></div>
+      </article>
+
+</div>
+
+<!-- ===== FOOTER ACCORDION ===== -->
+<div class="container">
+  <div class="footer-acc" id="footer-acc">
+    <div class="acc-item">
+      <div class="acc-toggle" onclick="toggleAcc('about')"><span class="acc-title" id="at-about">📌 À propos</span><span class="acc-icon" id="ai-about">+</span></div>
+      <div class="acc-body" id="ab-about"><div id="ac-about"></div></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-toggle" onclick="toggleAcc('cgu')"><span class="acc-title" id="at-cgu">📄 CGU</span><span class="acc-icon" id="ai-cgu">+</span></div>
+      <div class="acc-body" id="ab-cgu"><div id="ac-cgu"></div></div>
+    </div>
+    <div class="acc-item">
+      <div class="acc-toggle" onclick="toggleAcc('contact')"><span class="acc-title" id="at-contact">✉️ Contact</span><span class="acc-icon" id="ai-contact">+</span></div>
+      <div class="acc-body" id="ab-contact"><div id="ac-contact"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <div class="footer-links">
+      <a href="#" onclick="openAcc('about');return false" id="fl-about">À propos</a>
+      <a href="#" onclick="openAcc('cgu');return false"   id="fl-cgu">CGU</a>
+      <a href="#" onclick="openAcc('contact');return false" id="fl-contact">Contact</a>
+    </div>
+    <p>© 2026 <strong style="color:var(--ink)">Ecomercai</strong></p>
+  </div>
+</footer>
+
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+'use strict';
+// ── CONFIG ──────────────────────────────────────────────────
+const WORKER = 'https://api.ecomercai.com';
+const API    = WORKER + '/api/generate';
+const MODEL  = 'claude-sonnet-4-20250514';
+
+// ── STATE ────────────────────────────────────────────────────
+let subToken       = localStorage.getItem('ecomercai_token') || '';
+let subPlan        = null; // 'starter' | 'pro' | null
+let emailRegistered = false;
+let cfg            = { paywallActive:false, freeLimit:1, emailLimit:3, starterLimit:100, priceStarter:4.99, pricePro:9.99 };
+
+// Injecte les limites réelles dans les textes : {N} = gratuit/jour, {S} = Starter/mois
+// Gère aussi le singulier/pluriel quand N = 1
+const dyn = s => {
+  const n = cfg.freeLimit, st = cfg.starterLimit || 100;
+  return String(s)
+    // Formes longues d'abord (accord complet), puis formes courtes
+    .replace(/\{N\} générations gratuites/g, n > 1 ? n + ' générations gratuites' : '1 génération gratuite')
+    .replace(/\{N\} générations/g,           n > 1 ? n + ' générations' : '1 génération')
+    .replace(/\{N\} free generations/g,      n > 1 ? n + ' free generations' : '1 free generation')
+    .replace(/\{N\} generations/g,           n > 1 ? n + ' generations' : '1 generation')
+    .replace(/\{N\} توليدات مجانية/g,        n > 1 ? n + ' توليدات مجانية' : 'توليد مجاني واحد')
+    .replace(/\{N\} توليدات/g,               n > 1 ? n + ' توليدات' : 'توليد واحد')
+    .replace(/\{N\}/g, n)
+    .replace(/\{S\}/g, st);
+};
+let selPlan   = 'starter';
+let _billing  = 'monthly';
+let imgs      = { voix:null, pub:null, analyse:null };
+let origOut   = {};
+let lang      = 'fr';
+let fpId      = null;
+let intTimer  = null;
+let genDone       = false;
+let _isGenerating = false;
+window.addEventListener('beforeunload', e => {
+  if (_isGenerating) { e.preventDefault(); e.returnValue = ''; }
+});
+
+// ── INIT ─────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  initTheme();
+  buildUploaders();
+  applyT();
+  buildGuides();
+  buildFAQ();
+  translateSelects();
+  translatePH();
+  buildFooterContent();
+  loadCfg();
+  captureRefParam();
+  checkVerifyParam();
+  checkTokenParam();
+  checkStripeReturn();
+  updateQuota();
+  updateSubscriberUI();
+  initFP();
+  initCharCounters();
+});
+
+// ── GO TO TOOLS — scroll + activate tab 1 ────────────────────
+function goToTools() {
+  switchTab('landing');
+  const el = document.getElementById('tools-section');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Open guide automatically to help new users
+  setTimeout(() => {
+    const gb = document.getElementById('gb-lp');
+    const ga = document.getElementById('ga-lp');
+    if (gb && !gb.classList.contains('open')) {
+      gb.classList.add('open');
+      if (ga) ga.classList.add('open');
+    }
+  }, 600);
+}
+
+// ── LANG OTHER (Landing Page) ────────────────────────────────
+function checkLangOther() {
+  const s = document.getElementById('lp-lang');
+  const i = document.getElementById('lp-lang-other');
+  if (!s || !i) return;
+  i.classList.toggle('hidden', s.value !== '__other__');
+  if (s.value === '__other__') i.focus();
+}
+
+function getLangValue() {
+  const s = document.getElementById('lp-lang');
+  const i = document.getElementById('lp-lang-other');
+  if (s.value === '__other__') return i?.value.trim() || 'Custom language';
+  return s.value;
+}
+
+// ── MARKET OTHER (Analyse) ────────────────────────────────────
+function checkMarketOther() {
+  const s = document.getElementById('an-market');
+  const i = document.getElementById('an-market-other');
+  if (!s || !i) return;
+  const isOther = s.value === '__other__';
+  i.classList.toggle('hidden', !isOther);
+  if (isOther) i.focus();
+  // Reset DZ badge
+  const b = document.getElementById('dz-an');
+  if (b) b.classList.toggle('show', s.value === 'dz' || s.value.includes('Algérie'));
+}
+
+function getMarketValue() {
+  const s = document.getElementById('an-market');
+  const i = document.getElementById('an-market-other');
+  if (s.value === '__other__') return i?.value.trim() || 'Other market';
+  return s.value;
+}
+
+// ── FINGERPRINT ──────────────────────────────────────────────
+async function initFP() {
+  try {
+    // Charger le script à la demande — il ne bloque plus le rendu initial
+    if (!window.FingerprintJS) {
+      await new Promise((ok, ko) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.min.js';
+        s.onload = ok; s.onerror = ko;
+        document.head.appendChild(s);
+      });
+    }
+    const fp = await FingerprintJS.load();
+    const r  = await fp.get();
+    fpId     = r.visitorId;
+  } catch { fpId = null; }
+  await syncQuota(); // toujours synchroniser, même si le fingerprint échoue
+}
+
+async function syncQuota() {
+  try {
+    const p   = fpId ? `?fp=${encodeURIComponent(fpId)}` : '';
+    const res = await fetch(WORKER + '/api/check-quota' + p, { headers:{'x-token':subToken||''} });
+    if (!res.ok) return;
+    const d = await res.json();
+    subPlan = d.plan || null;
+    if (!d.subscriber) {
+      cfg.freeLimit = d.limit;
+      if (d.emailRegistered !== undefined) emailRegistered = d.emailRegistered;
+    }
+    if (d.paywallActive !== undefined) cfg.paywallActive = d.paywallActive;
+    updateQuotaValues(d.used, d.limit, d.subscriber, d.plan);
+    updateEmailRegUI();
+  } catch {}
+}
+
+// ── THEME ────────────────────────────────────────────────────
+function initTheme() {
+  const saved = localStorage.getItem('ecomercai_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', saved);
+  const b = document.getElementById('theme-btn');
+  if (b) b.textContent = saved === 'dark' ? '☀️' : '🌙';
+}
+
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const nt = isDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', nt);
+  localStorage.setItem('ecomercai_theme', nt);
+  document.getElementById('theme-btn').textContent = nt === 'dark' ? '☀️' : '🌙';
+}
+
+// ── CONFIG FROM WORKER ───────────────────────────────────────
+async function loadCfg() {
+  try {
+    const r = await fetch(WORKER + '/api/config');
+    if (r.ok) { cfg = await r.json(); updatePaywallPrices(); applyT(); buildFAQ(); }
+  } catch {}
+}
+
+// ── QUOTA ────────────────────────────────────────────────────
+function getLocalCount() {
+  const d = JSON.parse(localStorage.getItem('ecomercai_usage') || '{"c":0,"dt":""}');
+  return d.dt === new Date().toDateString() ? d.c : 0;
+}
+function incrLocal() {
+  const td = new Date().toDateString();
+  const d  = JSON.parse(localStorage.getItem('ecomercai_usage') || '{"c":0,"dt":""}');
+  const c  = d.dt === td ? d.c + 1 : 1;
+  localStorage.setItem('ecomercai_usage', JSON.stringify({c, dt:td}));
+  return c;
+}
+function updateQuota() {
+  if (!cfg.paywallActive || subToken) { document.getElementById('quota-wrap').classList.remove('show'); return; }
+  const used = getLocalCount();
+  updateQuotaValues(used, cfg.freeLimit, false);
+}
+function updateQuotaValues(used, limit, isSubscriber, plan) {
+  const isStarter = isSubscriber && plan === 'starter';
+  // Masquer pour : abonnés Pro, ou gratuits sans paywall actif
+  if ((isSubscriber && !isStarter) || (!isSubscriber && !cfg.paywallActive)) {
+    document.getElementById('quota-wrap').classList.remove('show'); return;
+  }
+  // Libellé : mensuel pour Starter, journalier pour gratuit
+  const lbl = document.querySelector('.quota-lbl');
+  if (lbl) {
+    const t = T[lang] || T.fr;
+    lbl.textContent = isStarter ? (t.quota_lbl_starter || 'Générations restantes ce mois (Starter)') : (t.quota_lbl || lbl.textContent);
+  }
+  const rem = Math.max(0, limit - used);
+  const pct = Math.min(100, (used/limit)*100);
+  const cls = used >= limit ? 'full' : used >= limit*0.6 ? 'warn' : 'ok';
+  const qw = document.getElementById('quota-wrap');
+  qw.classList.add('show');
+  document.getElementById('quota-fill').style.width = pct + '%';
+  document.getElementById('quota-fill').className = 'quota-fill qf-' + cls;
+  document.getElementById('quota-count').textContent = `${rem} / ${limit}`;
+  document.getElementById('quota-count').className = 'qc ' + cls;
+}
+function checkQuota() {
+  if (subToken) return true;
+  if (!cfg.paywallActive) return true;
+  if (getLocalCount() >= cfg.freeLimit) { showPaywall(); return false; }
+  return true;
+}
+
+// ── PAYWALL ──────────────────────────────────────────────────
+function updateEmailRegUI() {
+  const sec = document.getElementById('pw-free-section');
+  if (!sec) return;
+  if (!subToken && !emailRegistered) sec.classList.remove('hidden');
+  else sec.classList.add('hidden');
+}
+async function registerFreeEmail() {
+  const t    = T[lang] || T['fr'];
+  const inp  = document.getElementById('pw-free-email');
+  const email = (inp?.value || '').trim();
+  if (!email) return;
+  const btn = inp?.nextElementSibling;
+  if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
+  try {
+    const res = await fetch(WORKER + '/api/register-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, fpId: fpId || null })
+    });
+    const d = await res.json();
+    if (res.status === 400 && d.error === 'disposable_email') {
+      alert(t.free_email_disposable || '❌ Email temporaire non accepté.');
+    } else if (res.status === 429) {
+      alert(t.free_email_limit || '⚠️ Limite atteinte pour cet appareil.');
+    } else if (d.success) {
+      closePaywall();
+      alert(t.free_email_pending || '📩 Email envoyé ! Cliquez sur le lien dans votre boîte pour activer 3 générations/jour.');
+    } else {
+      alert(t.free_email_invalid || '❌ Email invalide.');
+    }
+  } catch { alert('❌ Erreur réseau.'); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = t.free_email_btn || 'Continuer →'; } }
+}
+function showPaywall() {
+  document.getElementById('paywall-overlay').classList.remove('hidden');
+  updateEmailRegUI();
+}
+function closePaywall() { document.getElementById('paywall-overlay').classList.add('hidden'); }
+function selectPlan(p) {
+  selPlan = p;
+  document.getElementById('pw-starter').classList.toggle('active', p==='starter');
+  document.getElementById('pw-pro').classList.toggle('active', p==='pro');
+}
+function updatePaywallPrices() {
+  const s  = document.getElementById('pw-p-starter');
+  const pr = document.getElementById('pw-p-pro');
+  if (_billing === 'annual') {
+    if (s)  s.innerHTML  = `$3.99<span>/mois</span>`;
+    if (pr) pr.innerHTML = `$7.99<span>/mois</span>`;
+  } else {
+    if (s)  s.innerHTML  = `$${cfg.priceStarter}<span>/mois</span>`;
+    if (pr) pr.innerHTML = `$${cfg.pricePro}<span>/mois</span>`;
+  }
+}
+function setBilling(mode) {
+  _billing = mode;
+  const isAnnual = mode === 'annual';
+  document.getElementById('btg-monthly').classList.toggle('active', !isAnnual);
+  document.getElementById('btg-annual').classList.toggle('active', isAnnual);
+  // Pricing cards
+  const ps = document.getElementById('main-price-starter');
+  const pp = document.getElementById('main-price-pro');
+  const pds = document.getElementById('main-period-starter');
+  const pdp = document.getElementById('main-period-pro');
+  const bs  = document.getElementById('main-btn-starter');
+  const bp  = document.getElementById('main-btn-pro');
+  if (isAnnual) {
+    if (ps)  ps.innerHTML  = `$3.99<span style="font-size:14px;font-weight:400;opacity:.5">/mois</span>`;
+    if (pp)  pp.innerHTML  = `$7.99<span style="font-size:14px;font-weight:400;color:var(--ink3)">/mois</span>`;
+    if (pds) pds.textContent = 'Facturé annuellement — $47.88/an';
+    if (pdp) pdp.textContent = 'Facturé annuellement — $95.88/an';
+    if (bs)  bs.textContent  = 'Démarrer — $3.99/mois';
+    if (bp)  bp.textContent  = 'Passer au Pro — $7.99/mois';
+  } else {
+    if (ps)  ps.innerHTML  = `$4.99<span style="font-size:14px;font-weight:400;opacity:.5">/mois</span>`;
+    if (pp)  pp.innerHTML  = `$9.99<span style="font-size:14px;font-weight:400;color:var(--ink3)">/mois</span>`;
+    if (pds) pds.textContent = 'Facturé mensuellement';
+    if (pdp) pdp.textContent = 'Facturé mensuellement';
+    if (bs)  bs.textContent  = 'Démarrer — $4.99/mois';
+    if (bp)  bp.textContent  = 'Passer au Pro';
+  }
+  // Paywall modal sync
+  updatePaywallPrices();
+}
+async function startCheckout() {
+  const email = document.getElementById('pw-email').value.trim();
+  const btn   = document.getElementById('pw-pay-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const r = await fetch(WORKER + '/api/create-checkout', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ plan:selPlan, email, billing:_billing, refCode: localStorage.getItem('_eai_ref') || null })
+    });
+    const d = await r.json();
+    if (d.url) window.location.href = d.url;
+    else throw new Error(d.error || 'Erreur Stripe');
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = T[lang]?.pw_btn || '💳 Payer avec Stripe →';
+    alert('Erreur: ' + e.message);
+  }
+}
+// ── RÉCUPÉRATION D'ACCÈS ─────────────────────────────────────
+async function recoverAccess() {
+  const t = T[lang] || T.fr;
+  const email = prompt(t.recover_prompt || 'Entrez l\'email utilisé lors de votre abonnement :');
+  if (!email || !email.trim()) return;
+  try {
+    await fetch(WORKER + '/api/recover-token', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.trim() })
+    });
+  } catch {}
+  alert(t.recover_sent || '📩 Si cet email correspond à un abonnement actif, vous recevrez un lien d\'accès dans quelques instants.');
+}
+
+// Token reçu par email : https://ecomercai.com/?token=XXX → activation auto
+async function checkVerifyParam() {
+  const p     = new URLSearchParams(window.location.search);
+  const token = p.get('verify');
+  if (!token || !/^[a-f0-9]{32,128}$/.test(token)) return;
+  window.history.replaceState({}, '', window.location.pathname);
+  try {
+    const res = await fetch(WORKER + '/api/verify-free-email?token=' + token);
+    const d   = await res.json();
+    if (d.success) {
+      emailRegistered = true;
+      await syncQuota();
+      alert('✅ ' + (T[lang]?.free_email_success || 'Accès étendu ! Vous avez maintenant 3 générations/jour.'));
+    } else {
+      alert('❌ ' + (T[lang]?.verify_expired || 'Lien expiré ou invalide. Recommencez depuis le site.'));
+    }
+  } catch {}
+}
+function captureRefParam() {
+  const ref = new URLSearchParams(window.location.search).get('ref');
+  if (ref && /^[a-f0-9]{10}$/.test(ref)) localStorage.setItem('_eai_ref', ref);
+}
+function checkTokenParam() {
+  const p  = new URLSearchParams(window.location.search);
+  const tk = p.get('token');
+  if (!tk || !/^[a-f0-9]{32,128}$/.test(tk)) return;
+  window.history.replaceState({}, '', window.location.pathname);
+  subToken = tk;
+  localStorage.setItem('ecomercai_token', tk);
+  alert('🎉 ' + (T[lang]?.welcome || 'Abonnement activé ! Générations illimitées.'));
+}
+
+async function checkStripeReturn() {
+  const p = new URLSearchParams(window.location.search);
+  const s = p.get('session_id');
+  if (!s) return;
+  window.history.replaceState({}, '', window.location.pathname);
+  try {
+    const r = await fetch(WORKER + '/api/verify-session', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({sessionId:s}) });
+    const d = await r.json();
+    if (d.token) {
+      subToken = d.token;
+      localStorage.setItem('ecomercai_token', d.token);
+      localStorage.removeItem('_eai_ref');
+      alert('🎉 ' + (T[lang]?.welcome || 'Abonnement activé ! Générations illimitées.'));
+    }
+  } catch {}
+}
+
+// ── INTERSTITIAL ─────────────────────────────────────────────
+function showInt(msg) {
+  const el  = document.getElementById('interstitial');
+  const t   = T[lang] || T.fr;
+  const cb  = document.getElementById('int-close');
+  // Recréer le compteur — il est détruit par cb.innerHTML en fin de countdown précédent
+  cb.innerHTML = `${(t.close_btn || 'Fermer ×').replace(' ×','').replace('×','')} (<span id="int-cd">5</span>s)`;
+  const cd  = document.getElementById('int-cd');
+  const tip = document.getElementById('int-tip');
+  const cnt = document.getElementById('int-counter');
+  const ups = document.getElementById('int-upsell');
+  const mg  = document.getElementById('int-msg');
+  if (mg && msg)  mg.textContent = msg;
+  if (cnt) {
+    if (subToken) { cnt.textContent = t.sub_badge||'⭐ Pro'; cnt.style.color='var(--green)'; }
+    else {
+      const used = getLocalCount(); const lim = cfg.freeLimit;
+      cnt.textContent = `${used}/${lim} ${t.gen_used||'gen'}`;
+      cnt.style.color = used >= lim-1 ? 'var(--red)' : 'var(--ink3)';
+    }
+  }
+  if (ups) {
+    ups.style.display = subToken ? 'none' : 'flex';
+    if (!subToken) {
+      const rem = Math.max(0, cfg.freeLimit - getLocalCount());
+      const ut = ups.querySelector('[data-i18n="upsell_title"]');
+      if (ut && rem <= 1) ut.textContent = t.upsell_last || '⚠️ Dernière génération gratuite !';
+    }
+  }
+  cb.disabled = true; genDone = false; el.classList.remove('hidden');
+  if (tip) tip.textContent = t.generating || '⚡ Génération en cours...';
+  clearInterval(intTimer); // stopper un éventuel countdown précédent
+  let c = 5; if (cd) cd.textContent = c;
+  intTimer = setInterval(() => {
+    c--; if (cd) cd.textContent = Math.max(0,c);
+    if (c <= 0) {
+      clearInterval(intTimer);
+      cb.disabled = false;
+      cb.innerHTML = t.close_btn || 'Fermer ×';
+      if (tip) tip.textContent = t.ready || '✅ Contenu prêt !';
+      if (genDone) hideInt();
+    }
+  }, 1000);
+}
+function hideInt() {
+  genDone = true;
+  const cb = document.getElementById('int-close');
+  if (!cb.disabled) { document.getElementById('interstitial').classList.add('hidden'); clearInterval(intTimer); }
+}
+function closeIntManual() { document.getElementById('interstitial').classList.add('hidden'); clearInterval(intTimer); }
+
+// ── IMAGE UPLOADERS ──────────────────────────────────────────
+function buildUploaders() {
+  ['voix','pub','analyse'].forEach(tool => {
+    const c = document.getElementById('ua-' + tool);
+    if (!c) return;
+    c.innerHTML = `<div class="upload-area" id="ua-div-${tool}" onclick="document.getElementById('uf-${tool}').click()">
+      <input type="file" id="uf-${tool}" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none" onchange="handleImg(this,'${tool}')">
+      <div class="upload-ph" id="uph-${tool}"><div class="uic">📷</div><span data-i18n="upload_hint">Cliquez pour uploader une photo</span><span style="font-size:11px;color:var(--ink3)">JPG, PNG, WEBP — Max 5MB</span></div>
+      <div class="upload-preview hidden" id="upv-${tool}"><img class="preview-img" id="upi-${tool}" alt="preview"><div class="img-info"><div class="img-name" id="upn-${tool}"></div><div class="img-meta" id="upm-${tool}"></div><div class="vision-badge">👁️ Vision IA</div></div></div>
+    </div>`;
+  });
+}
+function handleImg(input, tool) {
+  const f = input.files[0];
+  if (!f) return;
+  if (f.size > 5*1024*1024) { alert('Max 5MB'); return; }
+  if (!['image/jpeg','image/png','image/webp','image/gif'].includes(f.type)) { alert('JPG, PNG, WEBP, GIF only'); return; }
+  const r = new FileReader();
+  r.onload = e => {
+    imgs[tool] = { base64: e.target.result.split(',')[1], mediaType: f.type };
+    document.getElementById('upi-' + tool).src = e.target.result;
+    document.getElementById('upn-' + tool).textContent = f.name;
+    document.getElementById('upm-' + tool).textContent = `${(f.size/1024).toFixed(0)} KB`;
+    document.getElementById('uph-' + tool).classList.add('hidden');
+    document.getElementById('upv-' + tool).classList.remove('hidden');
+    document.getElementById('ua-div-' + tool).classList.add('has-img');
+    document.getElementById('ri-btn-' + tool).classList.remove('hidden');
+  };
+  r.readAsDataURL(f);
+}
+function removeImg(tool) {
+  imgs[tool] = null;
+  document.getElementById('uf-' + tool).value = '';
+  document.getElementById('uph-' + tool).classList.remove('hidden');
+  document.getElementById('upv-' + tool).classList.add('hidden');
+  document.getElementById('ua-div-' + tool).classList.remove('has-img');
+  document.getElementById('ri-btn-' + tool).classList.add('hidden');
+}
+
+// ── DZ CONTEXT ───────────────────────────────────────────────
+function getDZCtx(l) {
+  if (!l.includes('Algér')) return '';
+  return `\nCONTEXTE ALGÉRIE (hidden from user, for AI use only):
+Utilise la Darija algérienne authentique. COD dominant. Flexy/BaridiMob. Livraison toutes wilayas.
+Confiance: "أصلي 100%", "مضمون", "كاش عند الاستلام". Ton chaleureux et naturel.`;
+}
+function getDZMarketCtx() {
+  const m = document.getElementById('an-market')?.value || '';
+  if (!m.includes('Algérie') && m !== 'dz') return '';
+  return `\nMARCHÉ ALGÉRIE: Prix DZD. COD >90%. Frais livraison 400-600 DZD. Retour ~25%.
+Concurrents: Ouedkniss, Jumia DZ. Logistique: Yalidine, Zr Express.`;
+}
+function checkDZ(t) {
+  const map = {lp:'lp-lang', vo:'vo-lang', pub:'pub-lang'};
+  const bmap = {lp:'dz-lp', vo:'dz-vo', pub:'dz-pub'};
+  const sel = document.getElementById(map[t]);
+  const bdg = document.getElementById(bmap[t]);
+  if (sel && bdg) bdg.classList.toggle('show', sel.value.includes('Algér'));
+}
+function checkDZMarket() {
+  const s = document.getElementById('an-market');
+  const b = document.getElementById('dz-an');
+  if (s && b) b.classList.toggle('show', s.value.includes('Algérie') || s.value === 'dz');
+}
+function checkNicheOther() {
+  const s = document.getElementById('an-niche');
+  const i = document.getElementById('an-niche-other');
+  if (!s || !i) return;
+  i.classList.toggle('hidden', s.value !== '__other__');
+  if (s.value === '__other__') i.focus();
+}
+function getNiche() {
+  const s = document.getElementById('an-niche');
+  const i = document.getElementById('an-niche-other');
+  return s.value === '__other__' ? (i?.value.trim() || 'Other') : s.value;
+}
+
+// ── CLAUDE API ────────────────────────────────────────────────
+async function callClaude({ system, user, imgData, outEl, btnEl, key }) {
+  if (!checkQuota()) { return; }
+  _isGenerating = true;
+  btnEl.disabled = true;
+  btnEl.innerHTML = '<span class="spinner" style="border-top-color:#fff"></span>';
+  outEl.textContent = '';
+  outEl.classList.add('loading');
+  const os = document.getElementById('out-' + key);
+  if (os) os.classList.remove('hidden');
+  showInt(imgData ? '🔍 Vision IA...' : '⚡ Génération en cours...');
+
+  const content = imgData
+    ? [{type:'image', source:{type:'base64', media_type:imgData.mediaType, data:imgData.base64}}, {type:'text', text:user}]
+    : user;
+
+  try {
+    const res = await fetch(API, {
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-token':subToken||''},
+      body: JSON.stringify({ model:MODEL, max_tokens:2500, stream:true, system, messages:[{role:'user', content}], fpId: fpId||undefined, tool:key })
+    });
+    if (res.status === 429) {
+      hideInt();
+      const e = await res.json().catch(()=>({}));
+      if (e.error === 'starter_limit_reached') { alert(T[lang]?.starter_limit || '⚠️ Limite mensuelle Starter atteinte. Passez à Pro pour l\'illimité.'); selectPlan('pro'); }
+      showPaywall(); return;
+    }
+    if (!res.ok) { const e=await res.json().catch(()=>({})); throw new Error(e?.error?.message||`HTTP ${res.status}`); }
+
+    outEl.classList.remove('loading');
+    const cur = document.createElement('span');
+    cur.className = 'cursor-blink'; outEl.appendChild(cur);
+    const reader=res.body.getReader(), dec=new TextDecoder();
+    let buf='';
+    while(true) {
+      const {done,value}=await reader.read(); if(done) break;
+      buf+=dec.decode(value,{stream:true});
+      const lines=buf.split('\n'); buf=lines.pop();
+      for(const line of lines) {
+        if(!line.startsWith('data: ')) continue;
+        const d=line.slice(6).trim(); if(d==='[DONE]') continue;
+        try { const j=JSON.parse(d); if(j.type==='content_block_delta'&&j.delta?.text) cur.insertAdjacentText('beforebegin',j.delta.text); } catch {}
+      }
+    }
+    cur.remove();
+    incrLocal(); updateQuota();
+    if (subToken) syncQuota(); // rafraîchir le compteur Starter
+    if (key==='analyse') renderScores(outEl.textContent);
+    origOut[key] = outEl.textContent;
+
+  } catch(e) {
+    outEl.classList.remove('loading');
+    outEl.textContent = `❌ ${e.message}`;
+    outEl.style.color = 'var(--red)';
+  } finally {
+    _isGenerating = false;
+    btnEl.disabled = false;
+    btnEl.innerHTML = `<span data-i18n="generate">${T[lang]?.generate||'⚡ Générer'}</span>`;
+    hideInt();
+  }
+}
+
+// ── CHAR COUNTERS ─────────────────────────────────────────────
+function initCharCounters() {
+  document.querySelectorAll('.form-group textarea.form-control').forEach(ta => {
+    const counter = document.createElement('div');
+    counter.className = 'char-count';
+    ta.parentNode.insertBefore(counter, ta.nextSibling);
+    const update = () => {
+      const chars = ta.value.length;
+      const words = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+      counter.textContent = `${words} mot${words !== 1 ? 's' : ''} · ${chars} car.`;
+      counter.classList.toggle('warn', chars > 400);
+    };
+    ta.addEventListener('input', update);
+    update();
+  });
+}
+
+// ── REFINEMENT ────────────────────────────────────────────────
+const TOOL_N = { landing:{fr:'Landing Page',ar:'صفحة الهبوط',en:'Landing Page'}, voix:{fr:'Script Voix Off',ar:'سكريبت',en:'Voiceover'}, pub:{fr:'Publicité',ar:'إعلان',en:'Ad Copy'}, analyse:{fr:'Analyse Produit',ar:'تحليل',en:'Product Analysis'} };
+
+async function refine(key) {
+  const inputId = { landing:'ri-lp', voix:'ri-vo', pub:'ri-pub', analyse:'ri-an' };
+  const rbId    = { landing:'rb-lp', voix:'rb-vo', pub:'rb-pub', analyse:'rb-an' };
+  const rrId    = { landing:'rr-landing', voix:'rr-voix', pub:'rr-pub', analyse:'rr-analyse' };
+  const rtId    = { landing:'rrt-landing', voix:'rrt-voix', pub:'rrt-pub', analyse:'rrt-analyse' };
+  const req  = document.getElementById(inputId[key])?.value.trim();
+  if (!req) return;
+  if (!checkQuota()) return;
+  const rr  = document.getElementById(rrId[key]);
+  const rt  = document.getElementById(rtId[key]);
+  const btn = document.getElementById(rbId[key]);
+  const tn  = TOOL_N[key]?.[lang] || key;
+  const orig = origOut[key] || '';
+  btn.disabled = true; btn.innerHTML = '<span class="spinner" style="border-top-color:#fff"></span>';
+  showInt('🔄 Réajustement...');
+  rt.textContent = ''; rr.classList.remove('show');
+  try {
+    const res = await fetch(API, {
+      method:'POST', headers:{'Content-Type':'application/json','x-token':subToken||''},
+      body: JSON.stringify({ model:MODEL, max_tokens:2000, stream:true,
+        system:`Tu es un expert en e-commerce. Modifie le ${tn} ci-dessous selon la demande de l'utilisateur.\n\nCONTENU ORIGINAL:\n${orig.slice(0,3000)}\n\nRÈGLES: 1) Applique UNIQUEMENT les modifications demandées 2) Si hors contexte e-commerce, réponds poliment en 1 phrase et propose une modification pertinente 3) Garde la même langue`,
+        messages:[{role:'user', content:req}], fpId:fpId||undefined, tool:key })
+    });
+    if (res.status===429) {
+      hideInt();
+      const e = await res.json().catch(()=>({}));
+      if (e.error === 'starter_limit_reached') { alert(T[lang]?.starter_limit || '⚠️ Limite mensuelle Starter atteinte. Passez à Pro pour l\'illimité.'); selectPlan('pro'); }
+      showPaywall(); return;
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    rr.classList.add('show');
+    const cur=document.createElement('span'); cur.className='cursor-blink'; rt.appendChild(cur);
+    const reader=res.body.getReader(), dec=new TextDecoder(); let buf='';
+    while(true) {
+      const {done,value}=await reader.read(); if(done) break;
+      buf+=dec.decode(value,{stream:true});
+      const lines=buf.split('\n'); buf=lines.pop();
+      for(const line of lines) {
+        if(!line.startsWith('data: ')) continue;
+        const d=line.slice(6).trim(); if(d==='[DONE]') continue;
+        try { const j=JSON.parse(d); if(j.type==='content_block_delta'&&j.delta?.text) cur.insertAdjacentText('beforebegin',j.delta.text); } catch {}
+      }
+    }
+    cur.remove();
+    incrLocal(); updateQuota();
+    if (subToken) syncQuota(); // rafraîchir le compteur Starter
+    rr.scrollIntoView({behavior:'smooth',block:'nearest'});
+  } catch(e) { rt.textContent=`❌ ${e.message}`; rr.classList.add('show'); }
+  finally { btn.disabled=false; btn.innerHTML = T[lang]?.refine_btn||'⚡'; hideInt(); }
+}
+
+// ── TOOL GENERATORS ──────────────────────────────────────────
+async function genLanding() {
+  const l=getLangValue(), n=document.getElementById('lp-name').value.trim();
+  const b=document.getElementById('lp-benefits').value.trim(), p=document.getElementById('lp-price').value.trim();
+  const c=document.getElementById('lp-colors').value.trim();
+  const reviews=[1,2,3].map(i=>document.getElementById(`lp-r${i}`).value.trim()).filter(Boolean);
+  const urg=document.getElementById('lp-urgency').value.trim();
+  if(!n||!b||!p) return;
+  await callClaude({ system:`You are a world-class e-commerce prompt engineer for AI image generators (Midjourney, Nano Banana Pro, Flux, Adobe Firefly). Generate ONE complete ready-to-use image prompt for an ultra-tall vertical infographic landing page (9:32 ratio). Include: full layout top-to-bottom, ALL text in ${l}, 8-10 sections (hero, problem, solution, features, before/after, testimonials, urgency, CTA), detailed visual instructions. ${getDZCtx(l)}\nReturn ONLY the final prompt starting with "Create an ultra-tall vertical infographic..."`,
+    user:`Product: ${n}\nType: ${document.getElementById('lp-type').value}\nBenefits: ${b}\nPrice: ${p}\nColors: ${c||'professional dark & gold'}\nReviews: ${reviews.join(' | ')||'none'}\nUrgency: ${urg||'Limited stock'}\nLanguage: ${l}`,
+    outEl:document.getElementById('lp-text'), btnEl:document.getElementById('btn-lp'), key:'landing' });
+}
+
+async function genVoix() {
+  const l=document.getElementById('vo-lang').value, prd=document.getElementById('vo-product').value.trim();
+  const plt=document.getElementById('vo-platform').value, dur=document.getElementById('vo-duration').value;
+  const emo=document.getElementById('vo-emotion').value, aud=document.getElementById('vo-audience').value.trim();
+  const img=imgs.voix;
+  if(!prd&&!img) return;
+  await callClaude({ system:`You are an expert social media advertising copywriter for e-commerce.${img?' A product image is provided. Analyze it carefully and integrate specific visual details into the script.':''}\nCreate a professional voiceover script with EXACT timing markers [0:00-0:03].\nStructure: [HOOK]→[PROBLEM]→[SOLUTION]→[PROOF]→[CTA]\nPlatform: ${plt}. ALL text in ${l}. Return ONLY the script.${getDZCtx(l)}`,
+    user:`Platform: ${plt}\nProduct: ${prd||'See image'}\nDuration: ${dur}\nTone: ${emo}\nAudience: ${aud||'e-commerce buyers'}\nLanguage: ${l}`,
+    imgData:img, outEl:document.getElementById('vo-text'), btnEl:document.getElementById('btn-vo'), key:'voix' });
+}
+
+async function genPub() {
+  const plt=document.getElementById('pub-platform').value, obj=document.getElementById('pub-objective').value;
+  const prd=document.getElementById('pub-product').value.trim(), aud=document.getElementById('pub-audience').value.trim();
+  const l=document.getElementById('pub-lang').value, bgt=document.getElementById('pub-budget').value.trim();
+  const prm=document.getElementById('pub-promo').value.trim(), img=imgs.pub;
+  if(!prd) return;
+  await callClaude({ system:`You are a senior media buyer with 10+ years managing 7-figure budgets on ${plt}.${img?' A product image is provided. Analyze it for more precise ad copy.':''}
+Generate a COMPLETE advertising strategy.\nFormat:\n🎣 HOOKS (3 variants + explanation)\n📝 AD BODY (${plt}-optimized)\n🚀 CTA (2 variants)\n#️⃣ HASHTAGS (15-20)\n📊 CAMPAIGN STRATEGY (structure, targeting, budget ${bgt||'suggest split'})\n📈 SCALING PLAN (phase 1/2/3)\n⚠️ MISTAKES TO AVOID (5)\n🔬 A/B TESTS (3)\n📱 CREATIVE SPECS\nALL copy in ${l}. Be specific with numbers.${getDZCtx(l)}`,
+    user:`Platform: ${plt}\nObjective: ${obj}\nProduct: ${prd}\nAudience: ${aud||'e-commerce buyers'}\nBudget: ${bgt||'not specified'}\nPromo: ${prm||'none'}\nLanguage: ${l}`,
+    imgData:img, outEl:document.getElementById('pub-text'), btnEl:document.getElementById('btn-pub'), key:'pub' });
+}
+
+async function genAnalyse() {
+  const prd=document.getElementById('an-product').value.trim();
+  const buy=document.getElementById('an-buy').value, sell=document.getElementById('an-sell').value;
+  const mkt=getMarketValue(), niche=getNiche();
+  const ctx=document.getElementById('an-context').value.trim(), img=imgs.analyse;
+  if(!prd||!buy||!sell) return;
+  const mgn=(((sell-buy)/sell)*100).toFixed(1);
+  await callClaude({ system:`You are a senior e-commerce product analyst.${img?' A product image is provided. Analyze packaging, visual appeal, perceived value, branding potential.':''}
+Provide objective product analysis.\n\nMANDATORY FORMAT:\nSCORES:\nSCORE_DEMAND: [0-10]\nSCORE_COMPETITION: [0-10]\nSCORE_MARGIN: [0-10]\nSCORE_TREND: [0-10]\nSCORE_OVERALL: [0-100]\n\nREPORT:\n📊 VERDICT GLOBAL\n💰 FINANCIAL ANALYSIS (margin, ad cost, ROI)\n🎯 MARKET ANALYSIS\n⚔️ COMPETITION\n📈 TREND\n🚀 RECOMMENDATIONS (3-5)\n⚠️ RISKS\n🏆 FINAL VERDICT (go/no-go)${getDZMarketCtx()}`,
+    user:`Product: ${prd}\nBuy: ${buy}\nSell: ${sell}\nMargin: ${mgn}%\nMarket: ${mkt}\nNiche: ${niche}\nContext: ${ctx||'none'}`,
+    imgData:img, outEl:document.getElementById('an-text'), btnEl:document.getElementById('btn-an'), key:'analyse' });
+}
+
+// ── SCORES ────────────────────────────────────────────────────
+function renderScores(txt) {
+  const ex = k => { const m=txt.match(new RegExp(`${k}:\\s*([\\d.]+)`)); return m?parseFloat(m[1]):null; };
+  const d=ex('SCORE_DEMAND'), c=ex('SCORE_COMPETITION'), mg=ex('SCORE_MARGIN'), tr=ex('SCORE_TREND'), ov=ex('SCORE_OVERALL');
+  if(!ov) return;
+  const L={ fr:{d:'Demande',c:'Concurrence',m:'Marge',t:'Tendance',o:'Score Global'}, ar:{d:'الطلب',c:'المنافسة',m:'الهامش',t:'الاتجاه',o:'النتيجة'}, en:{d:'Demand',c:'Competition',m:'Margin',t:'Trend',o:'Overall'} }[lang]||{};
+  const col = ov>=70?'g':ov>=45?'o':'r';
+  const scls = {g:'sg',o:'so',r:'sr',b:'sb'};
+  const cards = [{l:L.d,v:d,c:'sg'},{l:L.c,v:c,c:'sb'},{l:L.m,v:mg,c:'so'},{l:L.t,v:tr,c:'sg'}];
+  document.getElementById('scores-grid').innerHTML =
+    cards.map(s=>`<div class="score-card"><div class="score-lbl">${s.l||''}</div><div class="score-val ${s.c}">${s.v!==null?s.v+'/10':'—'}</div><div class="score-bar"><div class="score-fill ${s.c}-fill" style="width:${s.v!==null?s.v*10:0}%"></div></div></div>`).join('') +
+    `<div class="score-card" style="grid-column:1/-1;display:flex;align-items:center;gap:16px"><div><div class="score-lbl">${L.o||''}</div><div class="score-val s${col}" style="font-size:32px">${ov}<span style="font-size:14px;opacity:.4">/100</span></div></div><div class="score-bar" style="flex:1;height:7px;border-radius:4px"><div class="score-fill s${col}-fill" style="width:${ov}%;height:100%;border-radius:4px"></div></div></div>`;
+}
+
+// ── TABS ─────────────────────────────────────────────────────
+function switchTab(id) {
+  document.querySelectorAll('.tool-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.tab-btn')[['landing','voix','pub','analyse'].indexOf(id)].classList.add('active');
+}
+
+// ── COPY ─────────────────────────────────────────────────────
+async function copyOut(elId, btnId) {
+  const txt = document.getElementById(elId)?.textContent||'';
+  await navigator.clipboard.writeText(txt).catch(()=>{});
+  const b = document.getElementById(btnId);
+  if (!b) return;
+  const prev = b.innerHTML;
+  b.textContent = '✅ ' + (T[lang]?.copied||'Copié !');
+  setTimeout(()=>{ b.innerHTML=prev; },2000);
+}
+
+// ── GUIDES ────────────────────────────────────────────────────
+const GUIDES = {
+  lp:{fr:['Remplissez le nom, les bénéfices et le prix du produit.','Choisissez la langue cible (6 langues + champ libre).','Cliquez "Générer le Prompt IA".','Copiez le prompt généré.','Collez dans Midjourney, Nano Banana Pro ou Flux avec les photos du produit.','Obtenez votre landing page visuelle en quelques secondes.'],ar:['أدخل اسم المنتج ومميزاته وسعره.','اختر اللغة المستهدفة (6 لغات + حقل حر).','انقر على "توليد".','انسخ البرومبت المُولَّد.','الصقه في Midjourney أو Nano Banana Pro مع صور المنتج.','احصل على صورة صفحة هبوط احترافية.'],en:['Fill in product name, benefits and price.','Choose target language (6 languages + free field).','Click "Generate AI Prompt".','Copy the generated prompt.','Paste into Midjourney, Nano Banana Pro or Flux with product photos.','Get your professional landing page image instantly.']},
+  vo:{fr:['Uploadez une photo du produit (recommandé).','Décrivez le produit et choisissez la plateforme.','Sélectionnez la durée et l\'émotion souhaitée.','Cliquez "Générer le Script".','Copiez et enregistrez avec ElevenLabs, Murf.ai ou votre voix.','Intégrez dans votre vidéo publicitaire.'],ar:['ارفع صورة المنتج (موصى به).','صف المنتج واختر المنصة.','اختر المدة والعاطفة.','انقر على "توليد".','انسخ وسجّل مع ElevenLabs أو Murf.ai.','استخدم في فيديوهاتك الإعلانية.'],en:['Upload a product photo (recommended).','Describe product and choose platform.','Select duration and tone.','Click "Generate Script".','Copy and record with ElevenLabs or Murf.ai.','Use in your ad videos.']},
+  pub:{fr:['Choisissez la plateforme et l\'objectif.','Uploadez une photo (optionnel).','Décrivez le produit et l\'audience.','Ajoutez budget et offre promo.','Cliquez "Générer la Stratégie".','Obtenez hooks, copy, stratégie, scaling et A/B tests.','Copiez dans Meta Ads Manager ou TikTok Ads.'],ar:['اختر المنصة والهدف.','ارفع صورة (اختياري).','صف المنتج والجمهور.','أضف الميزانية والعرض.','انقر على "توليد".','احصل على هوك، نص، استراتيجية، تطوير.','انسخ في مدير الإعلانات.'],en:['Choose platform and objective.','Upload photo (optional).','Describe product and audience.','Add budget and promo offer.','Click "Generate Strategy".','Get hooks, copy, strategy, scaling and A/B tests.','Paste into Meta Ads Manager or TikTok Ads.']},
+  an:{fr:['Décrivez votre produit précisément.','Uploadez une photo (optionnel).','Entrez prix d\'achat et prix de vente.','Choisissez marché et niche.','Cliquez "Analyser".','Obtenez 4 scores + rapport complet.','Décidez si le produit vaut le lancement.'],ar:['صف منتجك بدقة.','ارفع صورة (اختياري).','أدخل سعر الشراء والبيع.','اختر السوق والتخصص.','انقر على "تحليل".','احصل على 4 درجات + تقرير كامل.','قرر ما إذا كان المنتج يستحق.'],en:['Describe your product precisely.','Upload photo (optional).','Enter buy price and sell price.','Choose market and niche.','Click "Analyze".','Get 4 scores + full report.','Decide if the product is worth launching.']}
+};
+function buildGuides() {
+  const map = {lp:'lp',vo:'vo',pub:'pub',an:'an'};
+  Object.entries(map).forEach(([key, gk]) => {
+    const el = document.getElementById('gs-' + key);
+    if (!el) return;
+    const steps = GUIDES[gk]?.[lang] || GUIDES[gk]?.fr || [];
+    el.innerHTML = steps.map((s,i)=>`<div class="guide-step"><div class="guide-num">${i+1}</div><span>${s}</span></div>`).join('');
+  });
+}
+function toggleGuide(k) {
+  const b=document.getElementById('gb-'+k), a=document.getElementById('ga-'+k);
+  b.classList.toggle('open'); a.classList.toggle('open');
+}
+
+// ── FOOTER ACCORDION ─────────────────────────────────────────
+const FC = {
+  about:{fr:{t:'📌 À propos',h:`<p><strong>Ecomercai</strong> est une plateforme d'outils IA dédiée aux e-commerçants du monde entier. Conçue pour rendre l'intelligence artificielle accessible à tous les vendeurs en ligne, du débutant au professionnel confirmé.</p><p>Grâce à la puissance de l'IA, nos 4 outils vous permettent de créer des landing pages professionnelles, scripts voix off percutants, stratégies publicitaires et analyses produit — en quelques secondes.</p><p>Notre mission : vous faire gagner du temps, réduire vos coûts et maximiser vos ventes.</p>`},ar:{t:'📌 من نحن',h:`<p><strong>Ecomercai</strong> منصة أدوات ذكاء اصطناعي للتجار الإلكترونيين حول العالم. صُممت لجعل الذكاء الاصطناعي متاحاً لجميع البائعين عبر الإنترنت.</p><p>مهمتنا: توفير وقتك وتعظيم مبيعاتك.</p>`},en:{t:'📌 About',h:`<p><strong>Ecomercai</strong> is an AI-powered platform for e-commerce sellers worldwide. Built to make artificial intelligence accessible to all online merchants, whether beginners or seasoned professionals.</p><p>Our mission: save your time, reduce costs, and maximize your sales.</p>`}},
+  cgu:{fr:{t:'📄 Politique de Confidentialité & CGU',h:`
+    <p><strong>Dernière mise à jour :</strong> Mai 2026</p>
+
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">1. Collecte des données personnelles</h4>
+    <p>Ecomercai collecte uniquement les données strictement nécessaires au fonctionnement du service :</p>
+    <p>• <strong>Adresse email</strong> : collectée lors de la souscription d'un abonnement, utilisée uniquement pour la gestion de votre compte et les communications relatives à votre abonnement.</p>
+    <p>• <strong>Données de connexion</strong> : adresse IP et empreinte de navigateur utilisées temporairement pour limiter les abus (quota de générations gratuites). Ces données ne sont pas conservées au-delà de 25 heures.</p>
+    <p>• <strong>Données de paiement</strong> : traitées exclusivement par Stripe. Ecomercai n'a jamais accès à vos informations bancaires.</p>
+
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">2. Utilisation des données</h4>
+    <p>Vos données personnelles sont utilisées pour :</p>
+    <p>• Gérer votre abonnement et accès au service</p>
+    <p>• Vous envoyer des confirmations de paiement</p>
+    <p>• Vous contacter en cas de problème technique</p>
+    <p>Nous ne vendons, ne louons et ne partageons jamais vos données avec des tiers à des fins commerciales.</p>
+
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">3. Cookies et technologies similaires</h4>
+    <p>Ecomercai utilise un cookie technique (<em>_eai</em>) pour identifier votre session et gérer votre quota de générations gratuites. Ce cookie est strictement nécessaire au fonctionnement du service et ne collecte aucune information personnelle identifiable.</p>
+    <p>Google AdSense peut placer des cookies publicitaires sur votre navigateur pour personnaliser les annonces affichées. Vous pouvez gérer vos préférences via les paramètres de votre navigateur.</p>
+
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">4. Propriété intellectuelle</h4>
+    <p>Les contenus générés par les outils Ecomercai vous appartiennent intégralement. Vous pouvez les utiliser, les modifier et les publier librement, y compris à des fins commerciales.</p>
+    <p>Le code source, le design et les algorithmes d'Ecomercai sont la propriété exclusive de MERROK Brahim / Ecomercai.</p>
+
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">5. Abonnements et remboursements</h4>
+    <p>Les abonnements sont gérés par Stripe et facturés mensuellement. Vous pouvez annuler à tout moment depuis votre espace Stripe. L'annulation prend effet à la fin de la période de facturation en cours. Aucun remboursement partiel n'est accordé pour les périodes non utilisées.</p>
+
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">6. Responsabilité</h4>
+    <p>Ecomercai fournit des contenus générés par intelligence artificielle à titre informatif. Ces contenus ne constituent pas des conseils professionnels (juridiques, financiers ou commerciaux). L'utilisateur est seul responsable de l'utilisation des contenus générés et des décisions commerciales qui en découlent.</p>
+
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">7. Droit applicable</h4>
+    <p>Les présentes conditions sont soumises au droit algérien. Pour toute question, contactez-nous à : <a href="mailto:contact@ecomercai.com">contact@ecomercai.com</a></p>
+  `},
+  ar:{t:'📄 سياسة الخصوصية والشروط',h:`<p><strong>آخر تحديث:</strong> مايو 2026</p><p>باستخدام Ecomercai، توافق على هذه الشروط. المحتوى المُولَّد يعود إليك بالكامل. الاشتراكات تُدار عبر Stripe ويمكن إلغاؤها في أي وقت. بياناتك لا تُباع أبداً لأطراف ثالثة.</p>`},
+  en:{t:'📄 Privacy Policy & Terms',h:`
+    <p><strong>Last updated:</strong> May 2026</p>
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">1. Data Collection</h4>
+    <p>Ecomercai collects only: your <strong>email address</strong> (for subscription management) and temporary technical data (IP, browser fingerprint) to manage free quotas — deleted within 25 hours. Payment data is handled exclusively by Stripe.</p>
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">2. Data Use</h4>
+    <p>Your data is used solely to manage your subscription and send payment confirmations. We never sell or share your data with third parties.</p>
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">3. Cookies</h4>
+    <p>We use one technical cookie (_eai) to manage your free generation quota. Google AdSense may place advertising cookies on your browser.</p>
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">4. Content Ownership</h4>
+    <p>All generated content belongs entirely to you. You may use, modify and publish it freely for commercial purposes.</p>
+    <h4 style="margin:16px 0 8px;font-family:var(--fd);color:var(--ink)">5. Subscriptions</h4>
+    <p>Monthly billing via Stripe. Cancel anytime. No partial refunds for unused periods.</p>
+    <p>Contact: <a href="mailto:contact@ecomercai.com">contact@ecomercai.com</a></p>
+  `}},
+  contact:{
+    fr:{t:'✉️ Contact',h:`
+      <p>Pour toute question, suggestion ou réclamation :</p>
+      <p>📧 <strong>Email :</strong> <a href="mailto:contact@ecomercai.com">contact@ecomercai.com</a></p>
+      <p>💬 <strong>Délai de réponse :</strong> 24-48h (jours ouvrés)</p>
+      <div class="contact-form-wrap">
+        <h4>📬 Envoyez-nous un message</h4>
+        <p>Avis, suggestion, réclamation ou question — on vous répond sous 48h.</p>
+        <div class="cf-row">
+          <div class="cf-group" style="margin-bottom:0"><label class="cf-label">Prénom *</label><input class="cf-input" id="cf-fname" placeholder="Jean" type="text"></div>
+          <div class="cf-group" style="margin-bottom:0"><label class="cf-label">Email *</label><input class="cf-input" id="cf-email" placeholder="jean@email.com" type="email"></div>
+        </div>
+        <div class="cf-group" style="margin-top:14px"><label class="cf-label">Sujet *</label>
+          <select class="cf-input cf-select" id="cf-subject">
+            <option value="">-- Choisir un sujet --</option>
+            <option value="question">❓ Question sur les outils</option>
+            <option value="avis">⭐ Laisser un avis</option>
+            <option value="suggestion">💡 Suggestion d'amélioration</option>
+            <option value="reclamation">⚠️ Réclamation</option>
+            <option value="abonnement">💳 Problème d'abonnement</option>
+            <option value="autre">📌 Autre</option>
+          </select>
+        </div>
+        <div class="cf-group"><label class="cf-label">Message *</label><textarea class="cf-input cf-textarea" id="cf-message" placeholder="Décrivez votre message..."></textarea></div>
+        <button class="btn btn-gold btn-full" onclick="submitContact()" id="cf-submit">📨 Envoyer le message</button>
+        <div class="cf-success" id="cf-success">✅ Message envoyé ! Nous vous répondrons sous 48h.</div>
+        <div class="cf-error" id="cf-error">⚠️ Veuillez remplir tous les champs obligatoires.</div>
+      </div>`
+    },
+    ar:{t:'✉️ اتصل بنا',h:`
+      <p>📧 <strong>البريد الإلكتروني:</strong> <a href="mailto:contact@ecomercai.com">contact@ecomercai.com</a></p>
+      <p>وقت الرد: 24-48 ساعة</p>
+      <div class="contact-form-wrap">
+        <h4>📬 أرسل لنا رسالة</h4>
+        <p>رأي، اقتراح، شكوى أو سؤال — نرد عليك خلال 48 ساعة.</p>
+        <div class="cf-row">
+          <div class="cf-group" style="margin-bottom:0"><label class="cf-label">الاسم *</label><input class="cf-input" id="cf-fname" placeholder="محمد" type="text"></div>
+          <div class="cf-group" style="margin-bottom:0"><label class="cf-label">البريد *</label><input class="cf-input" id="cf-email" placeholder="email@example.com" type="email"></div>
+        </div>
+        <div class="cf-group" style="margin-top:14px"><label class="cf-label">الموضوع *</label>
+          <select class="cf-input cf-select" id="cf-subject">
+            <option value="">-- اختر موضوعاً --</option>
+            <option value="question">❓ سؤال عن الأدوات</option>
+            <option value="avis">⭐ إبداء رأي</option>
+            <option value="suggestion">💡 اقتراح تحسين</option>
+            <option value="reclamation">⚠️ شكوى</option>
+            <option value="abonnement">💳 مشكلة اشتراك</option>
+            <option value="autre">📌 أخرى</option>
+          </select>
+        </div>
+        <div class="cf-group"><label class="cf-label">الرسالة *</label><textarea class="cf-input cf-textarea" id="cf-message" placeholder="اكتب رسالتك هنا..."></textarea></div>
+        <button class="btn btn-gold btn-full" onclick="submitContact()" id="cf-submit">📨 إرسال الرسالة</button>
+        <div class="cf-success" id="cf-success">✅ تم الإرسال! سنرد عليك خلال 48 ساعة.</div>
+        <div class="cf-error" id="cf-error">⚠️ يرجى ملء جميع الحقول المطلوبة.</div>
+      </div>`
+    },
+    en:{t:'✉️ Contact',h:`
+      <p>📧 <strong>Email:</strong> <a href="mailto:contact@ecomercai.com">contact@ecomercai.com</a></p>
+      <p>💬 Response time: 24-48 hours (business days)</p>
+      <div class="contact-form-wrap">
+        <h4>📬 Send us a message</h4>
+        <p>Feedback, suggestion, complaint or question — we reply within 48h.</p>
+        <div class="cf-row">
+          <div class="cf-group" style="margin-bottom:0"><label class="cf-label">First name *</label><input class="cf-input" id="cf-fname" placeholder="John" type="text"></div>
+          <div class="cf-group" style="margin-bottom:0"><label class="cf-label">Email *</label><input class="cf-input" id="cf-email" placeholder="john@email.com" type="email"></div>
+        </div>
+        <div class="cf-group" style="margin-top:14px"><label class="cf-label">Subject *</label>
+          <select class="cf-input cf-select" id="cf-subject">
+            <option value="">-- Choose a subject --</option>
+            <option value="question">❓ Question about the tools</option>
+            <option value="avis">⭐ Leave a review</option>
+            <option value="suggestion">💡 Improvement suggestion</option>
+            <option value="reclamation">⚠️ Complaint</option>
+            <option value="abonnement">💳 Subscription issue</option>
+            <option value="autre">📌 Other</option>
+          </select>
+        </div>
+        <div class="cf-group"><label class="cf-label">Message *</label><textarea class="cf-input cf-textarea" id="cf-message" placeholder="Describe your message..."></textarea></div>
+        <button class="btn btn-gold btn-full" onclick="submitContact()" id="cf-submit">📨 Send message</button>
+        <div class="cf-success" id="cf-success">✅ Message sent! We'll reply within 48h.</div>
+        <div class="cf-error" id="cf-error">⚠️ Please fill in all required fields.</div>
+      </div>`
+    }
+  }
+};
+const FL_LABELS = {about:{fr:'📌 À propos',ar:'📌 من نحن',en:'📌 About'}, cgu:{fr:'CGU',ar:'الشروط',en:'Terms'}, contact:{fr:'✉️ Contact',ar:'✉️ اتصل بنا',en:'✉️ Contact'}};
+function buildFooterContent() {
+  ['about','cgu','contact'].forEach(k=>{
+    const d = FC[k]?.[lang] || FC[k]?.fr;
+    if (!d) return;
+    const t = document.getElementById('at-'+k);
+    const c = document.getElementById('ac-'+k);
+    const fl = document.getElementById('fl-'+k);
+    if (t) t.textContent = d.t;
+    if (c) c.innerHTML = d.h;
+    if (fl) fl.textContent = FL_LABELS[k]?.[lang] || FL_LABELS[k]?.fr;
+  });
+}
+function toggleAcc(k) {
+  const b=document.getElementById('ab-'+k), i=document.getElementById('ai-'+k);
+  const isOpen = b.classList.contains('open');
+  ['about','cgu','contact'].forEach(x=>{ document.getElementById('ab-'+x).classList.remove('open'); document.getElementById('ai-'+x).classList.remove('open'); });
+  if (!isOpen) { b.classList.add('open'); i.classList.add('open'); b.scrollIntoView({behavior:'smooth',block:'nearest'}); }
+}
+function openAcc(k) {
+  const b=document.getElementById('ab-'+k), i=document.getElementById('ai-'+k);
+  b.classList.add('open'); i.classList.add('open');
+  document.getElementById('footer-acc').scrollIntoView({behavior:'smooth'});
+}
+
+// ── TRANSLATIONS ──────────────────────────────────────────────
+const T = {
+fr:{
+  nav_features:'Fonctionnalités',nav_pricing:'Tarifs',
+  hero_badge:'4 Outils IA · E-commerce · Dropshipping',
+  hero_h1:'Créez du contenu<br>qui <mark>vend</mark> en secondes',
+  hero_p:'Landing pages, scripts vidéo, stratégies publicitaires et analyse produit — générés par l\'IA pour les e-commerçants qui veulent aller vite.',
+  cta_free:'Essayer gratuitement →', cta_free_lg:'⚡ Essayer gratuitement', cta_pricing:'Voir les tarifs →',
+  stat_tools:'Outils IA',stat_langs:'Langues',stat_faster:'Plus rapide',stat_from:'Dès / mois',
+  quota_lbl:'Générations gratuites aujourd\'hui',
+  quota_lbl_starter:'Générations restantes ce mois (Starter)',
+  starter_limit:'⚠️ Limite mensuelle Starter atteinte. Passez à Pro pour des générations illimitées.',
+  tab_lp:'Landing Page',tab_vo:'Voix Off',tab_pub:'Publicité',tab_an:'Analyse',
+  lp_h:'🏠 Générateur de Landing Page',lp_sub:'Prompt ultra-détaillé pour Midjourney, Flux ou Nano Banana Pro.',
+  lp_lang:'Langue cible',lp_type:'Type d\'offre',lp_single:'Produit unique',lp_bundle:'Pack / Bundle',
+  lp_name:'Nom du produit',lp_benefits:'Bénéfices & caractéristiques',lp_price:'Prix de vente',lp_colors:'Style colorimétrique',lp_reviews:'Avis clients (optionnel)',
+  vo_h:'🎙️ Script Voix Off + Vision IA',vo_sub:'Uploadez une photo — l\'IA analyse et génère un script avec timing précis.',
+  vo_lang:'Langue',vo_platform:'Plateforme',vo_product:'Produit & description',vo_duration:'Durée',vo_tone:'Émotion / Ton',vo_audience:'Audience cible',
+  pub_h:'📢 Stratégie Publicité — Media Buyer IA',pub_sub:'Copies haute conversion + stratégie campagne, scaling et A/B tests.',
+  pub_platform:'Plateforme',pub_obj:'Objectif',pub_product:'Produit & avantages',pub_audience:'Audience cible',pub_lang:'Langue',pub_budget:'Budget quotidien',pub_promo:'Offre promotionnelle',
+  an_h:'🔍 Analyseur de Produit Gagnant',an_sub:'Score de potentiel dropshipping sur 100 + rapport marché complet.',
+  an_product:'Nom & description du produit',an_buy:'Prix d\'achat',an_sell:'Prix de vente cible',an_market:'Marché cible',an_niche:'Niche',an_context:'Contexte supplémentaire',
+  guide_title:'Comment ça marche ?',
+  upload_lbl:'📸 Photo du produit (optionnel — Vision IA)',upload_hint:'Cliquez pour uploader une photo',remove_img:'✕ Supprimer',
+  generate:'⚡ Générer', generate_pub:'⚡ Générer la Stratégie Pub', generate_an:'⚡ Analyser le Potentiel',
+  copy:'📋 Copier', copied:'Copié !',
+  refine_h:'🔄 Réajuster ce résultat', refine_notice:'Un bref message publicitaire s\'affichera avant chaque réajustement.',
+  refine_ph:'Ex: Rends plus urgent, change le CTA...', refine_btn:'⚡', refine_result:'🔄 Version réajustée',
+  out_lp:'Prompt Landing Page',out_vo:'Script Voix Off',out_pub:'Stratégie Publicitaire',out_an:'Rapport d\'Analyse',
+  lp_notice:'💡 Collez ce prompt dans Midjourney, Nano Banana Pro ou Flux avec les photos du produit.',
+  lang_other:'Autre langue...',lang_other_ph:'Ex: Italian, Portuguese, German...',
+  market_other:'Autres pays...',market_other_ph:'Ex: Germany, Brazil, Turkey...',
+  feat_label:'Pourquoi Ecomercai',feat_h:'Conçu pour les vendeurs,\npas les agences',
+  feat1_t:'6 langues + champ libre',feat1_d:'Français, Anglais, Arabe, Darija, Espagnol + toute autre langue. Générez pour n\'importe quel marché.',
+  feat2_t:'Vision IA intégrée',feat2_d:'Uploadez la photo de votre produit. L\'IA l\'analyse et génère un contenu hyper-personnalisé.',
+  feat3_t:'Résultat en 10 secondes',feat3_d:'Streaming temps réel. Le contenu s\'affiche au fur et à mesure.',
+  feat4_t:'Réajustement intelligent',feat4_d:'Pas satisfait ? Demandez une modification directement sous le résultat.',
+  feat5_t:'Media Buyer IA',feat5_d:'Vraie stratégie campagne avec phases de scaling, tests A/B et erreurs à éviter.',
+  feat6_t:'Confidentialité totale',feat6_d:'Vos données ne sont jamais stockées ni partagées. Chaque génération est traitée en temps réel.',
+  langs_h:'Un outil, tous vos marchés',langs_p:'Du marché algérien aux États-Unis, générez dans la langue de votre audience.',
+  pricing_label:'Tarification',pricing_h:'Commencez gratuitement.\nPassez au Pro quand vous êtes prêt.',pricing_sub:'Aucune carte bancaire requise pour l\'essai gratuit.',
+  badge_free:'Gratuit',plan_free:'Free',free_period:'Pour découvrir l\'outil',monthly:'Facturé mensuellement',
+  f_free1:'{N} générations / jour',f_free2:'Tous les outils IA',f_free3:'Vision IA',f_free4:'Avec publicités',f_free5:'Support prioritaire',
+  f_s1:'{S} générations / mois',f_s2:'Tous les outils IA',f_s3:'Vision IA',f_s4:'Sans publicités ✓',f_s5:'Support prioritaire',
+  f_p1:'Générations illimitées',f_p2:'Tous les outils IA',f_p3:'Vision IA prioritaire ⚡',f_p4:'Sans publicités ✓',f_p5:'Support prioritaire ✓',
+  btn_free:'Essayer maintenant',btn_starter:'Démarrer — $4.99/mois',btn_pro:'Passer au Pro',badge_popular:'⚡ Le plus populaire',
+  testi_label:'Ce qu\'ils disent',testi_h:'Adoptés par des e-commerçants\nsur 3 continents',
+  t1:'"Je génère mes scripts TikTok en 15 secondes maintenant. Avant je passais 2h sur ChatGPT."',
+  t2:'"L\'analyseur produit m\'a évité d\'investir sur un produit perdant. Plus précis que ce que je payais $49/mois."',
+  t3:'"La stratégie pub avec le scaling plan — j\'ai copié-collé dans Meta Ads. ROAS x2.4 sur la première campagne."',
+  cta_h:'Prêt à générer votre premier contenu ?',cta_p:'{N} générations gratuites. Aucune carte bancaire. 10 secondes.',
+  footer_founder:'Founded by',
+  pw_title:'Limite atteinte',pw_desc:'Passez à un plan payant pour des générations illimitées sans publicités.',
+  plan_s_feat:'{S} gen/mois · Sans pub',plan_p_feat:'Illimité · Sans pub · Prioritaire',pw_popular:'⚡ MEILLEUR CHOIX',
+  pw_email_ph:'Votre email...',pw_btn:'💳 Payer avec Stripe →',or:'ou',pw_skip:'Continuer avec l\'essai gratuit',
+  recover_link:'Déjà abonné ? Récupérer mon accès par email',
+  recover_prompt:'Entrez l\'email utilisé lors de votre abonnement :',
+  recover_sent:'📩 Si cet email correspond à un abonnement actif, vous recevrez un lien d\'accès dans quelques instants.',
+  free_email_title:'Obtenez <strong>3 générations/jour</strong> gratuitement',
+  free_email_ph:'votre@email.com',
+  free_email_btn:'Continuer →',
+  free_email_pending:'📩 Email envoyé ! Cliquez sur le lien dans votre boîte pour activer 3 générations/jour.',
+  free_email_success:'✅ Accès étendu ! Vous avez maintenant 3 générations/jour.',
+  free_email_disposable:'❌ Email temporaire non accepté.',
+  free_email_limit:'⚠️ Limite atteinte pour cet appareil.',
+  free_email_invalid:'❌ Email invalide.',
+  verify_expired:'Lien expiré ou invalide. Recommencez depuis le site.',
+  ad_label:'Espace publicitaire',
+  upsell_title:'⚡ Générez sans publicité',upsell_last:'⚠️ Dernière génération gratuite !',
+  upsell_desc:'Starter $4.99/mois ({S} gen) — Pro $9.99/mois (illimité).',upsell_btn:'S\'abonner →',
+  generating:'⚡ Génération en cours...',close_btn:'Fermer ×',ready:'✅ Contenu prêt !',
+  gen_used:'gen utilisées',sub_badge:'⭐ Abonné',
+  dz_msg:'Mode <strong>Darija Algérienne</strong> activé.',dz_msg_pub:'Mode <strong>Darija DZ</strong> — Pub optimisée.',
+  trust_label:'Propulsé par', trust_secure:'100% Sécurisé',
+  stats_users:'E-commerçants actifs', stats_users_sub:'De l\'Algérie à la France',
+  stats_gen:'Contenus générés', stats_gen_sub:'Landing pages, scripts, pubs',
+  stats_rating:'Satisfaction client', stats_speed:'Temps de génération', stats_speed_sub:'Résultat en temps réel',
+  g1:'{N} générations gratuites — aucune carte requise', g2:'Annulation en 1 clic — sans engagement',
+  g3:'Paiement sécurisé via Stripe', g4:'Support réactif 24-48h',
+  faq_label:'FAQ', faq_h:'Questions fréquentes',
+  cf_btn:'📨 Envoyer le message', cf_err_fields:'⚠️ Veuillez remplir tous les champs obligatoires.', cf_err_email:'⚠️ Adresse email invalide.',
+  welcome:'Abonnement activé ! Générations illimitées.'
+},
+ar:{
+  nav_features:'المميزات',nav_pricing:'الأسعار',
+  hero_badge:'4 أدوات ذكاء اصطناعي · التجارة الإلكترونية',
+  hero_h1:'أنشئ محتوى<br>يُحقق <mark>المبيعات</mark> في ثوانٍ',
+  hero_p:'صفحات الهبوط، سكريبتات الفيديو، استراتيجيات الإعلانات وتحليل المنتج — تُولَّد بالذكاء الاصطناعي للتجار الذين يريدون السرعة.',
+  cta_free:'جرّب مجاناً →',cta_free_lg:'⚡ جرّب مجاناً',cta_pricing:'عرض الأسعار →',
+  stat_tools:'أدوات AI',stat_langs:'لغات',stat_faster:'أسرع',stat_from:'من / شهر',
+  quota_lbl:'الاستخدامات المجانية اليوم',
+  quota_lbl_starter:'التوليدات المتبقية هذا الشهر (Starter)',
+  starter_limit:'⚠️ وصلت إلى الحد الشهري لخطة Starter. انتقل إلى Pro للتوليد غير المحدود.',
+  tab_lp:'صفحة الهبوط',tab_vo:'السكريبت',tab_pub:'الإعلانات',tab_an:'التحليل',
+  lp_h:'🏠 مولد صفحة الهبوط',lp_sub:'برومبت احترافي لـ Midjourney أو Nano Banana Pro.',
+  lp_lang:'لغة الجمهور',lp_type:'نوع العرض',lp_single:'منتج واحد',lp_bundle:'حزمة',
+  lp_name:'اسم المنتج',lp_benefits:'المزايا والخصائص',lp_price:'سعر البيع',lp_colors:'النمط اللوني',lp_reviews:'تقييمات العملاء',
+  vo_h:'🎙️ مولد السكريبت + رؤية AI',vo_sub:'ارفع صورة المنتج — الذكاء الاصطناعي يحلل ويكتب السكريبت.',
+  vo_lang:'اللغة',vo_platform:'المنصة',vo_product:'المنتج والوصف',vo_duration:'المدة',vo_tone:'العاطفة',vo_audience:'الجمهور',
+  pub_h:'📢 استراتيجية الإعلانات — Media Buyer AI',pub_sub:'نصوص إعلانية + استراتيجية حملة وتطوير.',
+  pub_platform:'المنصة',pub_obj:'الهدف',pub_product:'المنتج والمزايا',pub_audience:'الجمهور',pub_lang:'اللغة',pub_budget:'الميزانية اليومية',pub_promo:'العرض الترويجي',
+  an_h:'🔍 محلل المنتج الرابح',an_sub:'تقييم إمكانية الدروبشيبينغ + تقرير سوق كامل.',
+  an_product:'اسم ووصف المنتج',an_buy:'سعر الشراء',an_sell:'سعر البيع',an_market:'السوق',an_niche:'التخصص',an_context:'سياق إضافي',
+  guide_title:'كيف يعمل؟',
+  upload_lbl:'📸 صورة المنتج (اختياري — رؤية AI)',upload_hint:'انقر لرفع صورة المنتج',remove_img:'✕ حذف',
+  generate:'⚡ توليد',generate_pub:'⚡ توليد الاستراتيجية',generate_an:'⚡ تحليل الإمكانية',
+  copy:'📋 نسخ',copied:'تم النسخ!',
+  refine_h:'🔄 تعديل هذه النتيجة',refine_notice:'سيظهر إعلان قصير قبل كل تعديل.',
+  refine_ph:'مثال: اجعله أكثر إلحاحاً...',refine_btn:'⚡',refine_result:'🔄 النسخة المعدّلة',
+  out_lp:'برومبت صفحة الهبوط',out_vo:'نص السكريبت',out_pub:'الاستراتيجية الإعلانية',out_an:'تقرير التحليل',
+  lp_notice:'💡 الصق البرومبت في Midjourney أو Nano Banana Pro مع صور المنتج.',
+  lang_other:'لغة أخرى...',lang_other_ph:'مثال: Italian, Portuguese, German...',
+  market_other:'دول أخرى...',market_other_ph:'مثال: Germany, Brazil, Turkey...',
+  feat_label:'لماذا Ecomercai',feat_h:'مصمم للبائعين\nليس للوكالات',
+  feat1_t:'6 لغات + حقل حر',feat1_d:'الفرنسية، الإنجليزية، الدارجة، العربية، الإسبانية + أي لغة أخرى. ولّد لأي سوق.',
+  feat2_t:'رؤية AI مدمجة',feat2_d:'ارفع صورة منتجك. الذكاء الاصطناعي يحللها ويولد محتوى مخصصاً.',
+  feat3_t:'نتيجة في 10 ثوانٍ',feat3_d:'بث مباشر. المحتوى يظهر فور التوليد.',
+  feat4_t:'تعديل ذكي',feat4_d:'غير راضٍ؟ اطلب تعديلاً مباشرةً تحت النتيجة.',
+  feat5_t:'Media Buyer AI',feat5_d:'استراتيجية حملة حقيقية مع مراحل تطوير واختبارات A/B.',
+  feat6_t:'سرية تامة',feat6_d:'بياناتك لا تُخزَّن ولا تُشارك أبداً. كل توليد يُعالَج فورياً ويُحذف مباشرة بعده.',
+  langs_h:'أداة واحدة، جميع أسواقك',langs_p:'من السوق الجزائري إلى أمريكا، ولّد بلغة جمهورك.',
+  pricing_label:'التسعير',pricing_h:'ابدأ مجاناً.\nانتقل إلى Pro عندما تكون جاهزاً.',pricing_sub:'لا تحتاج بطاقة بنكية للتجربة المجانية.',
+  badge_free:'مجاني',plan_free:'Free',free_period:'لاكتشاف الأداة',monthly:'يُفوتر شهرياً',
+  f_free1:'{N} توليدات / يوم',f_free2:'جميع الأدوات',f_free3:'رؤية AI',f_free4:'مع إعلانات',f_free5:'دعم أولوية',
+  f_s1:'{S} توليد / شهر',f_s2:'جميع الأدوات',f_s3:'رؤية AI',f_s4:'بدون إعلانات ✓',f_s5:'دعم أولوية',
+  f_p1:'توليد غير محدود',f_p2:'جميع الأدوات',f_p3:'رؤية AI أولوية ⚡',f_p4:'بدون إعلانات ✓',f_p5:'دعم أولوية ✓',
+  btn_free:'جرّب الآن',btn_starter:'ابدأ — 4.99$/شهر',btn_pro:'الانتقال إلى Pro',badge_popular:'⚡ الأكثر شعبية',
+  testi_label:'آراء المستخدمين',testi_h:'يثق بهم تجار إلكترونيون\nعلى 3 قارات',
+  t1:'"أولّد سكريبتات TikTok في 15 ثانية الآن. قبل كنت أقضي ساعتين."',
+  t2:'"محلل المنتج أنقذني من الاستثمار في منتج خاسر. أدق مما كنت أدفع 49$/شهر."',
+  t3:'"استراتيجية الإعلانات مع خطة التطوير — نسخت مباشرة في Meta Ads. ROAS x2.4."',
+  cta_h:'مستعد لتوليد أول محتوى؟',cta_p:'{N} توليدات مجانية. بدون بطاقة. نتيجة في 10 ثوانٍ.',
+  footer_founder:'تطوير',
+  pw_title:'وصلت إلى الحد المجاني',pw_desc:'اشترك للحصول على توليد غير محدود بدون إعلانات.',
+  plan_s_feat:'{S} توليد/شهر · بدون إعلانات',plan_p_feat:'غير محدود · بدون إعلانات · أولوية',pw_popular:'⚡ الأفضل قيمة',
+  pw_email_ph:'بريدك الإلكتروني...',pw_btn:'💳 الدفع عبر Stripe →',or:'أو',pw_skip:'استمر بالتجربة المجانية',
+  recover_link:'مشترك بالفعل؟ استرجع وصولك عبر البريد',
+  recover_prompt:'أدخل البريد الإلكتروني المستخدم عند الاشتراك:',
+  recover_sent:'📩 إذا كان هذا البريد مرتبطاً باشتراك نشط، ستتلقى رابط الوصول خلال لحظات.',
+  free_email_title:'احصل على <strong>3 توليدات/يوم</strong> مجاناً',
+  free_email_ph:'بريدك@الإلكتروني.com',
+  free_email_btn:'متابعة →',
+  free_email_pending:'📩 تم إرسال البريد! انقر على الرابط في صندوقك لتفعيل 3 توليدات/يوم.',
+  free_email_success:'✅ تم توسيع وصولك! لديك الآن 3 توليدات/يوم.',
+  free_email_disposable:'❌ البريد المؤقت غير مقبول.',
+  free_email_limit:'⚠️ تم الوصول إلى الحد الأقصى لهذا الجهاز.',
+  free_email_invalid:'❌ بريد إلكتروني غير صالح.',
+  verify_expired:'الرابط منتهي الصلاحية أو غير صالح. أعد المحاولة من الموقع.',
+  ad_label:'مساحة إعلانية',
+  upsell_title:'⚡ ولّد بدون إعلانات',upsell_last:'⚠️ آخر توليد مجاني!',
+  upsell_desc:'Starter 4.99$/شهر ({S}) — Pro 9.99$/شهر (غير محدود).',upsell_btn:'اشترك →',
+  generating:'⚡ الذكاء الاصطناعي يولد...',close_btn:'إغلاق ×',ready:'✅ المحتوى جاهز!',
+  gen_used:'استخدامات',sub_badge:'⭐ مشترك',
+  dz_msg:'تم تفعيل <strong>الدارجة الجزائرية</strong>.',dz_msg_pub:'الدارجة الجزائرية — إعلان محسّن.',
+  trust_label:'مدعوم من', trust_secure:'100% آمن',
+  stats_users:'تاجر إلكتروني نشط', stats_users_sub:'من الجزائر إلى فرنسا',
+  stats_gen:'محتوى مُولَّد', stats_gen_sub:'صفحات هبوط، سكريبتات، إعلانات',
+  stats_rating:'رضا العملاء', stats_speed:'وقت التوليد', stats_speed_sub:'نتيجة فورية',
+  g1:'{N} توليدات مجانية — بدون بطاقة', g2:'إلغاء بنقرة — بدون التزام',
+  g3:'دفع آمن عبر Stripe', g4:'دعم سريع 24-48 ساعة',
+  faq_label:'الأسئلة الشائعة', faq_h:'الأسئلة الأكثر شيوعاً',
+  cf_btn:'📨 إرسال الرسالة', cf_err_fields:'⚠️ يرجى ملء جميع الحقول المطلوبة.', cf_err_email:'⚠️ البريد الإلكتروني غير صالح.',
+  welcome:'تم تفعيل الاشتراك! توليد غير محدود.'
+},
+en:{
+  nav_features:'Features',nav_pricing:'Pricing',
+  hero_badge:'4 AI Tools · E-commerce · Dropshipping',
+  hero_h1:'Create content<br>that <mark>sells</mark> in seconds',
+  hero_p:'Landing pages, video scripts, ad strategies and product analysis — generated by AI for e-commerce sellers who want to move fast.',
+  cta_free:'Start for free →',cta_free_lg:'⚡ Start for free',cta_pricing:'See pricing →',
+  stat_tools:'AI Tools',stat_langs:'Languages',stat_faster:'3x Faster',stat_from:'From / mo',
+  quota_lbl:'Free generations today',
+  quota_lbl_starter:'Generations left this month (Starter)',
+  starter_limit:'⚠️ Starter monthly limit reached. Upgrade to Pro for unlimited generations.',
+  tab_lp:'Landing Page',tab_vo:'Voiceover',tab_pub:'Ad Strategy',tab_an:'Analysis',
+  lp_h:'🏠 Landing Page Generator',lp_sub:'Ultra-detailed prompt for Midjourney, Flux or Nano Banana Pro.',
+  lp_lang:'Target language',lp_type:'Offer type',lp_single:'Single product',lp_bundle:'Bundle / Pack',
+  lp_name:'Product name',lp_benefits:'Benefits & features',lp_price:'Selling price',lp_colors:'Color style',lp_reviews:'Customer reviews (optional)',
+  vo_h:'🎙️ Voiceover Script + Vision AI',vo_sub:'Upload a photo — AI analyzes it and generates a timed script.',
+  vo_lang:'Language',vo_platform:'Platform',vo_product:'Product & description',vo_duration:'Duration',vo_tone:'Emotion / Tone',vo_audience:'Target audience',
+  pub_h:'📢 Ad Strategy — AI Media Buyer',pub_sub:'High-converting copy + campaign strategy, scaling and A/B tests.',
+  pub_platform:'Platform',pub_obj:'Objective',pub_product:'Product & key benefits',pub_audience:'Target audience',pub_lang:'Language',pub_budget:'Daily budget',pub_promo:'Promotional offer',
+  an_h:'🔍 Winning Product Analyzer',an_sub:'Dropshipping potential score /100 + full market report.',
+  an_product:'Product name & description',an_buy:'Buy price',an_sell:'Target sell price',an_market:'Target market',an_niche:'Niche',an_context:'Additional context',
+  guide_title:'How does it work?',
+  upload_lbl:'📸 Product photo (optional — Vision AI)',upload_hint:'Click to upload a product photo',remove_img:'✕ Remove',
+  generate:'⚡ Generate',generate_pub:'⚡ Generate Ad Strategy',generate_an:'⚡ Analyze Potential',
+  copy:'📋 Copy',copied:'Copied!',
+  refine_h:'🔄 Refine this result',refine_notice:'A brief ad will show before each refinement.',
+  refine_ph:'Ex: Make it more urgent, change the CTA...',refine_btn:'⚡',refine_result:'🔄 Refined version',
+  out_lp:'Landing Page Prompt',out_vo:'Voiceover Script',out_pub:'Ad Strategy',out_an:'Analysis Report',
+  lp_notice:'💡 Paste this prompt into Midjourney, Nano Banana Pro or Flux with product photos for best results.',
+  lang_other:'Other language...',lang_other_ph:'Ex: Italian, Portuguese, German...',
+  market_other:'Other countries...',market_other_ph:'Ex: Germany, Brazil, Turkey...',
+  feat_label:'Why Ecomercai',feat_h:'Built for sellers,\nnot agencies',
+  feat1_t:'6 languages + free field',feat1_d:'French, English, Arabic, Darija, Spanish + any other language. Generate for any market.',
+  feat2_t:'Integrated Vision AI',feat2_d:'Upload your product photo. AI analyzes it and generates hyper-personalized content.',
+  feat3_t:'Results in 10 seconds',feat3_d:'Real-time streaming. Content appears as it\'s generated, like ChatGPT.',
+  feat4_t:'Smart refinement',feat4_d:'Not satisfied? Request a modification directly under the result.',
+  feat5_t:'AI Media Buyer',feat5_d:'Real campaign strategy with scaling phases, A/B tests and mistakes to avoid.',
+  feat6_t:'Total confidentiality',feat6_d:'Your data is never stored or shared. Every generation is processed in real time and deleted immediately after.',
+  langs_h:'One tool, all your markets',langs_p:'From the Algerian market to the United States, generate in your audience\'s language.',
+  pricing_label:'Pricing',pricing_h:'Start for free.\nGo Pro when you\'re ready.',pricing_sub:'No credit card required for free trial.',
+  badge_free:'Free',plan_free:'Free',free_period:'To discover the tool',monthly:'Billed monthly',
+  f_free1:'{N} generations / day',f_free2:'All AI tools',f_free3:'Vision AI',f_free4:'With ads',f_free5:'Priority support',
+  f_s1:'{S} generations / month',f_s2:'All AI tools',f_s3:'Vision AI',f_s4:'No ads ✓',f_s5:'Priority support',
+  f_p1:'Unlimited generations',f_p2:'All AI tools',f_p3:'Priority Vision AI ⚡',f_p4:'No ads ✓',f_p5:'Priority support ✓',
+  btn_free:'Try now',btn_starter:'Start — $4.99/mo',btn_pro:'Go Pro',badge_popular:'⚡ MOST POPULAR',
+  testi_label:'What they say',testi_h:'Trusted by e-commerce sellers\nacross 3 continents',
+  t1:'"I generate TikTok scripts in 15 seconds now. Before I spent 2 hours on ChatGPT."',
+  t2:'"The product analyzer saved me from investing in a losing product. More accurate than what I paid $49/mo for."',
+  t3:'"The ad strategy with scaling plan — I copy-pasted into Meta Ads Manager. ROAS x2.4 on the first campaign."',
+  cta_h:'Ready to generate your first content?',cta_p:'{N} free generations. No credit card. Results in 10 seconds.',
+  footer_founder:'Founded by',
+  pw_title:'You\'ve reached your free limit',pw_desc:'Upgrade for unlimited generations without ads.',
+  plan_s_feat:'{S} gen/month · No ads',plan_p_feat:'Unlimited · No ads · Priority',pw_popular:'⚡ BEST VALUE',
+  pw_email_ph:'Your email...',pw_btn:'💳 Pay with Stripe →',or:'or',pw_skip:'Continue with free trial',
+  recover_link:'Already subscribed? Recover my access by email',
+  recover_prompt:'Enter the email used for your subscription:',
+  recover_sent:'📩 If this email matches an active subscription, you will receive an access link shortly.',
+  free_email_title:'Get <strong>3 generations/day</strong> for free',
+  free_email_ph:'your@email.com',
+  free_email_btn:'Continue →',
+  free_email_pending:'📩 Email sent! Click the link in your inbox to activate 3 generations/day.',
+  free_email_success:'✅ Access extended! You now have 3 generations/day.',
+  free_email_disposable:'❌ Temporary emails are not accepted.',
+  free_email_limit:'⚠️ Limit reached for this device.',
+  free_email_invalid:'❌ Invalid email.',
+  verify_expired:'Link expired or invalid. Please try again from the site.',
+  ad_label:'Advertisement',
+  upsell_title:'⚡ Generate without ads',upsell_last:'⚠️ Last free generation!',
+  upsell_desc:'Starter $4.99/mo ({S} gen) — Pro $9.99/mo (unlimited).',upsell_btn:'Subscribe →',
+  generating:'⚡ AI is generating...',close_btn:'Close ×',ready:'✅ Content ready!',
+  gen_used:'gen used',sub_badge:'⭐ Subscribed',
+  dz_msg:'<strong>Algerian Darija</strong> mode activated.',dz_msg_pub:'Algerian Darija — DZ-optimized ads.',
+  trust_label:'Powered by', trust_secure:'100% Secure',
+  stats_users:'Active sellers', stats_users_sub:'From Algeria to France',
+  stats_gen:'Contents generated', stats_gen_sub:'Landing pages, scripts, ads',
+  stats_rating:'Customer satisfaction', stats_speed:'Generation time', stats_speed_sub:'Real-time result',
+  g1:'{N} free generations — no card required', g2:'Cancel in 1 click — no commitment',
+  g3:'Secure payment via Stripe', g4:'Responsive support 24-48h',
+  faq_label:'FAQ', faq_h:'Frequently asked questions',
+  cf_btn:'📨 Send message', cf_err_fields:'⚠️ Please fill in all required fields.', cf_err_email:'⚠️ Invalid email address.',
+  welcome:'Subscription activated! Unlimited generations.'
+}};
+
+// ── SELECTS TRANSLATIONS ──────────────────────────────────────
+const SEL = {
+  'vo-emotion':{ fr:[['urgency','Urgence & FOMO'],['trust','Confiance & Crédibilité'],['desire','Désir & Aspiration'],['empathy','Empathie & Douleur'],['humour','Humour & Viral']], ar:[['urgency','إلحاح وخوف الخسارة'],['trust','ثقة ومصداقية'],['desire','رغبة وتطلع'],['empathy','تعاطف وألم'],['humour','فكاهة وفيروسي']], en:[['urgency','Urgency & FOMO'],['trust','Trust & Credibility'],['desire','Desire & Aspiration'],['empathy','Empathy & Pain'],['humour','Humor & Viral']] },
+  'vo-duration':{ fr:[['15 secondes','15 secondes'],['30 secondes','30 secondes'],['45 secondes','45 secondes'],['60 secondes','60 secondes']], ar:[['15 secondes','15 ثانية'],['30 secondes','30 ثانية'],['45 secondes','45 ثانية'],['60 secondes','60 ثانية']], en:[['15 secondes','15 seconds'],['30 secondes','30 seconds'],['45 secondes','45 seconds'],['60 secondes','60 seconds']] },
+  'pub-objective':{ fr:[['conversions','Ventes / Conversions'],['traffic','Trafic site web'],['awareness','Notoriété marque'],['engagement','Engagement']], ar:[['conversions','مبيعات'],['traffic','زيارات الموقع'],['awareness','الوعي بالعلامة'],['engagement','التفاعل']], en:[['conversions','Sales / Conversions'],['traffic','Website Traffic'],['awareness','Brand Awareness'],['engagement','Engagement']] },
+  'an-niche':{ fr:[['Beauty & Care','Beauté & Soin'],['Health & Wellness','Santé & Bien-être'],['Sport & Fitness','Sport & Fitness'],['Home & Decor','Maison & Décoration'],['Tech & Gadgets','Tech & Gadgets'],['Fashion & Accessories','Mode & Accessoires'],['Baby & Kids','Bébé & Enfants'],['Pets','Animaux'],['__other__','Autres...']], ar:[['Beauty & Care','الجمال والعناية'],['Health & Wellness','الصحة والعافية'],['Sport & Fitness','الرياضة'],['Home & Decor','المنزل والديكور'],['Tech & Gadgets','التقنية'],['Fashion & Accessories','الموضة'],['Baby & Kids','الأطفال'],['Pets','الحيوانات'],['__other__','أخرى...']], en:[['Beauty & Care','Beauty & Care'],['Health & Wellness','Health & Wellness'],['Sport & Fitness','Sport & Fitness'],['Home & Decor','Home & Decor'],['Tech & Gadgets','Tech & Gadgets'],['Fashion & Accessories','Fashion & Accessories'],['Baby & Kids','Baby & Kids'],['Pets','Pets'],['__other__','Other...']] },
+  'an-market':{ fr:[['France / Belgique / Suisse','France / Belgique / Suisse'],['dz','🇩🇿 Algérie'],['Maghreb (MA/TN/LY)','Maghreb'],['USA / Canada','USA / Canada'],['UK / Australia','UK / Australia'],['__other__','Autres pays...']], ar:[['France / Belgique / Suisse','فرنسا'],['dz','🇩🇿 الجزائر'],['Maghreb (MA/TN/LY)','المغرب العربي'],['USA / Canada','أمريكا / كندا'],['UK / Australia','UK'],['__other__','دول أخرى...']], en:[['France / Belgique / Suisse','France / Belgium / Switzerland'],['dz','🇩🇿 Algeria'],['Maghreb (MA/TN/LY)','Maghreb'],['USA / Canada','USA / Canada'],['UK / Australia','UK / Australia'],['__other__','Other countries...']] },
+  'lp-lang':{ fr:[['French','Français'],['Darija Algérienne','🇩🇿 Darija Algérienne'],['Arabic Darija Moroccan','Darija Marocaine'],['Classical Arabic','Arabe classique'],['English','English'],['Spanish','Español'],['__other__','Autre langue...']], ar:[['French','الفرنسية'],['Darija Algérienne','🇩🇿 الدارجة الجزائرية'],['Arabic Darija Moroccan','الدارجة المغربية'],['Classical Arabic','العربية الفصحى'],['English','الإنجليزية'],['Spanish','الإسبانية'],['__other__','لغة أخرى...']], en:[['French','French'],['Darija Algérienne','🇩🇿 Algerian Darija'],['Arabic Darija Moroccan','Moroccan Darija'],['Classical Arabic','Classical Arabic'],['English','English'],['Spanish','Spanish'],['__other__','Other language...']] },
+  'vo-lang':{ fr:[['French','Français'],['Darija Algérienne','🇩🇿 Darija Algérienne'],['Arabic Darija Moroccan','Darija Marocaine'],['Classical Arabic','Arabe classique'],['English','English']], ar:[['French','الفرنسية'],['Darija Algérienne','🇩🇿 الدارجة الجزائرية'],['Arabic Darija Moroccan','الدارجة المغربية'],['Classical Arabic','العربية الفصحى'],['English','الإنجليزية']], en:[['French','French'],['Darija Algérienne','🇩🇿 Algerian Darija'],['Arabic Darija Moroccan','Moroccan Darija'],['Classical Arabic','Classical Arabic'],['English','English']] },
+  'pub-lang':{ fr:[['French','Français'],['Darija Algérienne','🇩🇿 Darija Algérienne'],['Classical Arabic','Arabe classique'],['English','English']], ar:[['French','الفرنسية'],['Darija Algérienne','🇩🇿 الدارجة الجزائرية'],['Classical Arabic','العربية الفصحى'],['English','الإنجليزية']], en:[['French','French'],['Darija Algérienne','🇩🇿 Algerian Darija'],['Classical Arabic','Classical Arabic'],['English','English']] }
+};
+function translateSelects() {
+  Object.entries(SEL).forEach(([id, opts]) => {
+    const s = document.getElementById(id); if (!s) return;
+    const cv = s.value;
+    s.innerHTML = (opts[lang]||opts.fr).map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+    s.value = cv;
+  });
+  checkNicheOther();
+  checkLangOther();
+  checkMarketOther();
+}
+
+// ── PLACEHOLDERS ──────────────────────────────────────────────
+const PH = {
+  'lp-name':{fr:'Ex: Brosse ionique Pro',ar:'مثال: فرشاة الشعر الأيونية',en:'Ex: Pro Ionic Hair Brush'},
+  'lp-benefits':{fr:'Ex: Élimine les frisottis 80%, chauffe en 30s...',ar:'مثال: يزيل التجعد 80%...',en:'Ex: Eliminates frizz 80%, heats in 30s...'},
+  'lp-price':{fr:'Ex: 29.99€ / $29',ar:'مثال: 29.99€ أو $29',en:'Ex: $29.99 / €29'},
+  'lp-colors':{fr:'Ex: Noir & Or, Blanc & Rose',ar:'مثال: أسود وذهبي',en:'Ex: Black & Gold, White & Pink'},
+  'lp-r1':{fr:'Avis 1...',ar:'تقييم 1...',en:'Review 1...'},
+  'lp-r2':{fr:'Avis 2...',ar:'تقييم 2...',en:'Review 2...'},
+  'lp-r3':{fr:'Avis 3...',ar:'تقييم 3...',en:'Review 3...'},
+  'lp-urgency':{fr:'Ex: Stock limité, -50% aujourd\'hui',ar:'مثال: كميات محدودة',en:'Ex: Limited stock, -50% today'},
+  'vo-product':{fr:'Ex: Ceinture chauffante lombaires — soulagement en 10 min',ar:'مثال: حزام تدفئة أسفل الظهر',en:'Ex: Lumbar heating belt — relief in 10 min'},
+  'vo-audience':{fr:'Ex: Femmes 25-45, mères actives',ar:'مثال: نساء 25-45',en:'Ex: Women 25-45, active mothers'},
+  'pub-product':{fr:'Ex: Montre connectée sport — GPS, 14j autonomie',ar:'مثال: ساعة ذكية رياضية',en:'Ex: Sports smartwatch — GPS, 14-day battery'},
+  'pub-audience':{fr:'Ex: Hommes 25-40, sportifs, Europe',ar:'مثال: رجال 25-40، رياضيون',en:'Ex: Men 25-40, sports lovers, Europe'},
+  'pub-budget':{fr:'Ex: 10$/jour',ar:'مثال: 10$/يوم',en:'Ex: $10/day'},
+  'pub-promo':{fr:'Ex: -40% 48h, livraison gratuite',ar:'مثال: -40% لمدة 48 ساعة',en:'Ex: -40% 48h, free shipping'},
+  'an-product':{fr:'Ex: Masque LED anti-acné, photothérapie',ar:'مثال: قناع LED لعلاج حب الشباب',en:'Ex: Anti-acne LED mask, phototherapy'},
+  'an-buy':{fr:'Ex: 8.50',ar:'مثال: 8.50',en:'Ex: 8.50'},
+  'an-sell':{fr:'Ex: 39.99',ar:'مثال: 39.99',en:'Ex: 39.99'},
+  'an-context':{fr:'Ex: Vu viral TikTok, concurrent sur Amazon...',ar:'مثال: انتشر على تيك توك...',en:'Ex: Went viral on TikTok, competitor on Amazon...'},
+  'an-niche-other':{fr:'Décrivez votre niche...',ar:'صف تخصصك...',en:'Describe your niche...'},
+  'ri-lp':{fr:'Ex: Rends plus urgent, ajoute des emojis...',ar:'مثال: اجعله أكثر إلحاحاً...',en:'Ex: Make it more urgent, add emojis...'},
+  'ri-vo':{fr:'Ex: Plus émotionnel, hook plus fort...',ar:'مثال: أكثر عاطفية...',en:'Ex: More emotional, stronger hook...'},
+  'ri-pub':{fr:'Ex: Budget plus serré, cible les femmes...',ar:'مثال: ميزانية أقل...',en:'Ex: Tighter budget, target women...'},
+  'ri-an':{fr:'Ex: Analyse pour un autre marché...',ar:'مثال: حلل لسوق مختلف...',en:'Ex: Analyze for a different market...'}
+};
+function translatePH() {
+  Object.entries(PH).forEach(([id,vals])=>{ const e=document.getElementById(id); if(e) e.placeholder=vals[lang]||vals.fr; });
+  document.querySelectorAll('.upload-ph span[data-i18n="upload_hint"]').forEach(e=>{ e.textContent=(T[lang]||T.fr).upload_hint; });
+}
+
+// ── CUSTOMER PORTAL ──────────────────────────────────────────
+async function openCustomerPortal() {
+  if (!subToken) { showPaywall(); return; }
+  const btn = document.querySelector('[onclick="openCustomerPortal()"]');
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Chargement...'; }
+  try {
+    const res = await fetch(WORKER + '/api/customer-portal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: subToken })
+    });
+    const d = await res.json();
+    if (d.url) window.location.href = d.url;
+    else throw new Error(d.error || 'Erreur');
+  } catch(e) {
+    alert('Erreur : ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = '⚙️ Gérer mon abonnement →'; }
+  }
+}
+
+// Afficher le bouton "Gérer" si abonné
+function updateSubscriberUI() {
+  const wrap = document.getElementById('pw-manage-wrap');
+  if (wrap && subToken) wrap.classList.remove('hidden');
+}
+
+// ── CONTACT FORM ─────────────────────────────────────────────
+async function submitContact() {
+  const fname   = document.getElementById('cf-fname')?.value.trim();
+  const email   = document.getElementById('cf-email')?.value.trim();
+  const subject = document.getElementById('cf-subject')?.value;
+  const message = document.getElementById('cf-message')?.value.trim();
+  const success = document.getElementById('cf-success');
+  const error   = document.getElementById('cf-error');
+  const btn     = document.getElementById('cf-submit');
+
+  // Validation
+  if (!fname || !email || !subject || !message) {
+    if (error) { error.textContent = T[lang]?.cf_err_fields || '⚠️ Veuillez remplir tous les champs obligatoires.'; error.classList.add('show'); setTimeout(()=>error.classList.remove('show'),3500); }
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (error) { error.textContent = T[lang]?.cf_err_email || '⚠️ Email invalide.'; error.classList.add('show'); setTimeout(()=>error.classList.remove('show'),3500); }
+    return;
+  }
+
+  if (btn) { btn.disabled=true; btn.innerHTML='<span class="spinner" style="border-top-color:#fff"></span>'; }
+
+  try {
+    // Route: abonnement issues → support@, everything else → contact@
+    const targetEmail = subject === 'abonnement' ? 'support@ecomercai.com' : 'contact@ecomercai.com';
+    const ccEmail     = subject === 'abonnement' ? 'contact@ecomercai.com' : 'support@ecomercai.com';
+
+    const formData = new FormData();
+    formData.append('name',    fname);
+    formData.append('email',   email);
+    formData.append('subject', `[Ecomercai] ${subject}`);
+    formData.append('message', message);
+    formData.append('_template', 'table');
+    formData.append('_captcha',  'false');
+    formData.append('_replyto',  email);
+    formData.append('_cc',       ccEmail);
+
+    const res = await fetch(`https://formsubmit.co/ajax/${targetEmail}`, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (data.success === 'true' || data.success === true || res.ok) {
+      if (success) success.classList.add('show');
+      ['cf-fname','cf-email','cf-message'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+      const sel=document.getElementById('cf-subject'); if(sel) sel.value='';
+      setTimeout(()=>{if(success)success.classList.remove('show');},6000);
+    } else {
+      throw new Error('Envoi échoué');
+    }
+  } catch(e) {
+    // Fallback mailto si FormSubmit non encore activé
+    const mailtoLink = `mailto:contact@ecomercai.com?subject=${encodeURIComponent('[Ecomercai] '+subject)}&body=${encodeURIComponent('Nom: '+fname+'\nEmail: '+email+'\n\n'+message)}`;
+    window.location.href = mailtoLink;
+    if (success) success.classList.add('show');
+  } finally {
+    if (btn) { btn.disabled=false; btn.innerHTML = T[lang]?.cf_btn || '📨 Envoyer le message'; }
+  }
+}
+
+// ── FAQ ─────────────────────────────────────────────────────
+const FAQ_DATA = {
+  fr: [
+    { q: 'Est-ce vraiment gratuit ?', a: 'Oui — {N} générations gratuites par jour, sans carte bancaire. Vous pouvez tester tous les outils immédiatement.' },
+    { q: 'Comment fonctionne l\'abonnement ?', a: 'L\'abonnement Starter ($4.99/mois) vous donne {S} générations par mois sans publicités. Le plan Pro ($9.99/mois) est illimité. Paiement sécurisé via Stripe.' },
+    { q: 'Puis-je annuler à tout moment ?', a: 'Oui, annulation en 1 clic depuis votre espace Stripe. Aucun engagement, aucune pénalité.' },
+    { q: 'Les contenus générés m\'appartiennent-ils ?', a: 'Absolument. Tous les contenus générés par les outils vous appartiennent à 100%. Vous pouvez les utiliser, modifier et publier librement.' },
+    { q: 'Quelles langues sont supportées ?', a: 'Français, Anglais, Arabe classique, Darija Algérienne, Darija Marocaine, Espagnol — et toute autre langue via le champ libre.' },
+    { q: 'Mes données sont-elles sécurisées ?', a: 'Oui. Vos données ne sont jamais stockées. Chaque génération est traitée en temps réel et effacée immédiatement. Seul votre email (si abonnement) est conservé.' },
+    { q: 'Que faire si j\'ai un problème ?', a: 'Contactez-nous via le formulaire Contact ou à support@ecomercai.com. Délai de réponse : 24-48h.' }
+  ],
+  ar: [
+    { q: 'هل هو مجاني حقاً؟', a: 'نعم — {N} توليدات مجانية يومياً، بدون بطاقة بنكية. يمكنك تجربة جميع الأدوات فوراً.' },
+    { q: 'كيف يعمل الاشتراك؟', a: 'اشتراك Starter (4.99$/شهر) يمنحك {S} توليد شهرياً بدون إعلانات. Pro (9.99$/شهر) غير محدود. دفع آمن عبر Stripe.' },
+    { q: 'هل يمكنني الإلغاء في أي وقت؟', a: 'نعم، إلغاء بنقرة واحدة من حسابك على Stripe. لا التزامات ولا غرامات.' },
+    { q: 'هل المحتوى المُولَّد يعود لي؟', a: 'بالكامل. كل المحتوى الذي تولّده يخصك 100%. يمكنك استخدامه وتعديله ونشره بحرية تامة.' },
+    { q: 'ما هي اللغات المدعومة؟', a: 'الفرنسية، الإنجليزية، العربية الفصحى، الدارجة الجزائرية، الدارجة المغربية، الإسبانية — وأي لغة أخرى عبر الحقل الحر.' },
+    { q: 'هل بياناتي آمنة؟', a: 'نعم. بياناتك لا تُخزَّن أبداً. كل توليد يُعالَج فورياً ويُحذف مباشرة. فقط بريدك الإلكتروني (عند الاشتراك) يُحفظ.' },
+    { q: 'ماذا أفعل إذا واجهت مشكلة؟', a: 'تواصل معنا عبر نموذج الاتصال أو على support@ecomercai.com. وقت الرد: 24-48 ساعة.' }
+  ],
+  en: [
+    { q: 'Is it really free?', a: 'Yes — {N} free generations per day, no credit card required. You can test all tools immediately.' },
+    { q: 'How does the subscription work?', a: 'The Starter plan ($4.99/month) gives you {S} generations per month with no ads. Pro ($9.99/month) is unlimited. Secure payment via Stripe.' },
+    { q: 'Can I cancel at any time?', a: 'Yes, cancel in 1 click from your Stripe dashboard. No commitment, no penalties.' },
+    { q: 'Do I own the generated content?', a: 'Absolutely. All content generated belongs 100% to you. You can use, modify and publish it freely.' },
+    { q: 'What languages are supported?', a: 'French, English, Classical Arabic, Algerian Darija, Moroccan Darija, Spanish — and any other language via the free field.' },
+    { q: 'Is my data secure?', a: 'Yes. Your data is never stored. Each generation is processed in real time and deleted immediately. Only your email (if subscribed) is kept.' },
+    { q: 'What if I have a problem?', a: 'Contact us via the Contact form or at support@ecomercai.com. Response time: 24-48 hours.' }
+  ]
+};
+
+function buildFAQ() {
+  const list = document.getElementById('faq-list');
+  if (!list) return;
+  const items = FAQ_DATA[lang] || FAQ_DATA.fr;
+  list.innerHTML = items.map((item, i) => `
+    <div class="faq-item" id="faq-${i}">
+      <div class="faq-q" onclick="toggleFAQ(${i})">
+        <span class="faq-q-text">${dyn(item.q)}</span>
+        <span class="faq-icon">+</span>
+      </div>
+      <div class="faq-a">${dyn(item.a)}</div>
+    </div>`).join('');
+}
+
+function toggleFAQ(i) {
+  const item = document.getElementById('faq-' + i);
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(el => el.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ── SET LANG ──────────────────────────────────────────────────
+function setLang(l) {
+  lang = l;
+  document.documentElement.setAttribute('lang', l==='ar'?'ar':l);
+  document.documentElement.setAttribute('dir',  l==='ar'?'rtl':'ltr');
+  document.documentElement.setAttribute('data-lang', l);
+  document.querySelectorAll('.lang-b').forEach((b,i)=>b.classList.toggle('active',['fr','ar','en'][i]===l));
+  // Sync mobile dropdown
+  const mSel = document.getElementById('lang-mobile-select');
+  if (mSel) mSel.value = l;
+  applyT(); translateSelects(); translatePH(); buildFooterContent(); buildGuides(); buildFAQ();
+  if (subToken) syncQuota(); // ré-appliquer le libellé Starter après traduction
+}
+
+// ── APPLY TRANSLATIONS ────────────────────────────────────────
+function applyT() {
+  const t = T[lang]||T.fr;
+  // Hero
+  const h1=document.getElementById('hero-h1'), hp=document.getElementById('hero-p');
+  if(h1) h1.innerHTML=t.hero_h1||h1.innerHTML;
+  if(hp) hp.textContent=t.hero_p||'';
+  // data-i18n
+  document.querySelectorAll('[data-i18n]').forEach(e=>{ const k=e.getAttribute('data-i18n'); if(t[k]!==undefined) e.textContent=dyn(t[k]); });
+  document.querySelectorAll('[data-i18n-html]').forEach(e=>{ const k=e.getAttribute('data-i18n-html'); if(t[k]!==undefined) e.innerHTML=dyn(t[k]); });
+  // placeholders data-i18n-ph
+  document.querySelectorAll('[data-i18n-ph]').forEach(e=>{ const k=e.getAttribute('data-i18n-ph'); if(t[k]!==undefined) e.placeholder=t[k]; });
+}
+</script>
+</body>
+</html>

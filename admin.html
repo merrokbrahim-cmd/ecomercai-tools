@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="/favicon.png">
+  <title>Ecomercai — Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8f8f6; --bg2: #f2f1ee; --card: #ffffff; --card2: #f2f1ee;
+      --border: #e2e2e8; --border2: #d0d0d8;
+      --gold: #c8910a; --green: #1a7a4a; --red: #c0392b; --blue: #2563eb;
+      --text: #0d0d0b; --text2: #5a5a62; --text3: #9a9a92;
+      --radius: 14px; --fd: 'Syne', sans-serif; --fb: 'DM Sans', sans-serif;
+    }
+    [data-theme="dark"] {
+      --bg: #070708; --bg2: #0e0e10; --card: #111114; --card2: #18181c;
+      --border: #1e1e24; --border2: #2a2a32;
+      --gold: #f5a623; --green: #3ecf8e; --red: #e05252; --blue: #4f8ef5;
+      --text: #ededea; --text2: #7a7a80; --text3: #3e3e46;
+    }
+    /* Logo */
+    .logo-wrap{display:flex;align-items:center;gap:6px;text-decoration:none}
+    .logo-wordmark-text{font-family:'Syne',sans-serif;font-size:20px;font-weight:900;letter-spacing:-.5px;line-height:1}
+    .logo-e{color:var(--gold)}
+    .logo-rest{color:var(--text)}
+    .logo-badge{background:var(--gold);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:5px;letter-spacing:.5px;text-transform:uppercase;align-self:flex-start;margin-top:2px}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: var(--fb); min-height: 100vh; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
+
+    /* LOGIN */
+    #login-screen {
+      position: fixed; inset: 0; background: var(--bg);
+      display: flex; align-items: center; justify-content: center; z-index: 100;
+    }
+    #login-screen.hidden { display: none; }
+    .login-box {
+      background: var(--card); border: 1px solid var(--border2);
+      border-radius: 20px; padding: 40px; max-width: 380px; width: 90%;
+      text-align: center;
+    }
+    .login-box .lock { font-size: 48px; margin-bottom: 16px; }
+    .login-box h2 { font-family: var(--fd); font-size: 22px; margin-bottom: 6px; }
+    .login-box p { color: var(--text2); font-size: 13px; margin-bottom: 24px; }
+    .login-box input {
+      width: 100%; background: var(--card2); border: 1px solid var(--border2);
+      border-radius: 8px; padding: 12px 14px; color: var(--text); font-family: var(--fb);
+      font-size: 14px; outline: none; margin-bottom: 12px; transition: border-color .2s;
+    }
+    .login-box input:focus { border-color: var(--gold); }
+    .login-error { color: var(--red); font-size: 13px; margin-bottom: 10px; display: none; }
+
+    /* LAYOUT */
+    #dashboard { display: none; flex-direction: column; min-height: 100vh; }
+    #dashboard.visible { display: flex; }
+    header {
+      background: var(--card); border-bottom: 1px solid var(--border);
+      padding: 0 28px; height: 60px; display: flex; align-items: center;
+      justify-content: space-between; position: sticky; top: 0; z-index: 10; direction:ltr;
+    }
+    .header-logo { font-family: var(--fd); font-size: 18px; font-weight: 800; color: var(--gold); }
+    .header-logo span { color: var(--text2); font-size: 13px; margin-left: 8px; font-family: var(--fb); }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    #worker-url-display { color: var(--text3); font-size: 12px; }
+    .btn-logout {
+      padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border2);
+      background: transparent; color: var(--text2); font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all .2s; font-family: var(--fb);
+    }
+    .btn-logout:hover { color: var(--red); border-color: var(--red); }
+
+    main { padding: 32px 28px; max-width: 1100px; margin: 0 auto; width: 100%; flex: 1; }
+
+    /* SETUP BANNER */
+    #setup-banner {
+      background: rgba(245,166,35,.08); border: 1px solid rgba(245,166,35,.25);
+      border-radius: var(--radius); padding: 16px 20px; margin-bottom: 28px;
+      display: none;
+    }
+    #setup-banner.visible { display: block; }
+    #setup-banner h3 { font-size: 14px; font-weight: 700; color: var(--gold); margin-bottom: 8px; }
+    #setup-banner p { font-size: 13px; color: var(--text2); line-height: 1.6; }
+    #setup-banner code { background: rgba(0,0,0,.4); padding: 2px 6px; border-radius: 4px; color: var(--gold); font-size: 12px; }
+
+    /* STATS CARDS */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+    @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border2);
+      border-radius: var(--radius); padding: 20px;
+    }
+    .stat-label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; }
+    .stat-value { font-family: var(--fd); font-size: 32px; font-weight: 800; }
+    .stat-sub { font-size: 12px; color: var(--text2); margin-top: 6px; }
+    .val-gold { color: var(--gold); }
+    .val-green { color: var(--green); }
+    .val-blue { color: var(--blue); }
+    .val-white { color: var(--text); }
+
+    /* GRID 2 COL */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* CARD */
+    .card {
+      background: var(--card); border: 1px solid var(--border2);
+      border-radius: var(--radius); overflow: hidden; margin-bottom: 20px;
+    }
+    .card-header {
+      padding: 16px 20px; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-title { font-family: var(--fd); font-size: 15px; font-weight: 700; }
+    .card-body { padding: 20px; }
+
+    /* PAYWALL TOGGLE — le bouton principal */
+    .toggle-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0;
+    }
+    .toggle-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .toggle-info p { font-size: 13px; color: var(--text2); }
+    .toggle-switch {
+      position: relative; width: 56px; height: 30px; flex-shrink: 0;
+    }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider {
+      position: absolute; inset: 0; background: var(--border2); border-radius: 15px;
+      cursor: pointer; transition: .3s;
+    }
+    .toggle-slider:before {
+      content: ''; position: absolute; height: 22px; width: 22px;
+      left: 4px; bottom: 4px; background: white; border-radius: 50%; transition: .3s;
+    }
+    input:checked + .toggle-slider { background: var(--green); }
+    input:checked + .toggle-slider:before { transform: translateX(26px); }
+    .paywall-status {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700;
+      margin-top: 10px;
+    }
+    .paywall-status.on  { background: rgba(62,207,142,.1); color: var(--green); border: 1px solid rgba(62,207,142,.25); }
+    .paywall-status.off { background: rgba(122,122,128,.1); color: var(--text2); border: 1px solid var(--border2); }
+
+    /* FORM CONTROLS */
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; }
+    .form-control {
+      background: var(--card2); border: 1px solid var(--border2);
+      border-radius: 8px; padding: 10px 14px; color: var(--text); font-family: var(--fb);
+      font-size: 14px; outline: none; width: 100%; transition: border-color .2s;
+    }
+    .form-control:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(245,166,35,.1); }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 11px 22px; border-radius: 8px; border: none; font-family: var(--fb);
+      font-size: 14px; font-weight: 600; cursor: pointer; transition: all .2s;
+    }
+    .btn-primary { background: var(--gold); color: #000; }
+    .btn-primary:hover { background: #f5b845; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-ghost { background: var(--card2); color: var(--text2); border: 1px solid var(--border2); }
+    .btn-ghost:hover { color: var(--text); }
+    .btn-danger { background: rgba(224,82,82,.1); color: var(--red); border: 1px solid rgba(224,82,82,.25); }
+    .btn-sm { padding: 7px 14px; font-size: 12px; }
+
+    /* CHART */
+    .chart-container { height: 140px; display: flex; align-items: flex-end; gap: 6px; padding: 8px 0; }
+    .chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 5px; height: 100%; justify-content: flex-end; }
+    .chart-bar { width: 100%; background: rgba(245,166,35,.3); border-radius: 4px 4px 0 0; min-height: 4px; transition: height .5s ease; position: relative; }
+    .chart-bar:hover { background: var(--gold); }
+    .chart-bar-label { font-size: 10px; color: var(--text3); }
+    .chart-bar-val { font-size: 11px; color: var(--text2); font-weight: 600; }
+
+    /* SUBSCRIBERS TABLE */
+    .sub-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .sub-table th { padding: 10px 12px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border); }
+    .sub-table td { padding: 12px; border-bottom: 1px solid var(--border); color: var(--text2); }
+    .sub-table tr:last-child td { border-bottom: none; }
+    .sub-table tr:hover td { background: var(--card2); }
+    .sortable-th { cursor: pointer; user-select: none; transition: color .15s; white-space: nowrap; }
+    .sortable-th:hover { color: var(--text); }
+    .sortable-th.asc, .sortable-th.desc { color: var(--text); }
+    .sort-icon { margin-left: 3px; font-style: normal; font-size: 10px; opacity: .4; }
+    .sortable-th.asc .sort-icon::after { content: '↑'; opacity: 1; color: var(--gold); }
+    .sortable-th.desc .sort-icon::after { content: '↓'; opacity: 1; color: var(--gold); }
+    .sortable-th:not(.asc):not(.desc) .sort-icon::after { content: '↕'; }
+    .filter-bar { display: flex; align-items: center; gap: 6px; padding: 10px 14px; border-bottom: 1px solid var(--border); flex-wrap: wrap; background: var(--card); }
+    .flt-btn { padding: 4px 11px; font-size: 11px; font-weight: 600; border-radius: 20px; border: 1px solid var(--border2); background: transparent; color: var(--text3); cursor: pointer; transition: all .15s; font-family: var(--fb); }
+    .flt-btn:hover { color: var(--text); border-color: var(--text3); }
+    .flt-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
+    .flt-date { padding: 3px 8px; font-size: 11px; border-radius: 6px; border: 1px solid var(--border2); background: var(--card2); color: var(--text); font-family: var(--fb); cursor: pointer; }
+    .flt-sep { color: var(--border2); font-size: 14px; margin: 0 2px; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+    .badge-green { background: rgba(62,207,142,.1); color: var(--green); }
+    .badge-red   { background: rgba(224,82,82,.1);  color: var(--red); }
+    .badge-blue  { background: rgba(79,142,245,.1); color: var(--blue); }
+
+    /* WORKER URL INPUT */
+    .worker-input-row { display: flex; gap: 10px; align-items: center; }
+    .worker-input-row input { flex: 1; }
+
+    /* SAVE INDICATOR */
+    .save-indicator { font-size: 12px; color: var(--green); display: none; }
+    .save-indicator.visible { display: inline; }
+
+    /* TOAST */
+    #toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--card); border: 1px solid var(--border2); border-radius: 10px;
+      padding: 12px 24px; font-size: 14px; font-weight: 600;
+      box-shadow: 0 8px 32px rgba(0,0,0,.5); z-index: 999;
+      transition: opacity .3s; opacity: 0; pointer-events: none; white-space: nowrap;
+    }
+    #toast.show { opacity: 1; }
+    #toast.success { border-color: rgba(62,207,142,.3); color: var(--green); }
+    #toast.error   { border-color: rgba(224,82,82,.3);  color: var(--red); }
+
+    /* LOADING SPINNER */
+    @keyframes spin { to{transform:rotate(360deg)} }
+    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.2); border-top-color: currentColor; border-radius: 50%; animation: spin .6s linear infinite; }
+
+    .divider { height: 1px; background: var(--border); margin: 16px 0; }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN ===== -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="lock">🔐</div>
+    <h2>Ecomercai Admin</h2>
+    <p>Entrez d'abord l'URL de votre Cloudflare Worker, puis votre mot de passe admin.</p>
+    <input type="url" id="worker-url-input" placeholder="https://ecomercai-proxy.merrokbrahim.workers.dev" autocomplete="off">
+    <input type="password" id="admin-password" placeholder="Mot de passe admin (ADMIN_KEY)" autocomplete="off" onkeydown="if(event.key==='Enter') login()">
+    <div class="login-error" id="login-error">❌ Mot de passe incorrect ou Worker inaccessible</div>
+    <button class="btn btn-primary" style="width:100%;padding:13px;font-size:15px" onclick="login()" id="login-btn">
+      Accéder au dashboard →
+    </button>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div id="dashboard">
+  <header>
+    <div>
+      <div class="logo-wrap">
+        <div class="logo-wordmark-text"><span class="logo-e">E</span><span class="logo-rest">comercai</span></div>
+        <div class="logo-badge">Tools</div>
+        <span style="font-size:12px;color:var(--text2);font-family:var(--fb);margin-left:6px">Admin</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <span id="worker-url-display"></span>
+      <button class="btn-logout" onclick="logout()">Déconnexion</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Setup Banner -->
+    <div id="setup-banner">
+      <h3>⚙️ Configuration initiale requise</h3>
+      <p>Le Worker répond, mais certaines variables d'environnement semblent manquantes. Assurez-vous d'avoir configuré dans Cloudflare :<br>
+      <code>ANTHROPIC_KEY</code> &nbsp;•&nbsp; <code>ADMIN_KEY</code> &nbsp;•&nbsp; <code>STRIPE_SECRET</code> &nbsp;•&nbsp;
+      <code>STRIPE_PRICE_STARTER</code> &nbsp;•&nbsp; <code>STRIPE_PRICE_PRO</code> &nbsp;•&nbsp; <code>SITE_URL</code>
+      et le KV namespace <code>ECOMAI_KV</code> bindé.</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Générations aujourd'hui</div>
+        <div class="stat-value val-gold" id="stat-today">—</div>
+        <div class="stat-sub">requêtes Claude</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Cette semaine</div>
+        <div class="stat-value val-white" id="stat-week">—</div>
+        <div class="stat-sub">7 derniers jours</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Abonnés actifs</div>
+        <div class="stat-value val-green" id="stat-subs">—</div>
+        <div class="stat-sub">abonnements Stripe</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Revenus estimés</div>
+        <div class="stat-value val-blue" id="stat-revenue">—</div>
+        <div class="stat-sub">ce mois (Stripe)</div>
+      </div>
+    </div>
+
+    <!-- CHART + PAYWALL -->
+    <div class="grid-2">
+
+      <!-- Graphique activité -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">📈 Activité 7 jours</span>
+          <button class="btn btn-ghost btn-sm" onclick="loadStats()">↻ Rafraîchir</button>
+        </div>
+        <div class="card-body">
+          <div class="chart-container" id="chart-container">
+            <div style="color:var(--text3);font-size:13px;width:100%;text-align:center">Chargement...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Paywall Toggle -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🎛️ Contrôle Paywall</span>
+          <span class="save-indicator" id="paywall-saved">✅ Sauvegardé</span>
+        </div>
+        <div class="card-body">
+          <div class="toggle-row">
+            <div class="toggle-info">
+              <h4>Activer le Paywall</h4>
+              <p>Limite les utilisateurs gratuits et affiche la modale d'abonnement Stripe.</p>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="paywall-toggle" onchange="togglePaywall()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div id="paywall-status-badge" class="paywall-status off">⚪ Paywall désactivé — accès libre</div>
+
+          <div class="divider"></div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Générations gratuites/jour</label>
+              <input type="number" class="form-control" id="cfg-free-limit" min="1" max="50" value="5">
+            </div>
+            <div class="form-group">
+              <label>Générations Starter/mois</label>
+              <input type="number" class="form-control" id="cfg-starter-limit" min="10" max="10000" value="100">
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="saveLimit()">💾 Sauvegarder les limites</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING + STRIPE -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">💳 Tarification</span>
+          <span class="save-indicator" id="price-saved">✅ Sauvegardé</span>
+        </div>
+        <div class="card-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Prix Starter ($/mois)</label>
+              <input type="number" class="form-control" id="cfg-price-starter" step="0.01" value="4.99">
+            </div>
+            <div class="form-group">
+              <label>Prix Pro ($/mois)</label>
+              <input type="number" class="form-control" id="cfg-price-pro" step="0.01" value="9.99">
+            </div>
+          </div>
+          <button class="btn btn-primary" onclick="savePrices()">💾 Mettre à jour les prix</button>
+          <p style="font-size:12px;color:var(--text3);margin-top:10px">⚠️ Les prix affichés seulement. Modifiez les vrais prix dans Stripe Dashboard.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🧪 Mode Test</span>
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
+          <p style="font-size:12px;color:var(--text2);margin-bottom:4px">Génère un token de test pour simuler un abonnement sans payer.</p>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-ghost" style="flex:1" onclick="generateTestToken('starter')">🌟 Token Starter</button>
+            <button class="btn btn-ghost" style="flex:1" onclick="generateTestToken('pro')">⚡ Token Pro</button>
+          </div>
+          <div id="test-token-result" style="display:none;background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:10px;font-size:12px">
+            <div style="font-weight:700;color:var(--gold);margin-bottom:6px" id="test-token-label"></div>
+            <input id="test-token-value" type="text" readonly onclick="this.select()"
+              style="width:100%;background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-family:monospace;font-size:11px;color:var(--text);cursor:pointer;margin-bottom:8px"
+              placeholder="Token...">
+            <p style="font-size:11px;color:var(--text2);margin-bottom:8px">👆 Clique sur le champ pour sélectionner → Ctrl+C pour copier</p>
+            <a id="test-token-link" href="https://ecomercai.com" target="_blank"
+              style="display:block;width:100%;padding:8px;background:var(--gold);color:#fff;border:none;border-radius:6px;font-weight:700;cursor:pointer;font-size:12px;text-align:center;text-decoration:none;box-sizing:border-box">
+              🌐 Ouvrir ecomercai.com
+            </a>
+            <p style="font-size:11px;color:var(--text2);margin-top:8px">Après avoir ouvert le site → F12 → Console → colle :</p>
+            <input id="test-token-cmd" type="text" readonly onclick="this.select()"
+              style="width:100%;background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;font-family:monospace;font-size:10px;color:var(--text);cursor:pointer"
+              placeholder="Commande console...">
+          </div>
+          <button class="btn btn-ghost" style="color:var(--red);border-color:var(--red);font-size:12px" onclick="clearTestToken()">🗑️ Supprimer le token actif</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">🔗 Liens rapides</span>
+        </div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:10px">
+          <a href="https://dashboard.stripe.com/subscriptions" target="_blank" class="btn btn-ghost" style="text-decoration:none">
+            💳 Stripe — Abonnements
+          </a>
+          <a href="https://dash.cloudflare.com" target="_blank" class="btn btn-ghost" style="text-decoration:none">
+            ☁️ Cloudflare Dashboard
+          </a>
+          <a href="https://console.anthropic.com/account/usage" target="_blank" class="btn btn-ghost" style="text-decoration:none">
+            🤖 Usage API Claude
+          </a>
+          <a id="link-site" href="#" target="_blank" class="btn btn-ghost" style="text-decoration:none">
+            🌐 Voir le site
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABONNÉS DÉTAILLÉS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">👥 Abonnés actifs</span>
+        <button class="btn btn-ghost btn-sm" onclick="loadStats()">↻ Rafraîchir</button>
+      </div>
+      <div class="filter-bar" id="subs-filter-bar">
+        <button class="flt-btn active" onclick="setSubsPeriod('all')">Tout</button>
+        <button class="flt-btn" onclick="setSubsPeriod(7)">7j</button>
+        <button class="flt-btn" onclick="setSubsPeriod(30)">30j</button>
+        <button class="flt-btn" onclick="setSubsPeriod(90)">90j</button>
+        <span class="flt-sep">|</span>
+        <input type="date" class="flt-date" id="subs-from" onchange="setSubsCustomDate()" title="Du">
+        <span style="color:var(--text3);font-size:11px">→</span>
+        <input type="date" class="flt-date" id="subs-to" onchange="setSubsCustomDate()" title="Au">
+      </div>
+      <div class="card-body" style="padding:0;overflow-x:auto">
+        <table class="sub-table" id="subscribers-table">
+          <thead>
+            <tr>
+              <th class="sortable-th" id="sh-email" onclick="sortSubs('email')">Email <span class="sort-icon"></span></th>
+              <th class="sortable-th" id="sh-plan" onclick="sortSubs('plan')">Plan <span class="sort-icon"></span></th>
+              <th class="sortable-th" id="sh-revenue" onclick="sortSubs('revenue')">Revenu <span class="sort-icon"></span></th>
+              <th class="sortable-th" id="sh-active" onclick="sortSubs('active')">Statut <span class="sort-icon"></span></th>
+              <th class="sortable-th desc" id="sh-activatedAt" onclick="sortSubs('activatedAt')">Date activation <span class="sort-icon"></span></th>
+              <th class="sortable-th" id="sh-lastGeneratedAt" onclick="sortSubs('lastGeneratedAt')">Dernière activité <span class="sort-icon"></span></th>
+              <th class="sortable-th" id="sh-usageThisMonth" onclick="sortSubs('usageThisMonth')">Usage/mois <span class="sort-icon"></span></th>
+              <th class="sortable-th" id="sh-referralCount" onclick="sortSubs('referralCount')">Parrainage <span class="sort-icon"></span></th>
+            </tr>
+          </thead>
+          <tbody id="subscribers-body">
+            <tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3)">Chargement...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- PARRAINAGES -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">🤝 Parrainages</span>
+        <span id="referral-count" style="font-size:12px;color:var(--text3)">0 filleul(s)</span>
+      </div>
+      <div class="card-body" style="padding:0;overflow-x:auto">
+        <table class="sub-table" id="referrals-table">
+          <thead>
+            <tr>
+              <th>Filleul</th>
+              <th>Code utilisé</th>
+              <th>Parrain</th>
+              <th>Date d'abonnement</th>
+              <th>Plan souscrit</th>
+            </tr>
+          </thead>
+          <tbody id="referrals-body">
+            <tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Chargement...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EMAILS GRATUITS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📧 Emails gratuits — 3 gen/jour</span>
+        <span id="free-email-count" style="font-size:12px;color:var(--text3)">0 inscrits</span>
+      </div>
+      <div class="filter-bar" id="free-filter-bar">
+        <button class="flt-btn active" onclick="setFreePeriod('all')">Tout</button>
+        <button class="flt-btn" onclick="setFreePeriod(7)">7j</button>
+        <button class="flt-btn" onclick="setFreePeriod(30)">30j</button>
+        <button class="flt-btn" onclick="setFreePeriod(90)">90j</button>
+        <span class="flt-sep">|</span>
+        <input type="date" class="flt-date" id="free-from" onchange="setFreeCustomDate()" title="Du">
+        <span style="color:var(--text3);font-size:11px">→</span>
+        <input type="date" class="flt-date" id="free-to" onchange="setFreeCustomDate()" title="Au">
+      </div>
+      <div class="card-body" style="padding:0;overflow-x:auto">
+        <table class="sub-table" id="free-emails-table">
+          <thead>
+            <tr>
+              <th class="sortable-th" id="fsh-email" onclick="sortFreeEmails('email')">Email <span class="sort-icon"></span></th>
+              <th class="sortable-th desc" id="fsh-registeredAt" onclick="sortFreeEmails('registeredAt')">Date inscription <span class="sort-icon"></span></th>
+            </tr>
+          </thead>
+          <tbody id="free-emails-body">
+            <tr><td colspan="2" style="text-align:center;padding:24px;color:var(--text3)">Chargement...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- STATS UTILISATION -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📊 Utilisation par outil — <span id="tools-period-label">7 jours</span></span>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost btn-sm" id="tools-sort-btn" onclick="sortTools()">↓ + utilisé</button>
+          <button class="btn btn-ghost btn-sm" onclick="loadStats()">↻ Rafraîchir</button>
+        </div>
+      </div>
+      <div class="filter-bar" style="border-top:none">
+        <button class="flt-btn active" id="tools-days-7"  onclick="loadStats(7)">7 jours</button>
+        <button class="flt-btn"        id="tools-days-30" onclick="loadStats(30)">30 jours</button>
+        <button class="flt-btn"        id="tools-days-90" onclick="loadStats(90)">90 jours</button>
+      </div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px" id="tools-stats">
+          <div style="background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:16px">
+            <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🏠 Landing Page</div>
+            <div style="font-size:24px;font-weight:800;color:var(--gold)" id="stat-tool-landing">—</div>
+          </div>
+          <div style="background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:16px">
+            <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🎙️ Voix Off</div>
+            <div style="font-size:24px;font-weight:800;color:var(--blue)" id="stat-tool-voix">—</div>
+          </div>
+          <div style="background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:16px">
+            <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📢 Publicité</div>
+            <div style="font-size:24px;font-weight:800;color:var(--green)" id="stat-tool-pub">—</div>
+          </div>
+          <div style="background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:16px">
+            <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🔍 Analyse</div>
+            <div style="font-size:24px;font-weight:800;color:var(--red)" id="stat-tool-analyse">—</div>
+          </div>
+        </div>
+        <p style="font-size:12px;color:var(--text3);margin-top:12px;text-align:center">Comptage actif depuis le 12 juin 2026 — inclut les générations et les réajustements</p>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">📈 Analytics — Trafic ecomercai.com</span>
+      </div>
+      <div class="card-body">
+        <p style="font-size:13px;color:var(--text2);margin-bottom:18px">Visites, pages vues, sources de trafic et pays — données en temps réel via Cloudflare Web Analytics (sans cookies).</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+          <a href="https://dash.cloudflare.com/0d321eb98cca5b275090e54082125942/web-analytics/overview?siteTag=ac65f17956d346e89640e7734aa72110" target="_blank" rel="noopener"
+            style="display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:18px 12px;text-decoration:none;transition:border-color .2s"
+            onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border2)'">
+            <span style="font-size:28px">🌍</span>
+            <span style="font-size:12px;font-weight:700;color:var(--text);text-align:center">Vue d'ensemble</span>
+            <span style="font-size:11px;color:var(--text3);text-align:center">Visites & pages vues</span>
+          </a>
+          <a href="https://dash.cloudflare.com/0d321eb98cca5b275090e54082125942/web-analytics/sources?siteTag=ac65f17956d346e89640e7734aa72110" target="_blank" rel="noopener"
+            style="display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:18px 12px;text-decoration:none;transition:border-color .2s"
+            onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border2)'">
+            <span style="font-size:28px">🔗</span>
+            <span style="font-size:12px;font-weight:700;color:var(--text);text-align:center">Sources</span>
+            <span style="font-size:11px;color:var(--text3);text-align:center">Origine du trafic</span>
+          </a>
+          <a href="https://dash.cloudflare.com/0d321eb98cca5b275090e54082125942/web-analytics/countries?siteTag=ac65f17956d346e89640e7734aa72110" target="_blank" rel="noopener"
+            style="display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border2);border-radius:12px;padding:18px 12px;text-decoration:none;transition:border-color .2s"
+            onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border2)'">
+            <span style="font-size:28px">🗺️</span>
+            <span style="font-size:12px;font-weight:700;color:var(--text);text-align:center">Pays</span>
+            <span style="font-size:11px;color:var(--text3);text-align:center">Géographie des visites</span>
+          </a>
+        </div>
+        <a href="https://dash.cloudflare.com/0d321eb98cca5b275090e54082125942/web-analytics/overview?siteTag=ac65f17956d346e89640e7734aa72110" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#fff;font-weight:700;font-size:13px;padding:10px 20px;border-radius:8px;text-decoration:none;transition:opacity .2s"
+          onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+          Ouvrir le dashboard Analytics ↗
+        </a>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+let WORKER_URL = localStorage.getItem('admin_worker_url') || '';
+let ADMIN_KEY  = '';
+let currentConfig = {};
+
+// ============================================================
+// AUTH
+// ============================================================
+async function login() {
+  const workerUrl = document.getElementById('worker-url-input').value.trim().replace(/\/$/, '');
+  const password  = document.getElementById('admin-password').value.trim();
+  const btn = document.getElementById('login-btn');
+  const err = document.getElementById('login-error');
+
+  if (!workerUrl || !password) {
+    err.textContent = '⚠️ Remplissez l\'URL du Worker et le mot de passe.';
+    err.style.display = 'block'; return;
+  }
+
+  btn.innerHTML = '<span class="spinner"></span> Connexion...';
+  btn.disabled = true; err.style.display = 'none';
+
+  try {
+    const res = await fetch(`${workerUrl}/api/stats`, {
+      headers: { 'x-admin-key': password }
+    });
+    if (res.status === 401) throw new Error('Mot de passe incorrect');
+    if (!res.ok) throw new Error(`Erreur Worker: ${res.status}`);
+
+    const data = await res.json();
+    WORKER_URL = workerUrl;
+    ADMIN_KEY  = password;
+    localStorage.setItem('admin_worker_url', workerUrl);
+
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('dashboard').classList.add('visible');
+    document.getElementById('worker-url-display').textContent = workerUrl.replace('https://', '');
+
+    // Pré-remplir l'URL du site
+    const link = document.getElementById('link-site');
+    if (data.config?.siteUrl) link.href = data.config.siteUrl;
+
+    renderStats(data);
+  } catch(e) {
+    err.textContent = `❌ ${e.message}`;
+    err.style.display = 'block';
+  } finally {
+    btn.innerHTML = 'Accéder au dashboard →';
+    btn.disabled = false;
+  }
+}
+
+// ── TEST TOKEN ───────────────────────────────────────────────
+let currentTestToken = null;
+
+async function generateTestToken(plan) {
+  try {
+    const res = await fetch(`${WORKER_URL}/api/generate-test-token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+      body: JSON.stringify({ plan })
+    });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error);
+
+    currentTestToken = d.token;
+    const label = plan === 'pro' ? '⚡ Token Pro généré' : '🌟 Token Starter généré';
+    document.getElementById('test-token-label').textContent = label;
+    document.getElementById('test-token-value').value = d.token;
+    document.getElementById('test-token-cmd').value = `localStorage.setItem('ecomercai_token','${d.token}')`;
+    document.getElementById('test-token-result').style.display = 'block';
+  } catch(e) {
+    alert('Erreur : ' + e.message);
+  }
+}
+
+function applyTestToken() {
+  if (!currentTestToken) return;
+  localStorage.setItem('ecomercai_token', currentTestToken);
+  // Créer un lien cliquable pour éviter le bloqueur de popups
+  const link = document.createElement('a');
+  link.href = 'https://ecomercai.com';
+  link.target = '_blank';
+  link.rel = 'noopener';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  alert('✅ Token Pro appliqué ! Le site va s\'ouvrir — si bloqué, ouvre ecomercai.com manuellement.');
+}
+
+function copyTestToken() {
+  if (!currentTestToken) return;
+  navigator.clipboard.writeText(currentTestToken);
+  alert('✅ Token copié ! Collez-le dans localStorage.setItem("ecomercai_token", "TOKEN") depuis la console du site.');
+}
+
+async function clearTestToken() {
+  localStorage.removeItem('ecomercai_token');
+  currentTestToken = null;
+  document.getElementById('test-token-result').style.display = 'none';
+  alert('✅ Token supprimé de votre navigateur.');
+}
+
+function logout() {
+  ADMIN_KEY = '';
+  document.getElementById('login-screen').classList.remove('hidden');
+  document.getElementById('dashboard').classList.remove('visible');
+  document.getElementById('admin-password').value = '';
+}
+
+// ============================================================
+// STATS
+// ============================================================
+let _currentStatsDays = 7;
+
+async function loadStats(days) {
+  if (days !== undefined) _currentStatsDays = days;
+  [7, 30, 90].forEach(d => {
+    const btn = document.getElementById('tools-days-' + d);
+    if (btn) btn.classList.toggle('active', d === _currentStatsDays);
+  });
+  const lbl = document.getElementById('tools-period-label');
+  if (lbl) lbl.textContent = `${_currentStatsDays} jour${_currentStatsDays > 1 ? 's' : ''}`;
+  try {
+    const res = await fetch(`${WORKER_URL}/api/stats?days=${_currentStatsDays}`, {
+      headers: { 'x-admin-key': ADMIN_KEY }
+    });
+    const data = await res.json();
+    renderStats(data);
+  } catch(e) { showToast('Erreur chargement stats', 'error'); }
+}
+
+function renderStats(data) {
+  document.getElementById('stat-today').textContent   = data.today?.toLocaleString() || '0';
+  document.getElementById('stat-week').textContent    = data.week?.toLocaleString() || '0';
+  document.getElementById('stat-subs').textContent    = data.activeSubscribers || '0';
+  document.getElementById('stat-revenue').textContent = `$${data.estimatedRevenue || '0'}`;
+
+  // Config
+  if (data.config) {
+    currentConfig = data.config;
+    document.getElementById('paywall-toggle').checked     = data.config.paywallActive;
+    document.getElementById('cfg-free-limit').value       = data.config.freeLimit || 5;
+    document.getElementById('cfg-starter-limit').value    = data.config.starterLimit || 100;
+    document.getElementById('cfg-price-starter').value    = data.config.priceStarter || 4.99;
+    document.getElementById('cfg-price-pro').value        = data.config.pricePro || 9.99;
+    updatePaywallBadge(data.config.paywallActive);
+  }
+
+  // Stats par outil (7 derniers jours)
+  if (data.toolTotals) {
+    _toolsRaw = data.toolTotals;
+    _renderToolsGrid();
+  }
+
+  // Graphique
+  if (data.dailyBreakdown?.length) renderChart(data.dailyBreakdown);
+
+  // Abonnés détaillés
+  renderSubscribers(data);
+
+  // Parrainages
+  renderReferrals(data);
+
+  // Emails gratuits
+  renderFreeEmails(data);
+}
+
+function renderChart(days) {
+  const container = document.getElementById('chart-container');
+  const max = Math.max(...days.map(d => d.generations || 0), 1);
+  container.innerHTML = days.map(d => {
+    const pct = Math.max(4, ((d.generations || 0) / max) * 100);
+    const label = d.date ? d.date.slice(5) : '';
+    return `<div class="chart-bar-wrap">
+      <div class="chart-bar-val">${d.generations || 0}</div>
+      <div class="chart-bar" style="height:${pct}%" title="${d.generations || 0} générations"></div>
+      <div class="chart-bar-label">${label}</div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// SORTING — SUBSCRIBERS
+// ============================================================
+let _subsRaw = [];
+let _subsSortCol = 'activatedAt';
+let _subsSortDir = 'desc';
+let _subsFilter = { period: 'all', from: '', to: '' };
+
+function setSubsPeriod(period) {
+  _subsFilter = { period, from: '', to: '' };
+  document.getElementById('subs-from').value = '';
+  document.getElementById('subs-to').value   = '';
+  document.querySelectorAll('#subs-filter-bar .flt-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['all',7,30,90][i] === period);
+  });
+  _renderSubsTable();
+}
+
+function setSubsCustomDate() {
+  _subsFilter.period = 'custom';
+  _subsFilter.from   = document.getElementById('subs-from').value;
+  _subsFilter.to     = document.getElementById('subs-to').value;
+  document.querySelectorAll('#subs-filter-bar .flt-btn').forEach(b => b.classList.remove('active'));
+  _renderSubsTable();
+}
+
+function _filterSubsData() {
+  const { period, from, to } = _subsFilter;
+  if (period === 'all') return _subsRaw;
+  if (period === 'custom') {
+    const f = from ? new Date(from).getTime()              : 0;
+    const t = to   ? new Date(to + 'T23:59:59').getTime() : Date.now();
+    return _subsRaw.filter(([, s]) => {
+      if (!s.activatedAt) return false;
+      const d = new Date(s.activatedAt).getTime();
+      return d >= f && d <= t;
+    });
+  }
+  const cutoff = Date.now() - period * 86400000;
+  return _subsRaw.filter(([, s]) => s.activatedAt && new Date(s.activatedAt).getTime() >= cutoff);
+}
+
+function sortSubs(col) {
+  if (_subsSortCol === col) _subsSortDir = _subsSortDir === 'asc' ? 'desc' : 'asc';
+  else { _subsSortCol = col; _subsSortDir = 'asc'; }
+  _renderSubsTable();
+  _updateSubsHeaders();
+}
+
+function _updateSubsHeaders() {
+  ['email','plan','revenue','active','activatedAt','lastGeneratedAt','usageThisMonth','referralCount'].forEach(c => {
+    const el = document.getElementById('sh-' + c);
+    if (!el) return;
+    el.classList.remove('asc','desc');
+    if (c === _subsSortCol) el.classList.add(_subsSortDir);
+  });
+}
+
+function _renderSubsTable() {
+  const tbody = document.getElementById('subscribers-body');
+  const filtered = _filterSubsData();
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--text3)">${_subsRaw.length ? 'Aucun abonné sur cette période' : 'Aucun abonné pour l\'instant — activez le paywall pour commencer à convertir 🚀'}</td></tr>`;
+    return;
+  }
+  const sorted = [...filtered].sort(([,a],[,b]) => {
+    let va, vb;
+    switch (_subsSortCol) {
+      case 'email':            va = a.email||'';              vb = b.email||'';              break;
+      case 'plan':             va = a.plan||'';               vb = b.plan||'';               break;
+      case 'revenue':          va = a.amountPaid??0;          vb = b.amountPaid??0;          break;
+      case 'active':           va = a.active?1:0;             vb = b.active?1:0;             break;
+      case 'activatedAt':      va = a.activatedAt||'';        vb = b.activatedAt||'';        break;
+      case 'lastGeneratedAt':  va = a.lastGeneratedAt||'';    vb = b.lastGeneratedAt||'';    break;
+      case 'usageThisMonth':   va = a.usageThisMonth||0;      vb = b.usageThisMonth||0;      break;
+      case 'referralCount':    va = a.referralCount||0;       vb = b.referralCount||0;       break;
+      default:                 va = ''; vb = '';
+    }
+    const cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb));
+    return _subsSortDir === 'asc' ? cmp : -cmp;
+  });
+  const now = Date.now();
+  tbody.innerHTML = sorted.map(([token, sub]) => {
+    const isAnnual = sub.billing === 'annual';
+    const planLabel = sub.plan === 'pro'
+      ? (isAnnual ? '⚡ Pro Annuel' : '⚡ Pro')
+      : (isAnnual ? '🌟 Starter Annuel' : '🌟 Starter');
+    const billingLabel = isAnnual ? '/an' : '/mois';
+    const price = sub.amountPaid != null
+      ? `$${sub.amountPaid.toFixed(2)}${billingLabel}`
+      : isAnnual
+        ? (sub.plan === 'pro' ? '~$95.88/an' : '~$47.88/an')
+        : (sub.plan === 'pro' ? '~$9.99/mois' : '~$4.99/mois');
+    const statut = sub.active
+      ? '<span style="color:var(--green);font-weight:700">✅ Actif</span>'
+      : '<span style="color:var(--red);font-weight:700">❌ Annulé</span>';
+    const date = sub.activatedAt ? new Date(sub.activatedAt).toLocaleDateString('fr-FR') : '—';
+    const email = sub.email || '—';
+    // Dernière activité
+    let lastAct = '—';
+    let lastActColor = 'var(--text3)';
+    if (sub.lastGeneratedAt) {
+      const diff = Math.floor((now - new Date(sub.lastGeneratedAt).getTime()) / 86400000);
+      if (diff === 0)       { lastAct = 'Aujourd\'hui'; lastActColor = 'var(--green)'; }
+      else if (diff === 1)  { lastAct = 'Hier'; lastActColor = 'var(--green)'; }
+      else if (diff <= 7)   { lastAct = `Il y a ${diff}j`; lastActColor = 'var(--gold)'; }
+      else if (diff <= 30)  { lastAct = `Il y a ${diff}j`; lastActColor = 'var(--text2)'; }
+      else                  { lastAct = `Il y a ${diff}j`; lastActColor = 'var(--red)'; }
+    }
+    // Usage mensuel
+    const usage = sub.usageThisMonth || 0;
+    const usageDisplay = sub.plan === 'starter'
+      ? `${usage} / 100`
+      : `${usage}`;
+    const usageColor = sub.plan === 'starter' && usage >= 80 ? 'var(--gold)' : 'var(--text2)';
+    return `<tr>
+      <td>${email}</td>
+      <td><span style="background:rgba(245,166,35,.15);color:var(--gold);padding:3px 10px;border-radius:10px;font-size:12px;font-weight:700">${planLabel}</span></td>
+      <td style="color:var(--green);font-weight:700">${price}</td>
+      <td>${statut}</td>
+      <td style="color:var(--text2)">${date}</td>
+      <td style="color:${lastActColor};font-weight:600">${lastAct}</td>
+      <td style="color:${usageColor};font-weight:600">${usageDisplay}</td>
+      <td>${sub.refCode ? `<span style="font-family:monospace;font-size:11px;background:var(--card2);padding:2px 8px;border-radius:6px;color:var(--gold);cursor:pointer" onclick="navigator.clipboard.writeText('https://ecomercai.com/?ref=${sub.refCode}');this.textContent='✓ Copié!';setTimeout(()=>this.textContent='${sub.refCode}',1500)" title="Cliquer pour copier le lien">${sub.refCode}</span>${sub.referralCount ? ` <span style="font-size:11px;color:var(--green);font-weight:700">· ${sub.referralCount} filleul${sub.referralCount > 1 ? 's' : ''}</span>` : ''}` : '<span style="color:var(--text3)">—</span>'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderSubscribers(data) {
+  _subsRaw = Object.entries(data.subscribers || {});
+  _renderSubsTable();
+  _updateSubsHeaders();
+}
+
+function renderReferrals(data) {
+  const subs = data.subscribers || {};
+  const tbody = document.getElementById('referrals-body');
+  const countEl = document.getElementById('referral-count');
+
+  // Map refCode → { email, plan }
+  const codeMap = {};
+  for (const sub of Object.values(subs)) {
+    if (sub.refCode) codeMap[sub.refCode] = { email: sub.email || '—', plan: sub.plan };
+  }
+
+  // Filleuls = subscribers qui ont referredBy
+  const filleuls = Object.values(subs)
+    .filter(s => s.referredBy)
+    .sort((a, b) => (b.activatedAt || '') > (a.activatedAt || '') ? 1 : -1);
+
+  countEl.textContent = `${filleuls.length} filleul${filleuls.length !== 1 ? 's' : ''}`;
+
+  if (!filleuls.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--text3)">Aucun parrainage pour l'instant</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filleuls.map(s => {
+    const parrain    = codeMap[s.referredBy] || {};
+    const parrainEmail = parrain.email || '(inconnu)';
+    const planLabel  = s.plan === 'pro'
+      ? `<span style="background:rgba(245,166,35,.15);color:var(--gold);padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700">⚡ Pro${s.billing==='annual'?' Annuel':''}</span>`
+      : `<span style="background:rgba(245,166,35,.15);color:var(--gold);padding:2px 8px;border-radius:8px;font-size:11px;font-weight:700">🌟 Starter${s.billing==='annual'?' Annuel':''}</span>`;
+    const date = s.activatedAt ? new Date(s.activatedAt).toLocaleDateString('fr-FR') : '—';
+    return `<tr>
+      <td style="font-weight:600">${s.email || '—'}</td>
+      <td><span style="font-family:monospace;font-size:11px;background:var(--card2);padding:2px 8px;border-radius:6px;color:var(--gold)">${s.referredBy}</span></td>
+      <td style="color:var(--text2)">${parrainEmail}</td>
+      <td style="color:var(--text2)">${date}</td>
+      <td>${planLabel}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ============================================================
+// SORTING — FREE EMAILS
+// ============================================================
+let _freeRaw = [];
+let _freeSortCol = 'registeredAt';
+let _freeSortDir = 'desc';
+let _freeFilter = { period: 'all', from: '', to: '' };
+
+function setFreePeriod(period) {
+  _freeFilter = { period, from: '', to: '' };
+  document.getElementById('free-from').value = '';
+  document.getElementById('free-to').value   = '';
+  document.querySelectorAll('#free-filter-bar .flt-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['all',7,30,90][i] === period);
+  });
+  _renderFreeTable();
+}
+
+function setFreeCustomDate() {
+  _freeFilter.period = 'custom';
+  _freeFilter.from   = document.getElementById('free-from').value;
+  _freeFilter.to     = document.getElementById('free-to').value;
+  document.querySelectorAll('#free-filter-bar .flt-btn').forEach(b => b.classList.remove('active'));
+  _renderFreeTable();
+}
+
+function _filterFreeData() {
+  const { period, from, to } = _freeFilter;
+  if (period === 'all') return _freeRaw;
+  if (period === 'custom') {
+    const f = from ? new Date(from).getTime()              : 0;
+    const t = to   ? new Date(to + 'T23:59:59').getTime() : Date.now();
+    return _freeRaw.filter(u => {
+      if (!u.registeredAt) return false;
+      const d = new Date(u.registeredAt).getTime();
+      return d >= f && d <= t;
+    });
+  }
+  const cutoff = Date.now() - period * 86400000;
+  return _freeRaw.filter(u => u.registeredAt && new Date(u.registeredAt).getTime() >= cutoff);
+}
+
+function sortFreeEmails(col) {
+  if (_freeSortCol === col) _freeSortDir = _freeSortDir === 'asc' ? 'desc' : 'asc';
+  else { _freeSortCol = col; _freeSortDir = 'asc'; }
+  _renderFreeTable();
+  _updateFreeHeaders();
+}
+
+function _updateFreeHeaders() {
+  ['email','registeredAt'].forEach(c => {
+    const el = document.getElementById('fsh-' + c);
+    if (!el) return;
+    el.classList.remove('asc','desc');
+    if (c === _freeSortCol) el.classList.add(_freeSortDir);
+  });
+}
+
+function _renderFreeTable() {
+  const tbody = document.getElementById('free-emails-body');
+  const filtered = _filterFreeData();
+  document.getElementById('free-email-count').textContent = `${filtered.length} inscrit${filtered.length !== 1 ? 's' : ''}${_freeFilter.period !== 'all' ? ' (filtré)' : ''}`;
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="2" style="text-align:center;padding:24px;color:var(--text3)">${_freeRaw.length ? 'Aucun email sur cette période' : 'Aucun email gratuit inscrit pour l\'instant'}</td></tr>`;
+    return;
+  }
+  const sorted = [...filtered].sort((a, b) => {
+    const va = _freeSortCol === 'email' ? a.email||'' : a.registeredAt||'';
+    const vb = _freeSortCol === 'email' ? b.email||'' : b.registeredAt||'';
+    const cmp = String(va).localeCompare(String(vb));
+    return _freeSortDir === 'asc' ? cmp : -cmp;
+  });
+  tbody.innerHTML = sorted.map(u => {
+    const date = u.registeredAt
+      ? new Date(u.registeredAt).toLocaleDateString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric'})
+      : '—';
+    return `<tr><td style="font-weight:600">${u.email}</td><td style="color:var(--text2)">${date}</td></tr>`;
+  }).join('');
+}
+
+function renderFreeEmails(data) {
+  _freeRaw = data.freeEmailUsers || [];
+  _renderFreeTable();
+  _updateFreeHeaders();
+}
+
+// ============================================================
+// SORTING — TOOLS
+// ============================================================
+let _toolsRaw = {};
+let _toolsSortDir = 'desc';
+
+function sortTools() {
+  _toolsSortDir = _toolsSortDir === 'desc' ? 'asc' : 'desc';
+  _renderToolsGrid();
+  const btn = document.getElementById('tools-sort-btn');
+  if (btn) btn.textContent = _toolsSortDir === 'desc' ? '↓ + utilisé' : '↑ - utilisé';
+}
+
+function _renderToolsGrid() {
+  const tools = [
+    { key: 'landing', label: '🏠 Landing Page', color: 'var(--gold)' },
+    { key: 'voix',    label: '🎙️ Voix Off',    color: 'var(--blue)' },
+    { key: 'pub',     label: '📢 Publicité',    color: 'var(--green)' },
+    { key: 'analyse', label: '🔍 Analyse',      color: 'var(--red)' }
+  ];
+  const sorted = [...tools].sort((a, b) => {
+    const diff = (_toolsRaw[a.key]||0) - (_toolsRaw[b.key]||0);
+    return _toolsSortDir === 'desc' ? -diff : diff;
+  });
+  document.getElementById('tools-stats').innerHTML = sorted.map(t => `
+    <div style="background:var(--card2);border:1px solid var(--border2);border-radius:10px;padding:16px">
+      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${t.label}</div>
+      <div style="font-size:24px;font-weight:800;color:${t.color}">${_toolsRaw[t.key] ?? 0}</div>
+    </div>`).join('');
+}
+
+// ============================================================
+// PAYWALL TOGGLE
+// ============================================================
+async function togglePaywall() {
+  const isOn = document.getElementById('paywall-toggle').checked;
+  updatePaywallBadge(isOn);
+  await updateConfig({ paywallActive: isOn });
+  showSaved('paywall-saved');
+  showToast(isOn ? '🔒 Paywall activé !' : '🔓 Paywall désactivé', isOn ? 'success' : null);
+}
+
+function updatePaywallBadge(isOn) {
+  const badge = document.getElementById('paywall-status-badge');
+  badge.textContent = isOn ? '🟢 Paywall ACTIVÉ — abonnement requis après limite' : '⚪ Paywall désactivé — accès libre';
+  badge.className = 'paywall-status ' + (isOn ? 'on' : 'off');
+}
+
+async function saveLimit() {
+  const limit        = parseInt(document.getElementById('cfg-free-limit').value);
+  const starterLimit = parseInt(document.getElementById('cfg-starter-limit').value);
+  await updateConfig({ freeLimit: limit, starterLimit });
+  showSaved('paywall-saved');
+  showToast(`✅ Limites : ${limit}/jour gratuit · ${starterLimit}/mois Starter`);
+}
+
+async function savePrices() {
+  const starter = parseFloat(document.getElementById('cfg-price-starter').value);
+  const pro     = parseFloat(document.getElementById('cfg-price-pro').value);
+  await updateConfig({ priceStarter: starter, pricePro: pro });
+  showSaved('price-saved');
+  showToast('✅ Prix mis à jour');
+}
+
+async function updateConfig(updates) {
+  try {
+    const res = await fetch(`${WORKER_URL}/api/admin-config`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+      body: JSON.stringify(updates)
+    });
+    if (!res.ok) throw new Error('Erreur sauvegarde');
+    const data = await res.json();
+    currentConfig = data.config;
+  } catch(e) { showToast('❌ Erreur : ' + e.message, 'error'); }
+}
+
+// ============================================================
+// UI HELPERS
+// ============================================================
+function showSaved(id) {
+  const el = document.getElementById(id);
+  el.classList.add('visible');
+  setTimeout(() => el.classList.remove('visible'), 2500);
+}
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `show ${type}`;
+  setTimeout(() => t.className = '', 3000);
+}
+
+// ============================================================
+// THEME TOGGLE ADMIN
+// ============================================================
+function toggleAdminTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('admin_theme', newTheme);
+  const btn = document.getElementById('admin-theme-btn');
+  if (btn) btn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  // Init theme
+  const savedTheme = localStorage.getItem('admin_theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  const btn = document.getElementById('admin-theme-btn');
+  if (btn) btn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+  if (WORKER_URL) {
+    document.getElementById('worker-url-input').value = WORKER_URL;
+  }
+  // Auto-refresh toutes les 60 secondes si connecté
+  setInterval(() => { if (ADMIN_KEY) loadStats(); }, 60000);
+});
+</script>
+</body>
+</html>

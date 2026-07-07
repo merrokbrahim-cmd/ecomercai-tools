@@ -1,0 +1,12 @@
+# Cache Wrangler (contient des infos de compte)
+.wrangler/
+
+# Dossier de déploiement Pages — généré par copie depuis la racine
+public/
+
+# Divers
+node_modules/
+*.log
+.env
+.env.local
+.claude/

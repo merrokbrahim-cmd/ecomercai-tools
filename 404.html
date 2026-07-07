@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — Page introuvable · Ecomercai</title>
+  <link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,900&f[]=satoshi@400,500&display=swap" media="print" onload="this.media='all'">
+  <style>
+    :root {
+      --bg:#FAFAF8; --card:#FFFFFF; --border:#E8E6E0;
+      --ink:#0D0D0B; --ink2:#4A4A42; --ink3:#9A9A8E;
+      --gold-btn:#D4A017; --gold-l:#FDF3D7;
+      --fd:'Cabinet Grotesk',sans-serif; --fb:'Satoshi',sans-serif;
+    }
+    [data-theme="dark"] {
+      --bg:#0A0A09; --card:#141413; --border:#222220;
+      --ink:#EDEDE8; --ink2:#7A7A72; --ink3:#3E3E38;
+      --gold-btn:#D4A017; --gold-l:rgba(212,160,23,.12);
+    }
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0 }
+    body {
+      background:var(--bg); color:var(--ink); font-family:var(--fb);
+      min-height:100vh; display:flex; flex-direction:column;
+      align-items:center; justify-content:center; padding:24px;
+      -webkit-font-smoothing:antialiased;
+    }
+    .logo-wrap { display:flex; align-items:center; gap:0; margin-bottom:48px; text-decoration:none }
+    .logo-wordmark-text { font-family:'Cabinet Grotesk',sans-serif; font-size:22px; font-weight:900; letter-spacing:-.5px }
+    .logo-wordmark-text .e { color:var(--gold-btn) }
+    .logo-wordmark-text .rest { color:var(--ink) }
+    .logo-badge { background:var(--gold-btn); color:#fff; font-size:9px; font-weight:800; padding:2px 6px; border-radius:5px; letter-spacing:.5px; text-transform:uppercase; align-self:flex-start; margin-top:2px; margin-left:6px }
+    .code {
+      font-family:'Cabinet Grotesk',sans-serif; font-size:120px; font-weight:900;
+      color:var(--gold-btn); line-height:1; letter-spacing:-4px;
+      margin-bottom:16px;
+    }
+    h1 { font-family:'Cabinet Grotesk',sans-serif; font-size:24px; font-weight:800; color:var(--ink); margin-bottom:10px }
+    p { font-size:15px; color:var(--ink2); margin-bottom:36px; text-align:center; max-width:360px; line-height:1.6 }
+    .btn {
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--gold-btn); color:#fff; font-family:var(--fb);
+      font-size:15px; font-weight:700; padding:13px 28px;
+      border-radius:12px; text-decoration:none; border:none; cursor:pointer;
+      transition:opacity .15s, transform .15s;
+    }
+    .btn:hover { opacity:.9; transform:translateY(-1px) }
+    .hint { margin-top:20px; font-size:13px; color:var(--ink3) }
+  </style>
+</head>
+<body>
+  <a href="/" class="logo-wrap">
+    <div class="logo-wordmark-text"><span class="e">E</span><span class="rest">comercai</span></div>
+    <div class="logo-badge">Tools</div>
+  </a>
+
+  <div class="code">404</div>
+  <h1>Page introuvable</h1>
+  <p>Cette page n'existe pas ou a été déplacée.<br>Retournez à l'accueil pour continuer.</p>
+
+  <a href="/" class="btn">← Retour à l'accueil</a>
+  <p class="hint">Ou utilisez les outils directement sur <strong>ecomercai.com</strong></p>
+
+  <script>
+    const saved = localStorage.getItem('ecomercai_theme');
+    const sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', saved || sys);
+  </script>
+</body>
+</html>
