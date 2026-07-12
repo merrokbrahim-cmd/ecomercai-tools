@@ -830,6 +830,14 @@ footer a:hover{color:var(--gold-btn)}
           </div>
         </div>
         <div class="dz-badge" id="dz-lp">🇩🇿 <span data-i18n="dz_msg">Mode <strong>Darija Algérienne</strong> activé — Contexte DZ intégré.</span></div>
+
+        <!-- Image produit -->
+        <div class="form-group">
+          <label class="form-label" data-i18n="upload_lbl">📸 Photo du produit (optionnel — Vision IA)</label>
+          <div id="ua-landing"></div>
+          <button type="button" class="btn btn-ghost btn-sm mt-8 hidden" id="ri-btn-landing" onclick="removeImg('landing')" data-i18n="remove_img">✕ Supprimer</button>
+        </div>
+
         <div class="form-group">
           <label class="form-label"><span data-i18n="lp_name">Nom du produit</span> <span class="req">*</span></label>
           <input type="text" class="form-control" id="lp-name" placeholder="Ex: Brosse ionique Pro">
@@ -844,10 +852,48 @@ footer a:hover{color:var(--gold-btn)}
             <input type="text" class="form-control" id="lp-price" placeholder="Ex: 1990 DA / 29€">
           </div>
           <div class="form-group">
-            <label class="form-label" data-i18n="lp_colors">Style colorimétrique</label>
-            <input type="text" class="form-control" id="lp-colors" placeholder="Ex: Noir & Or, Blanc & Rose">
+            <label class="form-label" data-i18n="lp_ratio">Format image</label>
+            <select class="form-control" id="lp-ratio">
+              <option value="9:16">9:16 — Vertical (recommandé)</option>
+              <option value="4:5">4:5 — Portrait</option>
+              <option value="1:1">1:1 — Carré</option>
+            </select>
           </div>
         </div>
+
+        <!-- Thème -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="lp_theme">Thème / Style</label>
+            <select class="form-control" id="lp-theme" onchange="toggleLpColors()">
+              <option value="dark_gold">🖤 Dark Premium (Noir & Or)</option>
+              <option value="white_minimal">⬜ Light Minimal (Blanc & Gris)</option>
+              <option value="blue_pro">🔵 Bleu Professionnel</option>
+              <option value="red_bold">🔴 Rouge Bold</option>
+              <option value="custom">✏️ Personnalisé</option>
+            </select>
+          </div>
+          <div class="form-group" id="lp-colors-wrap" style="display:none">
+            <label class="form-label" data-i18n="lp_colors">Couleurs personnalisées</label>
+            <input type="text" class="form-control" id="lp-colors" placeholder="Ex: Violet & Blanc, Vert & Or">
+          </div>
+        </div>
+
+        <!-- Sections à inclure -->
+        <div class="form-group">
+          <label class="form-label" data-i18n="lp_sections">Sections à inclure</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-hero" checked> Hero</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-problem" checked> Problème</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-solution" checked> Solution</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-features" checked> Features</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-before" checked> Avant/Après</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-reviews" checked> Témoignages</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-urgency" checked> Urgence</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-cta" checked> CTA</label>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="form-label" data-i18n="lp_reviews">Avis clients (optionnel)</label>
           <div class="reviews-grid">
@@ -1470,7 +1516,7 @@ const dyn = s => {
 };
 let selPlan   = 'starter';
 let _billing  = 'monthly';
-let imgs      = { voix:null, pub:null, analyse:null };
+let imgs      = { landing:null, voix:null, pub:null, analyse:null };
 let origOut   = {};
 let lang      = 'fr';
 let fpId      = null;
@@ -1880,7 +1926,7 @@ function closeIntManual() { document.getElementById('interstitial').classList.ad
 
 // ── IMAGE UPLOADERS ──────────────────────────────────────────
 function buildUploaders() {
-  ['voix','pub','analyse'].forEach(tool => {
+  ['landing','voix','pub','analyse'].forEach(tool => {
     const c = document.getElementById('ua-' + tool);
     if (!c) return;
     c.innerHTML = `<div class="upload-area" id="ua-div-${tool}" onclick="document.getElementById('uf-${tool}').click()">
@@ -2116,16 +2162,56 @@ function showFieldErrors(fields) {
   return !fields.some(f => !f.val);
 }
 
+function toggleLpColors() {
+  const t=document.getElementById('lp-theme').value;
+  document.getElementById('lp-colors-wrap').style.display = t==='custom' ? 'block' : 'none';
+}
+
+const LP_THEMES = {
+  dark_gold:    'dark charcoal background (#1a1a18) with gold accents (#D4A017), white text',
+  white_minimal:'white background (#ffffff) with light gray (#f5f5f3), dark text, minimal clean style',
+  blue_pro:     'deep navy blue (#0f1f3d) with electric blue accents (#2563eb), white text, professional',
+  red_bold:     'bold red (#c0392b) with white and dark accents, energetic and urgent style',
+  custom:       null
+};
+
 // ── TOOL GENERATORS ──────────────────────────────────────────
 async function genLanding() {
   const l=getLangValue(), n=document.getElementById('lp-name').value.trim();
   const b=document.getElementById('lp-benefits').value.trim(), p=document.getElementById('lp-price').value.trim();
-  const c=document.getElementById('lp-colors').value.trim();
+  const ratio=document.getElementById('lp-ratio').value;
+  const themeKey=document.getElementById('lp-theme').value;
+  const customColors=document.getElementById('lp-colors')?.value.trim();
+  const theme = themeKey==='custom' ? (customColors||'professional style') : LP_THEMES[themeKey];
   const reviews=[1,2,3].map(i=>document.getElementById(`lp-r${i}`).value.trim()).filter(Boolean);
   const urg=document.getElementById('lp-urgency').value.trim();
+  const img=imgs.landing;
+  const sections=[];
+  if(document.getElementById('lp-s-hero').checked)     sections.push('HERO (product name, tagline, product image)');
+  if(document.getElementById('lp-s-problem').checked)  sections.push('PROBLEM (3 pain points with icons)');
+  if(document.getElementById('lp-s-solution').checked) sections.push('SOLUTION (key benefit banner)');
+  if(document.getElementById('lp-s-features').checked) sections.push('FEATURES (grid with icons)');
+  if(document.getElementById('lp-s-before').checked)   sections.push('BEFORE/AFTER (side by side comparison)');
+  if(document.getElementById('lp-s-reviews').checked)  sections.push('TESTIMONIALS (customer reviews)');
+  if(document.getElementById('lp-s-urgency').checked)  sections.push('URGENCY (limited stock, countdown)');
+  if(document.getElementById('lp-s-cta').checked)      sections.push('CTA (buy button with price)');
   if(!showFieldErrors([{id:'lp-name',val:n},{id:'lp-benefits',val:b},{id:'lp-price',val:p}])) return;
-  await callClaude({ system:`You are a world-class e-commerce prompt engineer for AI image generators (Midjourney, Nano Banana Pro, Flux, Adobe Firefly). Generate ONE complete ready-to-use image prompt for an ultra-tall vertical infographic landing page (9:32 ratio). Include: full layout top-to-bottom, ALL text in ${l}, 8-10 sections (hero, problem, solution, features, before/after, testimonials, urgency, CTA), detailed visual instructions. ${getDZCtx(l)}\nReturn ONLY the final prompt starting with "Create an ultra-tall vertical infographic..."`,
-    user:`Product: ${n}\nType: ${document.getElementById('lp-type').value}\nBenefits: ${b}\nPrice: ${p}\nColors: ${c||'professional dark & gold'}\nReviews: ${reviews.join(' | ')||'none'}\nUrgency: ${urg||'Limited stock'}\nLanguage: ${l}`,
+  await callClaude({
+    system:`You are a world-class e-commerce prompt engineer for AI image generators (Nano Banana Pro, Midjourney, Flux).
+Generate ONE complete ready-to-use image prompt for a SINGLE continuous vertical landing page image.
+CRITICAL RULES:
+- The output must be ONE single tall image, NOT a collage, NOT split panels, NOT a grid of images
+- Aspect ratio: ${ratio}
+- ALL text in the image must be in ${l}
+- Style/colors: ${theme}
+- Include ONLY these sections in order: ${sections.join(' → ')}
+- Describe each section with exact position percentages from top
+- Specify typography, spacing, icons style
+${img?'- A product photo is provided — use it as the main product visual in the hero section':''}
+${getDZCtx(l)}
+Return ONLY the final prompt, starting with "Create a single continuous vertical ${ratio} landing page image..."`,
+    user:`Product: ${n}\nType: ${document.getElementById('lp-type').value}\nBenefits: ${b}\nPrice: ${p}\nReviews: ${reviews.join(' | ')||'none'}\nUrgency: ${urg||'Limited stock'}\nLanguage: ${l}`,
+    imgData:img,
     outEl:document.getElementById('lp-text'), btnEl:document.getElementById('btn-lp'), key:'landing' });
 }
 
