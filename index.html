@@ -248,6 +248,10 @@ header{position:sticky;top:0;z-index:100;background:var(--header-bg);border-bott
 .form-label .req{color:var(--gold-btn)}
 .form-control{background:var(--card2);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;color:var(--ink);font-family:var(--fb);font-size:14px;outline:none;width:100%;resize:vertical;transition:border-color .2s,box-shadow .2s}
 .form-control:focus{border-color:var(--gold-btn);box-shadow:0 0 0 3px rgba(212,160,23,.1)}
+.form-control.field-error{border-color:#e53e3e!important;box-shadow:0 0 0 3px rgba(229,62,62,.12)!important;animation:shake .3s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.field-error-msg{font-size:11px;color:#e53e3e;font-weight:600;margin-top:2px;display:none}
+.field-error-msg.show{display:block}
 .form-control::placeholder{color:var(--ink3)}
 .char-count{font-size:11px;color:var(--ink3);text-align:right;margin-top:2px;transition:color .2s}
 .char-count.warn{color:var(--gold-btn)}
@@ -2085,6 +2089,33 @@ async function refine(key) {
   finally { btn.disabled=false; btn.innerHTML = T[lang]?.refine_btn||'⚡'; hideInt(); }
 }
 
+// ── VALIDATION CHAMPS ────────────────────────────────────────
+function showFieldErrors(fields) {
+  let firstEl = null;
+  fields.forEach(({id, val}) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let msg = el.parentNode.querySelector('.field-error-msg');
+    if (!val) {
+      el.classList.add('field-error');
+      if (!msg) { msg = document.createElement('div'); msg.className = 'field-error-msg'; el.parentNode.appendChild(msg); }
+      msg.textContent = T[lang]?.field_required || '⚠️ Ce champ est obligatoire';
+      msg.classList.add('show');
+      if (!firstEl) firstEl = el;
+      el.addEventListener('input', function clear() {
+        el.classList.remove('field-error');
+        if (msg) msg.classList.remove('show');
+        el.removeEventListener('input', clear);
+      }, {once:true});
+    } else {
+      el.classList.remove('field-error');
+      if (msg) msg.classList.remove('show');
+    }
+  });
+  if (firstEl) firstEl.scrollIntoView({behavior:'smooth', block:'center'});
+  return !fields.some(f => !f.val);
+}
+
 // ── TOOL GENERATORS ──────────────────────────────────────────
 async function genLanding() {
   const l=getLangValue(), n=document.getElementById('lp-name').value.trim();
@@ -2092,7 +2123,7 @@ async function genLanding() {
   const c=document.getElementById('lp-colors').value.trim();
   const reviews=[1,2,3].map(i=>document.getElementById(`lp-r${i}`).value.trim()).filter(Boolean);
   const urg=document.getElementById('lp-urgency').value.trim();
-  if(!n||!b||!p) return;
+  if(!showFieldErrors([{id:'lp-name',val:n},{id:'lp-benefits',val:b},{id:'lp-price',val:p}])) return;
   await callClaude({ system:`You are a world-class e-commerce prompt engineer for AI image generators (Midjourney, Nano Banana Pro, Flux, Adobe Firefly). Generate ONE complete ready-to-use image prompt for an ultra-tall vertical infographic landing page (9:32 ratio). Include: full layout top-to-bottom, ALL text in ${l}, 8-10 sections (hero, problem, solution, features, before/after, testimonials, urgency, CTA), detailed visual instructions. ${getDZCtx(l)}\nReturn ONLY the final prompt starting with "Create an ultra-tall vertical infographic..."`,
     user:`Product: ${n}\nType: ${document.getElementById('lp-type').value}\nBenefits: ${b}\nPrice: ${p}\nColors: ${c||'professional dark & gold'}\nReviews: ${reviews.join(' | ')||'none'}\nUrgency: ${urg||'Limited stock'}\nLanguage: ${l}`,
     outEl:document.getElementById('lp-text'), btnEl:document.getElementById('btn-lp'), key:'landing' });
@@ -2103,7 +2134,7 @@ async function genVoix() {
   const plt=document.getElementById('vo-platform').value, dur=document.getElementById('vo-duration').value;
   const emo=document.getElementById('vo-emotion').value, aud=document.getElementById('vo-audience').value.trim();
   const img=imgs.voix;
-  if(!prd&&!img) return;
+  if(!showFieldErrors([{id:'vo-product',val:prd||img}])) return;
   await callClaude({ system:`You are an expert social media advertising copywriter for e-commerce.${img?' A product image is provided. Analyze it carefully and integrate specific visual details into the script.':''}\nCreate a professional voiceover script with EXACT timing markers [0:00-0:03].\nStructure: [HOOK]→[PROBLEM]→[SOLUTION]→[PROOF]→[CTA]\nPlatform: ${plt}. ALL text in ${l}. Return ONLY the script.${getDZCtx(l)}`,
     user:`Platform: ${plt}\nProduct: ${prd||'See image'}\nDuration: ${dur}\nTone: ${emo}\nAudience: ${aud||'e-commerce buyers'}\nLanguage: ${l}`,
     imgData:img, outEl:document.getElementById('vo-text'), btnEl:document.getElementById('btn-vo'), key:'voix' });
@@ -2114,7 +2145,7 @@ async function genPub() {
   const prd=document.getElementById('pub-product').value.trim(), aud=document.getElementById('pub-audience').value.trim();
   const l=document.getElementById('pub-lang').value, bgt=document.getElementById('pub-budget').value.trim();
   const prm=document.getElementById('pub-promo').value.trim(), img=imgs.pub;
-  if(!prd) return;
+  if(!showFieldErrors([{id:'pub-product',val:prd}])) return;
   await callClaude({ system:`You are a senior media buyer with 10+ years managing 7-figure budgets on ${plt}.${img?' A product image is provided. Analyze it for more precise ad copy.':''}
 Generate a COMPLETE advertising strategy.\nFormat:\n🎣 HOOKS (3 variants + explanation)\n📝 AD BODY (${plt}-optimized)\n🚀 CTA (2 variants)\n#️⃣ HASHTAGS (15-20)\n📊 CAMPAIGN STRATEGY (structure, targeting, budget ${bgt||'suggest split'})\n📈 SCALING PLAN (phase 1/2/3)\n⚠️ MISTAKES TO AVOID (5)\n🔬 A/B TESTS (3)\n📱 CREATIVE SPECS\nALL copy in ${l}. Be specific with numbers.${getDZCtx(l)}`,
     user:`Platform: ${plt}\nObjective: ${obj}\nProduct: ${prd}\nAudience: ${aud||'e-commerce buyers'}\nBudget: ${bgt||'not specified'}\nPromo: ${prm||'none'}\nLanguage: ${l}`,
@@ -2126,7 +2157,7 @@ async function genAnalyse() {
   const buy=document.getElementById('an-buy').value, sell=document.getElementById('an-sell').value;
   const mkt=getMarketValue(), niche=getNiche();
   const ctx=document.getElementById('an-context').value.trim(), img=imgs.analyse;
-  if(!prd||!buy||!sell) return;
+  if(!showFieldErrors([{id:'an-product',val:prd},{id:'an-buy',val:buy},{id:'an-sell',val:sell}])) return;
   const mgn=(((sell-buy)/sell)*100).toFixed(1);
   await callClaude({ system:`You are a senior e-commerce product analyst.${img?' A product image is provided. Analyze packaging, visual appeal, perceived value, branding potential.':''}
 Provide objective product analysis.\n\nMANDATORY FORMAT:\nSCORES:\nSCORE_DEMAND: [0-10]\nSCORE_COMPETITION: [0-10]\nSCORE_MARGIN: [0-10]\nSCORE_TREND: [0-10]\nSCORE_OVERALL: [0-100]\n\nREPORT:\n📊 VERDICT GLOBAL\n💰 FINANCIAL ANALYSIS (margin, ad cost, ROI)\n🎯 MARKET ANALYSIS\n⚔️ COMPETITION\n📈 TREND\n🚀 RECOMMENDATIONS (3-5)\n⚠️ RISKS\n🏆 FINAL VERDICT (go/no-go)${getDZMarketCtx()}`,
@@ -2416,6 +2447,7 @@ fr:{
   free_email_limit:'⚠️ Limite atteinte pour cet appareil.',
   free_email_invalid:'❌ Email invalide.',
   verify_expired:'Lien expiré ou invalide. Recommencez depuis le site.',
+  field_required:'⚠️ Ce champ est obligatoire',
   ad_label:'Espace publicitaire',
   upsell_title:'⚡ Générez sans publicité',upsell_last:'⚠️ Dernière génération gratuite !',
   upsell_desc:'Starter $4.99/mois ({S} gen) — Pro $9.99/mois (illimité).',upsell_btn:'S\'abonner →',
@@ -2497,6 +2529,7 @@ ar:{
   free_email_limit:'⚠️ تم الوصول إلى الحد الأقصى لهذا الجهاز.',
   free_email_invalid:'❌ بريد إلكتروني غير صالح.',
   verify_expired:'الرابط منتهي الصلاحية أو غير صالح. أعد المحاولة من الموقع.',
+  field_required:'⚠️ هذا الحقل إلزامي',
   ad_label:'مساحة إعلانية',
   upsell_title:'⚡ ولّد بدون إعلانات',upsell_last:'⚠️ آخر توليد مجاني!',
   upsell_desc:'Starter 4.99$/شهر ({S}) — Pro 9.99$/شهر (غير محدود).',upsell_btn:'اشترك →',
@@ -2578,6 +2611,7 @@ en:{
   free_email_limit:'⚠️ Limit reached for this device.',
   free_email_invalid:'❌ Invalid email.',
   verify_expired:'Link expired or invalid. Please try again from the site.',
+  field_required:'⚠️ This field is required',
   ad_label:'Advertisement',
   upsell_title:'⚡ Generate without ads',upsell_last:'⚠️ Last free generation!',
   upsell_desc:'Starter $4.99/mo ({S} gen) — Pro $9.99/mo (unlimited).',upsell_btn:'Subscribe →',
