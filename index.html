@@ -252,14 +252,23 @@ header{position:sticky;top:0;z-index:100;background:var(--header-bg);border-bott
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 .field-error-msg{font-size:11px;color:#e53e3e;font-weight:600;margin-top:2px;display:none}
 .field-error-msg.show{display:block}
+.lp-section-row{display:flex;flex-direction:column;gap:4px;border:1px solid var(--border);border-radius:8px;padding:8px 10px}
+.lp-section-label{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--ink2);cursor:pointer;user-select:none}
+.lp-section-label input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold-btn);cursor:pointer;flex-shrink:0}
+.lp-section-input{font-size:12px!important;padding:5px 9px!important;transition:opacity .2s}
+.lp-section-input.hidden{display:none}
 .form-control::placeholder{color:var(--ink3)}
 .char-count{font-size:11px;color:var(--ink3);text-align:right;margin-top:2px;transition:color .2s}
 .char-count.warn{color:var(--gold-btn)}
 select.form-control{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239A9A8E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
 select.form-control option{background:var(--card);color:var(--ink)}
 .form-control[rows]{min-height:80px}
-.reviews-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:600px){.reviews-grid{grid-template-columns:1fr}}
+.lp-review-row{display:flex;flex-direction:column;gap:6px;border:1px solid var(--border);border-radius:8px;padding:10px 10px 8px;position:relative}
+.lp-review-remove{position:absolute;top:6px;right:8px;background:none;border:none;color:var(--ink3);cursor:pointer;font-size:15px;line-height:1;padding:0}
+.lp-review-remove:hover{color:#e53e3e}
+.lp-reviews-img-label{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--ink2);cursor:pointer;background:rgba(212,160,23,.08);border:1px solid rgba(212,160,23,.2);border-radius:8px;padding:9px 11px;margin-bottom:8px}
+.lp-reviews-img-label input[type=checkbox]{margin-top:1px;accent-color:var(--gold-btn);flex-shrink:0;width:15px;height:15px}
+#lp-reviews-fields.disabled{opacity:.35;pointer-events:none}
 .dz-badge{display:none !important}
 
 /* ============================================================
@@ -854,7 +863,7 @@ footer a:hover{color:var(--gold-btn)}
           <div class="form-group">
             <label class="form-label" data-i18n="lp_ratio">Format image</label>
             <select class="form-control" id="lp-ratio">
-              <option value="9:16">9:16 — Vertical (recommandé)</option>
+              <option value="9:16">9:16 — Vertical</option>
               <option value="4:5">4:5 — Portrait</option>
               <option value="1:1">1:1 — Carré</option>
             </select>
@@ -879,29 +888,52 @@ footer a:hover{color:var(--gold-btn)}
           </div>
         </div>
 
+        <!-- Dimensions -->
+        <div class="form-group">
+          <label class="form-label"><span data-i18n="lp_dimensions">Dimensions</span> <span style="font-weight:400;font-size:11px;color:var(--ink3)" data-i18n="opt_lbl">(optionnel)</span></label>
+          <div style="display:flex;gap:10px;align-items:center">
+            <input type="number" class="form-control" id="lp-width" placeholder="Width (px)" min="100" style="flex:1">
+            <span style="color:var(--ink3);font-weight:700;font-size:16px">×</span>
+            <input type="number" class="form-control" id="lp-height" placeholder="Height (px)" min="100" style="flex:1">
+          </div>
+        </div>
+
         <!-- Sections à inclure -->
         <div class="form-group">
-          <label class="form-label" data-i18n="lp_sections">Sections à inclure</label>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px">
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-hero" checked> Hero</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-problem" checked> Problème</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-solution" checked> Solution</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-features" checked> Features</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-before" checked> Avant/Après</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-reviews" checked> Témoignages</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-urgency" checked> Urgence</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2);cursor:pointer"><input type="checkbox" id="lp-s-cta" checked> CTA</label>
+          <label class="form-label"><span data-i18n="lp_sections_lbl">Sections</span> <span style="font-weight:400;font-size:11px;color:var(--ink3)" data-i18n="lp_sections_hint">— ✅ coché = IA génère | ☐ décoché = tu remplis</span></label>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+            <div class="lp-section-row"><label class="lp-section-label"><input type="checkbox" id="lp-s-hero" checked onchange="toggleSectionInput('hero')"> <span>Hero</span></label><textarea class="form-control lp-section-input" id="lp-si-hero" rows="2" placeholder="Ex: Karcher Sans Fil 48V — Liberté totale"></textarea></div>
+            <div class="lp-section-row"><label class="lp-section-label"><input type="checkbox" id="lp-s-problem" checked onchange="toggleSectionInput('problem')"> <span data-i18n="lp_s_problem">Problème</span></label><textarea class="form-control lp-section-input" id="lp-si-problem" rows="2" placeholder="Ex: Câbles encombrants&#10;Poids lourd&#10;Mobilité réduite"></textarea></div>
+            <div class="lp-section-row"><label class="lp-section-label"><input type="checkbox" id="lp-s-solution" checked onchange="toggleSectionInput('solution')"> <span data-i18n="lp_s_solution">Solution</span></label><textarea class="form-control lp-section-input" id="lp-si-solution" rows="2" placeholder="Ex: Batterie 48V — Puissance sans câble"></textarea></div>
+            <div class="lp-section-row"><label class="lp-section-label"><input type="checkbox" id="lp-s-features" checked onchange="toggleSectionInput('features')"> <span data-i18n="lp_s_features">Features</span></label><textarea class="form-control lp-section-input" id="lp-si-features" rows="2" placeholder="Ex: Autonomie 60min&#10;Charge rapide&#10;Léger 2kg"></textarea></div>
+            <div class="lp-section-row"><label class="lp-section-label"><input type="checkbox" id="lp-s-before" checked onchange="toggleSectionInput('before')"> <span data-i18n="lp_s_before">Avant/Après</span></label><textarea class="form-control lp-section-input" id="lp-si-before" rows="2" placeholder="Ex: Avant: câble 5m encombrant&#10;Après: sans fil total"></textarea></div>
+            <div class="lp-section-row"><label class="lp-section-label"><input type="checkbox" id="lp-s-reviews" checked onchange="toggleSectionInput('reviews')"> <span data-i18n="lp_s_testim">Témoignages</span></label><textarea class="form-control lp-section-input" id="lp-si-reviews" rows="2" placeholder="Ex: 'Gain de temps énorme' — Ahmed B.&#10;'Ça change tout' — Karim D."></textarea></div>
+            <div class="lp-section-row"><label class="lp-section-label"><input type="checkbox" id="lp-s-urgency" checked onchange="toggleSectionInput('urgency')"> <span data-i18n="lp_s_urgency">Urgence</span></label><textarea class="form-control lp-section-input" id="lp-si-urgency" rows="2" placeholder="Ex: Stock limité — 12 unités restantes&#10;Offre expire dans 24h"></textarea></div>
+            <div class="lp-section-row"><label class="lp-section-label"><input type="checkbox" id="lp-s-cta" checked onchange="toggleSectionInput('cta')"> <span>CTA</span></label><textarea class="form-control lp-section-input" id="lp-si-cta" rows="2" placeholder="Ex: Commander maintenant — 8900 DA&#10;Livraison gratuite partout en Algérie"></textarea></div>
           </div>
         </div>
 
         <div class="form-group">
-          <label class="form-label" data-i18n="lp_reviews">Avis clients (optionnel)</label>
-          <div class="reviews-grid">
-            <input type="text" class="form-control" id="lp-r1" placeholder="Avis 1...">
-            <input type="text" class="form-control" id="lp-r2" placeholder="Avis 2...">
-            <input type="text" class="form-control" id="lp-r3" placeholder="Avis 3...">
-            <input type="text" class="form-control" id="lp-urgency" placeholder="Ex: Stock limité, -50% aujourd'hui">
+          <label class="form-label"><span data-i18n="lp_reviews_lbl">Avis clients</span> <span style="font-weight:400;font-size:11px;color:var(--ink3)" data-i18n="opt_lbl">(optionnel)</span></label>
+          <label class="lp-reviews-img-label">
+            <input type="checkbox" id="lp-reviews-img" onchange="toggleReviewsImg()">
+            <span data-i18n="lp_reviews_img_lbl">📸 J'importe des captures d'écran d'avis réels — le prompt indiquera à Nano Banana Pro de les coller automatiquement</span>
+          </label>
+          <div id="lp-reviews-fields">
+            <div id="lp-reviews-list" style="display:flex;flex-direction:column;gap:8px">
+              <div class="lp-review-row">
+                <button type="button" class="lp-review-remove" onclick="removeReview(this)" title="Supprimer">✕</button>
+                <input type="text" class="form-control lp-review-name-ph" placeholder="Nom du client (ex: Ahmed B.)">
+                <textarea class="form-control lp-review-text-ph" rows="2" placeholder="Son avis..."></textarea>
+              </div>
+            </div>
+            <button type="button" class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%" onclick="addReview()" data-i18n="lp_add_review">+ Ajouter un avis</button>
           </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label"><span data-i18n="lp_urgency_lbl">Urgence / Offre limitée</span> <span style="font-weight:400;font-size:11px;color:var(--ink3)" data-i18n="opt_lbl">(optionnel)</span></label>
+          <input type="text" class="form-control" id="lp-urgency" placeholder="Ex: Stock limité — -50% aujourd'hui seulement">
         </div>
         <button class="btn btn-gold btn-full" style="padding:13px;font-size:15px;border-radius:var(--radius)" onclick="genLanding()" id="btn-lp">
           <span data-i18n="generate">⚡ Générer le Prompt IA</span>
@@ -978,7 +1010,37 @@ footer a:hover{color:var(--gold-btn)}
         </div>
         <div class="form-group">
           <label class="form-label" data-i18n="vo_audience">Audience cible</label>
-          <input type="text" class="form-control" id="vo-audience" placeholder="Ex: Femmes 25-45, mères actives, douleurs de dos">
+          <textarea class="form-control" id="vo-audience" rows="2" placeholder="Ex: Femmes 25-45, mères actives, douleurs de dos"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="vo_price">Prix & offre</span> <span style="font-weight:400;font-size:11px;color:var(--ink3)" data-i18n="opt_lbl">(optionnel)</span></label>
+            <input type="text" class="form-control" id="vo-price" placeholder="Ex: 1990 DA — Livraison gratuite">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="vo_cta">CTA personnalisé</span> <span style="font-weight:400;font-size:11px;color:var(--ink3)" data-i18n="opt_lbl">(optionnel)</span></label>
+            <textarea class="form-control" id="vo-cta" rows="2" placeholder="Ex: Envoyez COMMANDER au 0555..."></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="vo_hook">Type de hook</label>
+            <select class="form-control" id="vo-hook">
+              <option value="question">❓ Question choc</option>
+              <option value="stat">📊 Statistique / Chiffre</option>
+              <option value="affirmation">💥 Affirmation directe</option>
+              <option value="story">📖 Storytelling</option>
+              <option value="before_after">🔄 Avant / Après</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="vo_variants">Nombre de variantes</label>
+            <select class="form-control" id="vo-variants" onchange="updateVariantCost()">
+              <option value="1">1 variante — 1 génération</option>
+              <option value="2">2 variantes — 2 générations</option>
+              <option value="3">3 variantes — 3 générations</option>
+            </select>
+          </div>
         </div>
         <button class="btn btn-gold btn-full" style="padding:13px;font-size:15px;border-radius:var(--radius)" onclick="genVoix()" id="btn-vo">
           <span data-i18n="generate">⚡ Générer le Script</span>
@@ -1032,22 +1094,42 @@ footer a:hover{color:var(--gold-btn)}
           <label class="form-label"><span data-i18n="pub_product">Produit & avantages clés</span> <span class="req">*</span></label>
           <textarea class="form-control" id="pub-product" rows="2" placeholder="Ex: Montre connectée sport — GPS, 14j autonomie, $39"></textarea>
         </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="pub_audience">Audience cible</label>
+          <textarea class="form-control" id="pub-audience" rows="2" placeholder="Ex: Hommes 25-40, sportifs, DZ/MA — intérêts: fitness, sport, santé"></textarea>
+        </div>
         <div class="form-row">
-          <div class="form-group">
-            <label class="form-label" data-i18n="pub_audience">Audience cible</label>
-            <input type="text" class="form-control" id="pub-audience" placeholder="Ex: Men 25-40, fitness lovers">
-          </div>
           <div class="form-group">
             <label class="form-label" data-i18n="pub_lang">Langue</label>
             <select class="form-control" id="pub-lang" onchange="checkDZ('pub')">
               <option value="French">Français</option>
               <option value="Darija Algérienne">🇩🇿 Darija Algérienne</option>
+              <option value="Arabic Darija Moroccan">🇲🇦 Darija Marocaine</option>
               <option value="Classical Arabic">Arabe classique</option>
               <option value="English">English</option>
             </select>
           </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="pub_format">Format d'annonce</label>
+            <select class="form-control" id="pub-format">
+              <option value="image">🖼️ Image statique</option>
+              <option value="video">🎬 Vidéo</option>
+              <option value="carousel">🎠 Carrousel</option>
+              <option value="story">📱 Story / Reels</option>
+            </select>
+          </div>
         </div>
         <div class="dz-badge" id="dz-pub">🇩🇿 <span data-i18n="dz_msg_pub">Mode <strong>Darija Algérienne</strong> — Publicité optimisée marché DZ.</span></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" data-i18n="pub_market">Marché / Pays cible</label>
+            <input type="text" class="form-control" id="pub-market" placeholder="Ex: Algérie, Maroc, France, Europe">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="pub_price">Prix de vente</span> <span style="font-weight:400;font-size:11px;color:var(--ink3)" data-i18n="opt_lbl">(optionnel)</span></label>
+            <input type="text" class="form-control" id="pub-price" placeholder="Ex: 1990 DA / 29€">
+          </div>
+        </div>
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" data-i18n="pub_budget">Budget quotidien</label>
@@ -1055,7 +1137,7 @@ footer a:hover{color:var(--gold-btn)}
           </div>
           <div class="form-group">
             <label class="form-label" data-i18n="pub_promo">Offre promotionnelle</label>
-            <input type="text" class="form-control" id="pub-promo" placeholder="Ex: -40% 48h, free shipping">
+            <input type="text" class="form-control" id="pub-promo" placeholder="Ex: -40% 48h, livraison gratuite">
           </div>
         </div>
         <button class="btn btn-gold btn-full" style="padding:13px;font-size:15px;border-radius:var(--radius)" onclick="genPub()" id="btn-pub">
@@ -1105,6 +1187,20 @@ footer a:hover{color:var(--gold-btn)}
         </div>
         <div class="form-row">
           <div class="form-group">
+            <label class="form-label"><span data-i18n="an_delivery">Frais de livraison</span> <span style="font-weight:400;font-size:11px;color:var(--ink3)" data-i18n="opt_lbl">(optionnel)</span></label>
+            <input type="number" class="form-control" id="an-delivery" placeholder="Ex: 500 DA">
+          </div>
+          <div class="form-group">
+            <label class="form-label" data-i18n="an_report_lang">Langue du rapport</label>
+            <select class="form-control" id="an-lang">
+              <option value="French">Français</option>
+              <option value="Classical Arabic">العربية</option>
+              <option value="English">English</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
             <label class="form-label" data-i18n="an_market">Marché cible</label>
             <select class="form-control" id="an-market" onchange="checkDZMarket();checkMarketOther()">
               <option>France / Belgique / Suisse</option>
@@ -1129,6 +1225,24 @@ footer a:hover{color:var(--gold-btn)}
           </div>
         </div>
         <div class="dz-badge" id="dz-an">🇩🇿 <span>Marché <strong>Algérie</strong> — Analyse adaptée COD, wilayas, Ouedkniss.</span></div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="an_adcost">Coût pub quotidien estimé</span> <span style="font-weight:400;font-size:11px;color:var(--ink3)" data-i18n="opt_lbl">(optionnel)</span></label>
+            <input type="number" class="form-control" id="an-adcost" placeholder="Ex: 500 DA/jour">
+          </div>
+          <div class="form-group">
+            <label class="form-label"><span data-i18n="an_supplier">Source / Fournisseur</span> <span style="font-weight:400;font-size:11px;color:var(--ink3)" data-i18n="opt_lbl">(optionnel)</span></label>
+            <select class="form-control" id="an-supplier">
+              <option value="">— Non spécifié —</option>
+              <option value="AliExpress">AliExpress</option>
+              <option value="Alibaba">Alibaba</option>
+              <option value="Chine directe">Chine directe</option>
+              <option value="Fournisseur local">Fournisseur local</option>
+              <option value="Amazon FBA">Amazon FBA</option>
+              <option value="Autres">Autres</option>
+            </select>
+          </div>
+        </div>
         <div class="form-group">
           <label class="form-label" data-i18n="an_context">Contexte supplémentaire (optionnel)</label>
           <textarea class="form-control" id="an-context" rows="2" placeholder="Ex: Vu viral TikTok, competitor on Amazon..."></textarea>
@@ -1523,6 +1637,7 @@ let fpId      = null;
 let intTimer  = null;
 let genDone       = false;
 let _isGenerating = false;
+let _lastVariantCost = { voix:1, landing:1, pub:1, analyse:1 };
 window.addEventListener('beforeunload', e => {
   if (_isGenerating) { e.preventDefault(); e.returnValue = ''; }
 });
@@ -1699,10 +1814,10 @@ function updateQuotaValues(used, limit, isSubscriber, plan) {
   document.getElementById('quota-count').textContent = `${rem} / ${limit}`;
   document.getElementById('quota-count').className = 'qc ' + cls;
 }
-function checkQuota() {
+function checkQuota(cost=1) {
   if (subToken) return true;
   if (!cfg.paywallActive) return true;
-  if (getLocalCount() >= cfg.freeLimit) { showPaywall(); return false; }
+  if (getLocalCount() + cost - 1 >= cfg.freeLimit) { showPaywall(); return false; }
   return true;
 }
 
@@ -2002,8 +2117,8 @@ function getNiche() {
 }
 
 // ── CLAUDE API ────────────────────────────────────────────────
-async function callClaude({ system, user, imgData, outEl, btnEl, key }) {
-  if (!checkQuota()) { return; }
+async function callClaude({ system, user, imgData, outEl, btnEl, key, cost=1 }) {
+  if (!checkQuota(cost)) { return; }
   _isGenerating = true;
   btnEl.disabled = true;
   btnEl.innerHTML = '<span class="spinner" style="border-top-color:#fff"></span>';
@@ -2047,7 +2162,7 @@ async function callClaude({ system, user, imgData, outEl, btnEl, key }) {
       }
     }
     cur.remove();
-    incrLocal(); updateQuota();
+    for(let i=0;i<cost;i++) incrLocal(); updateQuota();
     if (subToken) syncQuota(); // rafraîchir le compteur Starter
     if (key==='analyse') renderScores(outEl.textContent);
     origOut[key] = outEl.textContent;
@@ -2091,7 +2206,8 @@ async function refine(key) {
   const rtId    = { landing:'rrt-landing', voix:'rrt-voix', pub:'rrt-pub', analyse:'rrt-analyse' };
   const req  = document.getElementById(inputId[key])?.value.trim();
   if (!req) return;
-  if (!checkQuota()) return;
+  const refineCost = _lastVariantCost[key] || 1;
+  if (!checkQuota(refineCost)) return;
   const rr  = document.getElementById(rrId[key]);
   const rt  = document.getElementById(rtId[key]);
   const btn = document.getElementById(rbId[key]);
@@ -2128,7 +2244,7 @@ async function refine(key) {
       }
     }
     cur.remove();
-    incrLocal(); updateQuota();
+    for(let i=0;i<refineCost;i++) incrLocal(); updateQuota();
     if (subToken) syncQuota(); // rafraîchir le compteur Starter
     rr.scrollIntoView({behavior:'smooth',block:'nearest'});
   } catch(e) { rt.textContent=`❌ ${e.message}`; rr.classList.add('show'); }
@@ -2162,10 +2278,44 @@ function showFieldErrors(fields) {
   return !fields.some(f => !f.val);
 }
 
+function toggleReviewsImg() {
+  const checked = document.getElementById('lp-reviews-img')?.checked;
+  document.getElementById('lp-reviews-fields')?.classList.toggle('disabled', checked);
+}
+
+function addReview() {
+  const list = document.getElementById('lp-reviews-list');
+  const namePH = (PH['lp-review-name'][lang]||PH['lp-review-name'].fr);
+  const textPH = (PH['lp-review-text'][lang]||PH['lp-review-text'].fr);
+  const row = document.createElement('div');
+  row.className = 'lp-review-row';
+  row.innerHTML = `<button type="button" class="lp-review-remove" onclick="removeReview(this)" title="Supprimer">✕</button><input type="text" class="form-control lp-review-name-ph" placeholder="${namePH}"><textarea class="form-control lp-review-text-ph" rows="2" placeholder="${textPH}"></textarea>`;
+  list.appendChild(row);
+}
+
+function removeReview(btn) {
+  const list = document.getElementById('lp-reviews-list');
+  if (list.children.length <= 1) return;
+  btn.closest('.lp-review-row').remove();
+}
+
 function toggleLpColors() {
   const t=document.getElementById('lp-theme').value;
   document.getElementById('lp-colors-wrap').style.display = t==='custom' ? 'block' : 'none';
 }
+
+function toggleSectionInput(key) {
+  const cb = document.getElementById('lp-s-'+key);
+  const inp = document.getElementById('lp-si-'+key);
+  if (!cb || !inp) return;
+  // checked = AI generates → hide textarea; unchecked = user fills → show textarea
+  inp.classList.toggle('hidden', cb.checked);
+}
+
+// Init section inputs visibility
+document.addEventListener('DOMContentLoaded', function() {
+  ['hero','problem','solution','features','before','reviews','urgency','cta'].forEach(k => toggleSectionInput(k));
+});
 
 const LP_THEMES = {
   dark_gold:    'dark charcoal background (#1a1a18) with gold accents (#D4A017), white text',
@@ -2180,50 +2330,109 @@ async function genLanding() {
   const l=getLangValue(), n=document.getElementById('lp-name').value.trim();
   const b=document.getElementById('lp-benefits').value.trim(), p=document.getElementById('lp-price').value.trim();
   const ratio=document.getElementById('lp-ratio').value;
+  const dimW=document.getElementById('lp-width')?.value.trim();
+  const dimH=document.getElementById('lp-height')?.value.trim();
+  const dims=(dimW&&dimH) ? `${dimW}x${dimH} px` : '';
   const themeKey=document.getElementById('lp-theme').value;
   const customColors=document.getElementById('lp-colors')?.value.trim();
   const theme = themeKey==='custom' ? (customColors||'professional style') : LP_THEMES[themeKey];
-  const reviews=[1,2,3].map(i=>document.getElementById(`lp-r${i}`).value.trim()).filter(Boolean);
+  const reviewsImg = document.getElementById('lp-reviews-img')?.checked;
+  const reviews = [];
+  document.querySelectorAll('#lp-reviews-list .lp-review-row').forEach(row => {
+    const name = row.querySelector('input[type=text]')?.value.trim();
+    const text = row.querySelector('textarea')?.value.trim();
+    if (name || text) reviews.push(`${name||'Client'}: "${text}"`);
+  });
   const urg=document.getElementById('lp-urgency').value.trim();
   const img=imgs.landing;
+
+  const SECTION_DEFS = {
+    hero:    { label:'HERO (product name, tagline, product image)',         id:'lp-s-hero' },
+    problem: { label:'PROBLEM (3 pain points with icons)',                  id:'lp-s-problem' },
+    solution:{ label:'SOLUTION (key benefit banner)',                       id:'lp-s-solution' },
+    features:{ label:'FEATURES (grid with icons)',                          id:'lp-s-features' },
+    before:  { label:'BEFORE/AFTER (side by side comparison)',              id:'lp-s-before' },
+    reviews: { label:'TESTIMONIALS (customer reviews)',                     id:'lp-s-reviews' },
+    urgency: { label:'URGENCY (limited stock, countdown)',                  id:'lp-s-urgency' },
+    cta:     { label:'CTA (buy button with price)',                         id:'lp-s-cta' }
+  };
   const sections=[];
-  if(document.getElementById('lp-s-hero').checked)     sections.push('HERO (product name, tagline, product image)');
-  if(document.getElementById('lp-s-problem').checked)  sections.push('PROBLEM (3 pain points with icons)');
-  if(document.getElementById('lp-s-solution').checked) sections.push('SOLUTION (key benefit banner)');
-  if(document.getElementById('lp-s-features').checked) sections.push('FEATURES (grid with icons)');
-  if(document.getElementById('lp-s-before').checked)   sections.push('BEFORE/AFTER (side by side comparison)');
-  if(document.getElementById('lp-s-reviews').checked)  sections.push('TESTIMONIALS (customer reviews)');
-  if(document.getElementById('lp-s-urgency').checked)  sections.push('URGENCY (limited stock, countdown)');
-  if(document.getElementById('lp-s-cta').checked)      sections.push('CTA (buy button with price)');
+  const sectionNotes=[];
+  Object.entries(SECTION_DEFS).forEach(([key,def]) => {
+    const cb=document.getElementById(def.id);
+    const txt=document.getElementById('lp-si-'+key)?.value.trim();
+    if(cb?.checked) {
+      // AI generates freely
+      sections.push(def.label);
+    } else {
+      // User provided content — always include with mandatory text
+      sections.push(def.label);
+      if(txt) sectionNotes.push(`${key.toUpperCase()} (use EXACTLY this content): ${txt}`);
+      else sections[sections.length-1] += ' [user left blank — generate default]';
+    }
+  });
+
   if(!showFieldErrors([{id:'lp-name',val:n},{id:'lp-benefits',val:b},{id:'lp-price',val:p}])) return;
+
+  const dimsLine = dims ? `- Output dimensions: ${dims}` : `- Aspect ratio: ${ratio}`;
+
   await callClaude({
     system:`You are a world-class e-commerce prompt engineer for AI image generators (Nano Banana Pro, Midjourney, Flux).
 Generate ONE complete ready-to-use image prompt for a SINGLE continuous vertical landing page image.
 CRITICAL RULES:
 - The output must be ONE single tall image, NOT a collage, NOT split panels, NOT a grid of images
-- Aspect ratio: ${ratio}
+${dimsLine}
 - ALL text in the image must be in ${l}
 - Style/colors: ${theme}
 - Include ONLY these sections in order: ${sections.join(' → ')}
 - Describe each section with exact position percentages from top
 - Specify typography, spacing, icons style
+${sectionNotes.length?'- Section-specific content to include:\n'+sectionNotes.map(s=>'  • '+s).join('\n'):''}
 ${img?'- A product photo is provided — use it as the main product visual in the hero section':''}
 ${getDZCtx(l)}
-Return ONLY the final prompt, starting with "Create a single continuous vertical ${ratio} landing page image..."`,
-    user:`Product: ${n}\nType: ${document.getElementById('lp-type').value}\nBenefits: ${b}\nPrice: ${p}\nReviews: ${reviews.join(' | ')||'none'}\nUrgency: ${urg||'Limited stock'}\nLanguage: ${l}`,
+Return ONLY the final prompt, starting with "Create a single continuous vertical landing page image..."`,
+    user:`Product: ${n}\nType: ${document.getElementById('lp-type').value}\nBenefits: ${b}\nPrice: ${p}\n${reviewsImg?'TESTIMONIALS: User will manually paste real customer review screenshot images — add clear placeholder zones labeled [REVIEW SCREENSHOT 1], [REVIEW SCREENSHOT 2], etc.\n':reviews.length?'Reviews text: '+reviews.join(' | ')+'\n':'TESTIMONIALS: Leave this section completely generic — do NOT invent specific customer names or quotes.\n'}Urgency: ${urg||'Limited stock'}\nLanguage: ${l}`,
     imgData:img,
     outEl:document.getElementById('lp-text'), btnEl:document.getElementById('btn-lp'), key:'landing' });
 }
+
+function updateVariantCost() {
+  const n = parseInt(document.getElementById('vo-variants')?.value||'1');
+  const btn = document.getElementById('btn-vo');
+  if(btn) btn.querySelector('span').textContent = n > 1 ? `⚡ Générer ${n} variantes (${n} générations)` : '⚡ Générer le Script';
+}
+
+const HOOK_TYPES = {
+  question:    'Start with a shocking question that makes the viewer stop scrolling',
+  stat:        'Start with a surprising statistic or number that grabs attention',
+  affirmation: 'Start with a bold direct affirmation statement',
+  story:       'Start with a micro-story (2-3 seconds) that creates instant empathy',
+  before_after:'Start with a vivid before/after contrast'
+};
 
 async function genVoix() {
   const l=document.getElementById('vo-lang').value, prd=document.getElementById('vo-product').value.trim();
   const plt=document.getElementById('vo-platform').value, dur=document.getElementById('vo-duration').value;
   const emo=document.getElementById('vo-emotion').value, aud=document.getElementById('vo-audience').value.trim();
+  const price=document.getElementById('vo-price')?.value.trim();
+  const cta=document.getElementById('vo-cta')?.value.trim();
+  const hookType=document.getElementById('vo-hook')?.value||'question';
+  const variants=parseInt(document.getElementById('vo-variants')?.value||'1');
   const img=imgs.voix;
   if(!showFieldErrors([{id:'vo-product',val:prd||img}])) return;
-  await callClaude({ system:`You are an expert social media advertising copywriter for e-commerce.${img?' A product image is provided. Analyze it carefully and integrate specific visual details into the script.':''}\nCreate a professional voiceover script with EXACT timing markers [0:00-0:03].\nStructure: [HOOK]→[PROBLEM]→[SOLUTION]→[PROOF]→[CTA]\nPlatform: ${plt}. ALL text in ${l}. Return ONLY the script.${getDZCtx(l)}`,
-    user:`Platform: ${plt}\nProduct: ${prd||'See image'}\nDuration: ${dur}\nTone: ${emo}\nAudience: ${aud||'e-commerce buyers'}\nLanguage: ${l}`,
-    imgData:img, outEl:document.getElementById('vo-text'), btnEl:document.getElementById('btn-vo'), key:'voix' });
+  const variantInstr = variants > 1
+    ? `Generate EXACTLY ${variants} distinct script variants, each separated by "═══ VARIANTE ${'{N}'} ═══" header. Each variant must use a different angle/hook approach.`
+    : 'Generate ONE script.';
+  await callClaude({
+    system:`You are an expert social media advertising copywriter for e-commerce.${img?' A product image is provided. Analyze it carefully and integrate specific visual details into the script.':''}
+${variantInstr}
+Each script: professional voiceover with EXACT timing markers [0:00-0:03].
+Structure: [HOOK]→[PROBLEM]→[SOLUTION]→[PROOF]→[CTA]
+Hook style: ${HOOK_TYPES[hookType]}
+Platform: ${plt}. ALL text in ${l}. Return ONLY the script(s).${getDZCtx(l)}`,
+    user:`Platform: ${plt}\nProduct: ${prd||'See image'}\nDuration: ${dur}\nTone: ${emo}\nAudience: ${aud||'e-commerce buyers'}\n${price?'Price/Offer: '+price+'\n':''}${cta?'CTA: '+cta+'\n':''}Language: ${l}`,
+    imgData:img, outEl:document.getElementById('vo-text'), btnEl:document.getElementById('btn-vo'), key:'voix', cost:variants });
+  _lastVariantCost.voix = variants;
 }
 
 async function genPub() {
@@ -2231,23 +2440,62 @@ async function genPub() {
   const prd=document.getElementById('pub-product').value.trim(), aud=document.getElementById('pub-audience').value.trim();
   const l=document.getElementById('pub-lang').value, bgt=document.getElementById('pub-budget').value.trim();
   const prm=document.getElementById('pub-promo').value.trim(), img=imgs.pub;
+  const fmt=document.getElementById('pub-format').value;
+  const mkt=document.getElementById('pub-market')?.value.trim();
+  const price=document.getElementById('pub-price')?.value.trim();
   if(!showFieldErrors([{id:'pub-product',val:prd}])) return;
+  const fmtLabel={image:'static image ad',video:'video ad',carousel:'carousel ad',story:'story/reels vertical ad'}[fmt]||fmt;
   await callClaude({ system:`You are a senior media buyer with 10+ years managing 7-figure budgets on ${plt}.${img?' A product image is provided. Analyze it for more precise ad copy.':''}
-Generate a COMPLETE advertising strategy.\nFormat:\n🎣 HOOKS (3 variants + explanation)\n📝 AD BODY (${plt}-optimized)\n🚀 CTA (2 variants)\n#️⃣ HASHTAGS (15-20)\n📊 CAMPAIGN STRATEGY (structure, targeting, budget ${bgt||'suggest split'})\n📈 SCALING PLAN (phase 1/2/3)\n⚠️ MISTAKES TO AVOID (5)\n🔬 A/B TESTS (3)\n📱 CREATIVE SPECS\nALL copy in ${l}. Be specific with numbers.${getDZCtx(l)}`,
-    user:`Platform: ${plt}\nObjective: ${obj}\nProduct: ${prd}\nAudience: ${aud||'e-commerce buyers'}\nBudget: ${bgt||'not specified'}\nPromo: ${prm||'none'}\nLanguage: ${l}`,
+Generate a COMPLETE advertising strategy for a ${fmtLabel}.
+Format:
+🎣 HOOKS (3 variants + explanation)
+📝 AD BODY (${plt}-optimized, adapted for ${fmtLabel})
+🚀 CTA (2 variants)
+#️⃣ HASHTAGS (15-20)
+📊 CAMPAIGN STRATEGY (structure, targeting${mkt?' for '+mkt:''}, budget ${bgt||'suggest split'})
+📈 SCALING PLAN (phase 1/2/3)
+⚠️ MISTAKES TO AVOID (5)
+🔬 A/B TESTS (3)
+📱 CREATIVE SPECS (exact dimensions and specs for ${fmtLabel} on ${plt})
+ALL copy in ${l}. Be specific with numbers.${getDZCtx(l)}`,
+    user:`Platform: ${plt}\nObjective: ${obj}\nFormat: ${fmtLabel}\nProduct: ${prd}\n${price?'Price: '+price+'\n':''}Audience: ${aud||'e-commerce buyers'}\n${mkt?'Market/Country: '+mkt+'\n':''}Budget: ${bgt||'not specified'}\nPromo: ${prm||'none'}\nLanguage: ${l}`,
     imgData:img, outEl:document.getElementById('pub-text'), btnEl:document.getElementById('btn-pub'), key:'pub' });
 }
 
 async function genAnalyse() {
   const prd=document.getElementById('an-product').value.trim();
-  const buy=document.getElementById('an-buy').value, sell=document.getElementById('an-sell').value;
+  const buy=parseFloat(document.getElementById('an-buy').value)||0;
+  const sell=parseFloat(document.getElementById('an-sell').value)||0;
+  const delivery=parseFloat(document.getElementById('an-delivery')?.value)||0;
+  const adcost=parseFloat(document.getElementById('an-adcost')?.value)||0;
+  const supplier=document.getElementById('an-supplier')?.value||'';
+  const l=document.getElementById('an-lang')?.value||'French';
   const mkt=getMarketValue(), niche=getNiche();
   const ctx=document.getElementById('an-context').value.trim(), img=imgs.analyse;
-  if(!showFieldErrors([{id:'an-product',val:prd},{id:'an-buy',val:buy},{id:'an-sell',val:sell}])) return;
-  const mgn=(((sell-buy)/sell)*100).toFixed(1);
+  if(!showFieldErrors([{id:'an-product',val:prd},{id:'an-buy',val:buy||''},{id:'an-sell',val:sell||''}])) return;
+  const netProfit = sell - buy - delivery;
+  const mgn = sell > 0 ? ((netProfit/sell)*100).toFixed(1) : '0';
   await callClaude({ system:`You are a senior e-commerce product analyst.${img?' A product image is provided. Analyze packaging, visual appeal, perceived value, branding potential.':''}
-Provide objective product analysis.\n\nMANDATORY FORMAT:\nSCORES:\nSCORE_DEMAND: [0-10]\nSCORE_COMPETITION: [0-10]\nSCORE_MARGIN: [0-10]\nSCORE_TREND: [0-10]\nSCORE_OVERALL: [0-100]\n\nREPORT:\n📊 VERDICT GLOBAL\n💰 FINANCIAL ANALYSIS (margin, ad cost, ROI)\n🎯 MARKET ANALYSIS\n⚔️ COMPETITION\n📈 TREND\n🚀 RECOMMENDATIONS (3-5)\n⚠️ RISKS\n🏆 FINAL VERDICT (go/no-go)${getDZMarketCtx()}`,
-    user:`Product: ${prd}\nBuy: ${buy}\nSell: ${sell}\nMargin: ${mgn}%\nMarket: ${mkt}\nNiche: ${niche}\nContext: ${ctx||'none'}`,
+Provide objective product analysis. ALL report text must be in ${l}.
+
+MANDATORY FORMAT:
+SCORES:
+SCORE_DEMAND: [0-10]
+SCORE_COMPETITION: [0-10]
+SCORE_MARGIN: [0-10]
+SCORE_TREND: [0-10]
+SCORE_OVERALL: [0-100]
+
+REPORT:
+📊 VERDICT GLOBAL
+💰 FINANCIAL ANALYSIS (buy price, sell price, delivery cost, net margin${adcost?', daily ad budget, ROI, breakeven units/day':''})
+🎯 MARKET ANALYSIS
+⚔️ COMPETITION
+📈 TREND
+${supplier?'🚚 SUPPLY CHAIN ANALYSIS (supplier reliability, lead times, risks for '+supplier+')\n':''}🚀 RECOMMENDATIONS (3-5)
+⚠️ RISKS
+🏆 FINAL VERDICT (go/no-go)${getDZMarketCtx()}`,
+    user:`Product: ${prd}\nBuy price: ${buy}\nSell price: ${sell}\n${delivery?'Delivery cost: '+delivery+'\n':''}Net profit/unit: ${netProfit.toFixed(0)}\nNet margin: ${mgn}%\n${adcost?'Daily ad budget: '+adcost+'\n':''}${supplier?'Supplier: '+supplier+'\n':''}Market: ${mkt}\nNiche: ${niche}\nContext: ${ctx||'none'}`,
     imgData:img, outEl:document.getElementById('an-text'), btnEl:document.getElementById('btn-an'), key:'analyse' });
 }
 
@@ -2286,10 +2534,10 @@ async function copyOut(elId, btnId) {
 
 // ── GUIDES ────────────────────────────────────────────────────
 const GUIDES = {
-  lp:{fr:['Remplissez le nom, les bénéfices et le prix du produit.','Choisissez la langue cible (6 langues + champ libre).','Cliquez "Générer le Prompt IA".','Copiez le prompt généré.','Collez dans Midjourney, Nano Banana Pro ou Flux avec les photos du produit.','Obtenez votre landing page visuelle en quelques secondes.'],ar:['أدخل اسم المنتج ومميزاته وسعره.','اختر اللغة المستهدفة (6 لغات + حقل حر).','انقر على "توليد".','انسخ البرومبت المُولَّد.','الصقه في Midjourney أو Nano Banana Pro مع صور المنتج.','احصل على صورة صفحة هبوط احترافية.'],en:['Fill in product name, benefits and price.','Choose target language (6 languages + free field).','Click "Generate AI Prompt".','Copy the generated prompt.','Paste into Midjourney, Nano Banana Pro or Flux with product photos.','Get your professional landing page image instantly.']},
-  vo:{fr:['Uploadez une photo du produit (recommandé).','Décrivez le produit et choisissez la plateforme.','Sélectionnez la durée et l\'émotion souhaitée.','Cliquez "Générer le Script".','Copiez et enregistrez avec ElevenLabs, Murf.ai ou votre voix.','Intégrez dans votre vidéo publicitaire.'],ar:['ارفع صورة المنتج (موصى به).','صف المنتج واختر المنصة.','اختر المدة والعاطفة.','انقر على "توليد".','انسخ وسجّل مع ElevenLabs أو Murf.ai.','استخدم في فيديوهاتك الإعلانية.'],en:['Upload a product photo (recommended).','Describe product and choose platform.','Select duration and tone.','Click "Generate Script".','Copy and record with ElevenLabs or Murf.ai.','Use in your ad videos.']},
-  pub:{fr:['Choisissez la plateforme et l\'objectif.','Uploadez une photo (optionnel).','Décrivez le produit et l\'audience.','Ajoutez budget et offre promo.','Cliquez "Générer la Stratégie".','Obtenez hooks, copy, stratégie, scaling et A/B tests.','Copiez dans Meta Ads Manager ou TikTok Ads.'],ar:['اختر المنصة والهدف.','ارفع صورة (اختياري).','صف المنتج والجمهور.','أضف الميزانية والعرض.','انقر على "توليد".','احصل على هوك، نص، استراتيجية، تطوير.','انسخ في مدير الإعلانات.'],en:['Choose platform and objective.','Upload photo (optional).','Describe product and audience.','Add budget and promo offer.','Click "Generate Strategy".','Get hooks, copy, strategy, scaling and A/B tests.','Paste into Meta Ads Manager or TikTok Ads.']},
-  an:{fr:['Décrivez votre produit précisément.','Uploadez une photo (optionnel).','Entrez prix d\'achat et prix de vente.','Choisissez marché et niche.','Cliquez "Analyser".','Obtenez 4 scores + rapport complet.','Décidez si le produit vaut le lancement.'],ar:['صف منتجك بدقة.','ارفع صورة (اختياري).','أدخل سعر الشراء والبيع.','اختر السوق والتخصص.','انقر على "تحليل".','احصل على 4 درجات + تقرير كامل.','قرر ما إذا كان المنتج يستحق.'],en:['Describe your product precisely.','Upload photo (optional).','Enter buy price and sell price.','Choose market and niche.','Click "Analyze".','Get 4 scores + full report.','Decide if the product is worth launching.']}
+  lp:{fr:['Remplissez le nom du produit, ses bénéfices et son prix de vente.','Uploadez une photo du produit (optionnel — l\'IA l\'utilisera dans le Hero).','Choisissez le ratio (9:16 par défaut) et les dimensions en pixels si nécessaire.','Sélectionnez le thème visuel (Dark, Light, Bleu, Rouge ou couleurs personnalisées).','Sections : ✅ coché = l\'IA génère — ☐ décoché = remplissez le contenu vous-même.','Avis clients : cochez 📸 pour importer vos captures d\'écran, ou remplissez les champs texte.','Cliquez "Générer le Prompt IA", copiez le résultat.','Collez dans Nano Banana Pro (ou Midjourney / Flux) avec vos images produit et avis.'],ar:['أدخل اسم المنتج ومميزاته وسعره.','ارفع صورة المنتج (اختياري — ستُستخدم في قسم الـ Hero).','اختر نسبة الأبعاد والأبعاد بالبكسل إذا لزم.','اختر الثيم البصري (داكن، فاتح، أزرق، أحمر أو ألوان مخصصة).','الأقسام: ✅ محدد = الذكاء الاصطناعي يُولّد — ☐ غير محدد = أنت تملأ المحتوى.','التقييمات: حدد 📸 لاستيراد لقطات شاشة، أو اكتب الأسماء والتقييمات.','انقر على "توليد"، انسخ النتيجة.','الصقها في Nano Banana Pro مع صور المنتج والتقييمات.'],en:['Fill in product name, benefits and sell price.','Upload a product photo (optional — AI uses it in the Hero section).','Choose ratio (9:16 default) and pixel dimensions if needed.','Select a visual theme (Dark, Light, Blue, Red or custom colors).','Sections: ✅ checked = AI generates — ☐ unchecked = you fill the content.','Reviews: check 📸 to import screenshots, or type names and reviews manually.','Click "Generate AI Prompt", copy the result.','Paste into Nano Banana Pro (or Midjourney / Flux) with your product images and reviews.']},
+  vo:{fr:['Uploadez une photo du produit (optionnel — Vision IA analyse et intègre les détails visuels).','Choisissez la langue, la plateforme cible et décrivez le produit.','Sélectionnez la durée (15s → 60s) et l\'émotion / ton souhaité.','Choisissez le type de hook : Question choc, Statistique, Affirmation, Storytelling ou Avant/Après.','Ajoutez le prix & offre et votre CTA personnalisé (numéro, mot-clé, lien).','Choisissez 1, 2 ou 3 variantes — chaque variante = 1 génération débitée.','Cliquez "Générer", copiez le script et enregistrez-le avec ElevenLabs, Murf.ai ou votre voix.'],ar:['ارفع صورة المنتج (اختياري — الذكاء الاصطناعي يحلل التفاصيل البصرية).','اختر اللغة والمنصة وصف المنتج.','اختر المدة والعاطفة / النبرة.','اختر نوع الهوك: سؤال، إحصائية، تأكيد، قصة، أو قبل/بعد.','أضف السعر والعرض و CTA مخصص (رقم، كلمة مفتاح، رابط).','اختر 1 أو 2 أو 3 نسخ — كل نسخة = جيل واحد مُستهلَك.','انقر "توليد"، انسخ السكريبت وسجّله مع ElevenLabs أو Murf.ai.'],en:['Upload a product photo (optional — Vision AI analyzes and integrates visual details).','Choose language, target platform and describe the product.','Select duration (15s → 60s) and desired emotion / tone.','Choose hook type: Shocking question, Statistic, Affirmation, Storytelling or Before/After.','Add price & offer and your custom CTA (number, keyword, link).','Choose 1, 2 or 3 variants — each variant = 1 generation debited from your quota.','Click "Generate", copy the script and record with ElevenLabs, Murf.ai or your own voice.']},
+  pub:{fr:['Choisissez la plateforme (Facebook, TikTok, Instagram, Google) et l\'objectif.','Sélectionnez le format d\'annonce : Image, Vidéo, Carrousel ou Story/Reels — la copy s\'adapte.','Uploadez une photo produit (optionnel — Vision IA analyse et intègre les détails).','Décrivez le produit et ses avantages clés.','Remplissez l\'audience cible, le marché/pays et le prix de vente.','Ajoutez le budget quotidien et l\'offre promotionnelle (optionnels).','Cliquez "Générer la Stratégie" — obtenez hooks, copy, CTA, hashtags, stratégie, scaling et A/B tests.','Copiez directement dans Meta Ads Manager, TikTok Ads ou Google Ads.'],ar:['اختر المنصة (Facebook, TikTok, Instagram, Google) والهدف.','اختر صيغة الإعلان: صورة، فيديو، كاروسيل أو ستوري — النص يتكيف تلقائياً.','ارفع صورة المنتج (اختياري — الذكاء الاصطناعي يحلل التفاصيل البصرية).','صف المنتج ومزاياه الرئيسية.','أضف الجمهور المستهدف والسوق/البلد وسعر البيع.','أضف الميزانية اليومية والعرض الترويجي (اختياريان).','انقر "توليد" — احصل على هوك، نص، CTA، هاشتاق، استراتيجية وتطوير.','انسخ مباشرةً في Meta Ads Manager أو TikTok Ads أو Google Ads.'],en:['Choose platform (Facebook, TikTok, Instagram, Google) and objective.','Select ad format: Image, Video, Carousel or Story/Reels — copy adapts automatically.','Upload a product photo (optional — Vision AI analyzes and integrates visual details).','Describe the product and its key benefits.','Fill in target audience, market/country and sell price.','Add daily budget and promo offer (optional).','Click "Generate Strategy" — get hooks, copy, CTA, hashtags, strategy, scaling and A/B tests.','Copy directly into Meta Ads Manager, TikTok Ads or Google Ads.']},
+  an:{fr:['Décrivez le produit précisément (nom, caractéristiques, origine).','Uploadez une photo (optionnel — Vision IA analyse emballage, valeur perçue et potentiel visuel).','Entrez le prix d\'achat, le prix de vente cible et les frais de livraison — la marge nette réelle est calculée automatiquement.','Choisissez la langue du rapport (Français, Arabe, Anglais).','Sélectionnez le marché cible et la niche.','Ajoutez le coût pub quotidien estimé — l\'IA calcule ROI et point mort (ventes/jour nécessaires).','Choisissez la source fournisseur — l\'IA analyse la fiabilité, délais et risques supply chain.','Cliquez "Analyser le Potentiel" — obtenez 4 scores + rapport complet avec verdict go/no-go.'],ar:['صف المنتج بدقة (الاسم، المميزات، المصدر).','ارفع صورة (اختياري — الذكاء الاصطناعي يحلل التغليف والقيمة المرئية).','أدخل سعر الشراء وسعر البيع وتكلفة الشحن — يُحسب صافي الربح تلقائياً.','اختر لغة التقرير (فرنسي، عربي، إنجليزي).','اختر السوق المستهدف والتخصص.','أضف ميزانية الإعلان اليومية — يحسب الذكاء الاصطناعي ROI ونقطة التعادل.','اختر المورد — يحلل الذكاء الاصطناعي الموثوقية والمهل والمخاطر.','انقر "تحليل" — احصل على 4 درجات + تقرير كامل مع حكم Go/No-Go.'],en:['Describe the product precisely (name, features, origin).','Upload a photo (optional — Vision AI analyzes packaging, perceived value and visual potential).','Enter buy price, target sell price and delivery cost — net margin is calculated automatically.','Choose the report language (French, Arabic, English).','Select target market and niche.','Add estimated daily ad budget — AI calculates ROI and breakeven (units/day needed).','Choose supplier source — AI analyzes reliability, lead times and supply chain risks.','Click "Analyze Potential" — get 4 scores + full report with go/no-go verdict.']}
 };
 function buildGuides() {
   const map = {lp:'lp',vo:'vo',pub:'pub',an:'an'};
@@ -2482,12 +2730,21 @@ fr:{
   lp_h:'🏠 Générateur de Landing Page',lp_sub:'Prompt ultra-détaillé pour Midjourney, Flux ou Nano Banana Pro.',
   lp_lang:'Langue cible',lp_type:'Type d\'offre',lp_single:'Produit unique',lp_bundle:'Pack / Bundle',
   lp_name:'Nom du produit',lp_benefits:'Bénéfices & caractéristiques',lp_price:'Prix de vente',lp_colors:'Style colorimétrique',lp_reviews:'Avis clients (optionnel)',
+  opt_lbl:'(optionnel)',
+  lp_ratio:'Format image',lp_theme:'Thème / Style',
+  lp_sections_lbl:'Sections',lp_sections_hint:'— ✅ coché = IA génère | ☐ décoché = tu remplis',
+  lp_s_problem:'Problème',lp_s_solution:'Solution',lp_s_features:'Features',lp_s_before:'Avant/Après',lp_s_testim:'Témoignages',lp_s_urgency:'Urgence',
+  lp_reviews_lbl:'Avis clients',lp_reviews_img_lbl:'📸 J\'importe des captures d\'écran d\'avis réels — le prompt indiquera à Nano Banana Pro de les coller automatiquement',
+  lp_add_review:'+ Ajouter un avis',lp_urgency_lbl:'Urgence / Offre limitée',
   vo_h:'🎙️ Script Voix Off + Vision IA',vo_sub:'Uploadez une photo — l\'IA analyse et génère un script avec timing précis.',
   vo_lang:'Langue',vo_platform:'Plateforme',vo_product:'Produit & description',vo_duration:'Durée',vo_tone:'Émotion / Ton',vo_audience:'Audience cible',
+  vo_price:'Prix & offre',vo_cta:'CTA personnalisé',vo_hook:'Type de hook',vo_variants:'Nombre de variantes',
   pub_h:'📢 Stratégie Publicité — Media Buyer IA',pub_sub:'Copies haute conversion + stratégie campagne, scaling et A/B tests.',
   pub_platform:'Plateforme',pub_obj:'Objectif',pub_product:'Produit & avantages',pub_audience:'Audience cible',pub_lang:'Langue',pub_budget:'Budget quotidien',pub_promo:'Offre promotionnelle',
+  pub_format:'Format d\'annonce',pub_market:'Marché / Pays cible',pub_price:'Prix de vente',
   an_h:'🔍 Analyseur de Produit Gagnant',an_sub:'Score de potentiel dropshipping sur 100 + rapport marché complet.',
   an_product:'Nom & description du produit',an_buy:'Prix d\'achat',an_sell:'Prix de vente cible',an_market:'Marché cible',an_niche:'Niche',an_context:'Contexte supplémentaire',
+  an_delivery:'Frais de livraison',an_report_lang:'Langue du rapport',an_adcost:'Coût pub quotidien estimé',an_supplier:'Source / Fournisseur',lp_dimensions:'Dimensions',
   guide_title:'Comment ça marche ?',
   upload_lbl:'📸 Photo du produit (optionnel — Vision IA)',upload_hint:'Cliquez pour uploader une photo',remove_img:'✕ Supprimer',
   generate:'⚡ Générer', generate_pub:'⚡ Générer la Stratégie Pub', generate_an:'⚡ Analyser le Potentiel',
@@ -2564,12 +2821,21 @@ ar:{
   lp_h:'🏠 مولد صفحة الهبوط',lp_sub:'برومبت احترافي لـ Midjourney أو Nano Banana Pro.',
   lp_lang:'لغة الجمهور',lp_type:'نوع العرض',lp_single:'منتج واحد',lp_bundle:'حزمة',
   lp_name:'اسم المنتج',lp_benefits:'المزايا والخصائص',lp_price:'سعر البيع',lp_colors:'النمط اللوني',lp_reviews:'تقييمات العملاء',
+  opt_lbl:'(اختياري)',
+  lp_ratio:'تنسيق الصورة',lp_theme:'الثيم / النمط',
+  lp_sections_lbl:'الأقسام',lp_sections_hint:'— ✅ محدد = الذكاء الاصطناعي يولّد | ☐ غير محدد = أنت تملأ',
+  lp_s_problem:'المشكلة',lp_s_solution:'الحل',lp_s_features:'المميزات',lp_s_before:'قبل/بعد',lp_s_testim:'شهادات',lp_s_urgency:'إلحاح',
+  lp_reviews_lbl:'تقييمات العملاء',lp_reviews_img_lbl:'📸 أستورد لقطات شاشة للتقييمات الحقيقية — سيشير البرومبت إلى Nano Banana Pro لإلصاقها تلقائياً',
+  lp_add_review:'+ إضافة تقييم',lp_urgency_lbl:'إلحاح / عرض محدود',
   vo_h:'🎙️ مولد السكريبت + رؤية AI',vo_sub:'ارفع صورة المنتج — الذكاء الاصطناعي يحلل ويكتب السكريبت.',
   vo_lang:'اللغة',vo_platform:'المنصة',vo_product:'المنتج والوصف',vo_duration:'المدة',vo_tone:'العاطفة',vo_audience:'الجمهور',
+  vo_price:'السعر والعرض',vo_cta:'CTA مخصص',vo_hook:'نوع الهوك',vo_variants:'عدد النسخ',
   pub_h:'📢 استراتيجية الإعلانات — Media Buyer AI',pub_sub:'نصوص إعلانية + استراتيجية حملة وتطوير.',
   pub_platform:'المنصة',pub_obj:'الهدف',pub_product:'المنتج والمزايا',pub_audience:'الجمهور',pub_lang:'اللغة',pub_budget:'الميزانية اليومية',pub_promo:'العرض الترويجي',
+  pub_format:'صيغة الإعلان',pub_market:'السوق / البلد المستهدف',pub_price:'سعر البيع',
   an_h:'🔍 محلل المنتج الرابح',an_sub:'تقييم إمكانية الدروبشيبينغ + تقرير سوق كامل.',
   an_product:'اسم ووصف المنتج',an_buy:'سعر الشراء',an_sell:'سعر البيع',an_market:'السوق',an_niche:'التخصص',an_context:'سياق إضافي',
+  an_delivery:'تكلفة الشحن',an_report_lang:'لغة التقرير',an_adcost:'تكلفة الإعلان اليومية المقدرة',an_supplier:'المورد / المصدر',lp_dimensions:'الأبعاد',
   guide_title:'كيف يعمل؟',
   upload_lbl:'📸 صورة المنتج (اختياري — رؤية AI)',upload_hint:'انقر لرفع صورة المنتج',remove_img:'✕ حذف',
   generate:'⚡ توليد',generate_pub:'⚡ توليد الاستراتيجية',generate_an:'⚡ تحليل الإمكانية',
@@ -2646,12 +2912,21 @@ en:{
   lp_h:'🏠 Landing Page Generator',lp_sub:'Ultra-detailed prompt for Midjourney, Flux or Nano Banana Pro.',
   lp_lang:'Target language',lp_type:'Offer type',lp_single:'Single product',lp_bundle:'Bundle / Pack',
   lp_name:'Product name',lp_benefits:'Benefits & features',lp_price:'Selling price',lp_colors:'Color style',lp_reviews:'Customer reviews (optional)',
+  opt_lbl:'(optional)',lp_dimensions:'Dimensions',
+  lp_ratio:'Image format',lp_theme:'Theme / Style',
+  lp_sections_lbl:'Sections',lp_sections_hint:'— ✅ checked = AI generates | ☐ unchecked = you fill',
+  lp_s_problem:'Problem',lp_s_solution:'Solution',lp_s_features:'Features',lp_s_before:'Before/After',lp_s_testim:'Testimonials',lp_s_urgency:'Urgency',
+  lp_reviews_lbl:'Customer reviews',lp_reviews_img_lbl:'📸 I\'m importing screenshots of real reviews — the prompt will tell Nano Banana Pro to paste them automatically',
+  lp_add_review:'+ Add a review',lp_urgency_lbl:'Urgency / Limited offer',
   vo_h:'🎙️ Voiceover Script + Vision AI',vo_sub:'Upload a photo — AI analyzes it and generates a timed script.',
   vo_lang:'Language',vo_platform:'Platform',vo_product:'Product & description',vo_duration:'Duration',vo_tone:'Emotion / Tone',vo_audience:'Target audience',
+  vo_price:'Price & offer',vo_cta:'Custom CTA',vo_hook:'Hook type',vo_variants:'Number of variants',
   pub_h:'📢 Ad Strategy — AI Media Buyer',pub_sub:'High-converting copy + campaign strategy, scaling and A/B tests.',
   pub_platform:'Platform',pub_obj:'Objective',pub_product:'Product & key benefits',pub_audience:'Target audience',pub_lang:'Language',pub_budget:'Daily budget',pub_promo:'Promotional offer',
+  pub_format:'Ad format',pub_market:'Market / Target country',pub_price:'Selling price',
   an_h:'🔍 Winning Product Analyzer',an_sub:'Dropshipping potential score /100 + full market report.',
   an_product:'Product name & description',an_buy:'Buy price',an_sell:'Target sell price',an_market:'Target market',an_niche:'Niche',an_context:'Additional context',
+  an_delivery:'Shipping cost',an_report_lang:'Report language',an_adcost:'Estimated daily ad cost',an_supplier:'Source / Supplier',
   guide_title:'How does it work?',
   upload_lbl:'📸 Product photo (optional — Vision AI)',upload_hint:'Click to upload a product photo',remove_img:'✕ Remove',
   generate:'⚡ Generate',generate_pub:'⚡ Generate Ad Strategy',generate_an:'⚡ Analyze Potential',
@@ -2724,7 +2999,14 @@ const SEL = {
   'an-market':{ fr:[['France / Belgique / Suisse','France / Belgique / Suisse'],['dz','🇩🇿 Algérie'],['Maghreb (MA/TN/LY)','Maghreb'],['USA / Canada','USA / Canada'],['UK / Australia','UK / Australia'],['__other__','Autres pays...']], ar:[['France / Belgique / Suisse','فرنسا'],['dz','🇩🇿 الجزائر'],['Maghreb (MA/TN/LY)','المغرب العربي'],['USA / Canada','أمريكا / كندا'],['UK / Australia','UK'],['__other__','دول أخرى...']], en:[['France / Belgique / Suisse','France / Belgium / Switzerland'],['dz','🇩🇿 Algeria'],['Maghreb (MA/TN/LY)','Maghreb'],['USA / Canada','USA / Canada'],['UK / Australia','UK / Australia'],['__other__','Other countries...']] },
   'lp-lang':{ fr:[['French','Français'],['Darija Algérienne','🇩🇿 Darija Algérienne'],['Arabic Darija Moroccan','Darija Marocaine'],['Classical Arabic','Arabe classique'],['English','English'],['Spanish','Español'],['__other__','Autre langue...']], ar:[['French','الفرنسية'],['Darija Algérienne','🇩🇿 الدارجة الجزائرية'],['Arabic Darija Moroccan','الدارجة المغربية'],['Classical Arabic','العربية الفصحى'],['English','الإنجليزية'],['Spanish','الإسبانية'],['__other__','لغة أخرى...']], en:[['French','French'],['Darija Algérienne','🇩🇿 Algerian Darija'],['Arabic Darija Moroccan','Moroccan Darija'],['Classical Arabic','Classical Arabic'],['English','English'],['Spanish','Spanish'],['__other__','Other language...']] },
   'vo-lang':{ fr:[['French','Français'],['Darija Algérienne','🇩🇿 Darija Algérienne'],['Arabic Darija Moroccan','Darija Marocaine'],['Classical Arabic','Arabe classique'],['English','English']], ar:[['French','الفرنسية'],['Darija Algérienne','🇩🇿 الدارجة الجزائرية'],['Arabic Darija Moroccan','الدارجة المغربية'],['Classical Arabic','العربية الفصحى'],['English','الإنجليزية']], en:[['French','French'],['Darija Algérienne','🇩🇿 Algerian Darija'],['Arabic Darija Moroccan','Moroccan Darija'],['Classical Arabic','Classical Arabic'],['English','English']] },
-  'pub-lang':{ fr:[['French','Français'],['Darija Algérienne','🇩🇿 Darija Algérienne'],['Classical Arabic','Arabe classique'],['English','English']], ar:[['French','الفرنسية'],['Darija Algérienne','🇩🇿 الدارجة الجزائرية'],['Classical Arabic','العربية الفصحى'],['English','الإنجليزية']], en:[['French','French'],['Darija Algérienne','🇩🇿 Algerian Darija'],['Classical Arabic','Classical Arabic'],['English','English']] }
+  'pub-lang':{ fr:[['French','Français'],['Darija Algérienne','🇩🇿 Darija Algérienne'],['Arabic Darija Moroccan','🇲🇦 Darija Marocaine'],['Classical Arabic','Arabe classique'],['English','English']], ar:[['French','الفرنسية'],['Darija Algérienne','🇩🇿 الدارجة الجزائرية'],['Arabic Darija Moroccan','🇲🇦 الدارجة المغربية'],['Classical Arabic','العربية الفصحى'],['English','الإنجليزية']], en:[['French','French'],['Darija Algérienne','🇩🇿 Algerian Darija'],['Arabic Darija Moroccan','🇲🇦 Moroccan Darija'],['Classical Arabic','Classical Arabic'],['English','English']] },
+  'vo-hook':{ fr:[['question','❓ Question choc'],['stat','📊 Statistique / Chiffre'],['affirmation','💥 Affirmation directe'],['story','📖 Storytelling'],['before_after','🔄 Avant / Après']], ar:[['question','❓ سؤال صادم'],['stat','📊 إحصاء / رقم'],['affirmation','💥 تأكيد مباشر'],['story','📖 قصة'],['before_after','🔄 قبل / بعد']], en:[['question','❓ Shock question'],['stat','📊 Statistic / Number'],['affirmation','💥 Direct statement'],['story','📖 Storytelling'],['before_after','🔄 Before / After']] },
+  'vo-variants':{ fr:[['1','1 variante — 1 génération'],['2','2 variantes — 2 générations'],['3','3 variantes — 3 générations']], ar:[['1','1 نسخة — 1 توليد'],['2','2 نسخ — 2 توليدات'],['3','3 نسخ — 3 توليدات']], en:[['1','1 variant — 1 generation'],['2','2 variants — 2 generations'],['3','3 variants — 3 generations']] },
+  'pub-format':{ fr:[['image','🖼️ Image statique'],['video','🎬 Vidéo'],['carousel','🎠 Carrousel'],['story','📱 Story / Reels']], ar:[['image','🖼️ صورة ثابتة'],['video','🎬 فيديو'],['carousel','🎠 كاروسيل'],['story','📱 ستوري / ريلز']], en:[['image','🖼️ Static image'],['video','🎬 Video'],['carousel','🎠 Carousel'],['story','📱 Story / Reels']] },
+  'an-lang':{ fr:[['French','Français'],['Classical Arabic','العربية'],['English','English']], ar:[['French','الفرنسية'],['Classical Arabic','العربية'],['English','الإنجليزية']], en:[['French','French'],['Classical Arabic','Arabic'],['English','English']] },
+  'an-supplier':{ fr:[['','— Non spécifié —'],['AliExpress','AliExpress'],['Alibaba','Alibaba'],['Chine directe','Chine directe'],['Fournisseur local','Fournisseur local'],['Amazon FBA','Amazon FBA'],['Autres','Autres']], ar:[['','— غير محدد —'],['AliExpress','AliExpress'],['Alibaba','Alibaba'],['Chine directe','الصين مباشرة'],['Fournisseur local','مورد محلي'],['Amazon FBA','Amazon FBA'],['Autres','أخرى']], en:[['','— Not specified —'],['AliExpress','AliExpress'],['Alibaba','Alibaba'],['Chine directe','Direct from China'],['Fournisseur local','Local supplier'],['Amazon FBA','Amazon FBA'],['Autres','Other']] },
+  'lp-ratio':{ fr:[['9:16','9:16 — Vertical'],['4:5','4:5 — Portrait'],['1:1','1:1 — Carré']], ar:[['9:16','9:16 — عمودي'],['4:5','4:5 — بورتريه'],['1:1','1:1 — مربع']], en:[['9:16','9:16 — Vertical'],['4:5','4:5 — Portrait'],['1:1','1:1 — Square']] },
+  'lp-theme':{ fr:[['dark_gold','🖤 Dark Premium (Noir & Or)'],['white_minimal','⬜ Light Minimal (Blanc & Gris)'],['blue_pro','🔵 Bleu Professionnel'],['red_bold','🔴 Rouge Bold'],['custom','✏️ Personnalisé']], ar:[['dark_gold','🖤 Dark Premium (أسود وذهبي)'],['white_minimal','⬜ Light Minimal (أبيض ورمادي)'],['blue_pro','🔵 أزرق احترافي'],['red_bold','🔴 أحمر Bold'],['custom','✏️ مخصص']], en:[['dark_gold','🖤 Dark Premium (Black & Gold)'],['white_minimal','⬜ Light Minimal (White & Grey)'],['blue_pro','🔵 Professional Blue'],['red_bold','🔴 Bold Red'],['custom','✏️ Custom']] }
 };
 function translateSelects() {
   Object.entries(SEL).forEach(([id, opts]) => {
@@ -2757,6 +3039,16 @@ const PH = {
   'an-product':{fr:'Ex: Masque LED anti-acné, photothérapie',ar:'مثال: قناع LED لعلاج حب الشباب',en:'Ex: Anti-acne LED mask, phototherapy'},
   'an-buy':{fr:'Ex: 500 DA',ar:'مثال: 500 دج',en:'Ex: 500 DA'},
   'an-sell':{fr:'Ex: 1990 DA',ar:'مثال: 1990 دج',en:'Ex: 1990 DA'},
+  'lp-width':{fr:'Ex: 1200px',ar:'مثال: 1200px',en:'Ex: 1200px'},
+  'lp-height':{fr:'Ex: 800px',ar:'مثال: 800px',en:'Ex: 800px'},
+  'vo-price':{fr:'Ex: 1990 DA — 50% de réduction aujourd\'hui',ar:'مثال: 1990 دج — خصم 50%',en:'Ex: $29 — 50% off today'},
+  'vo-cta':{fr:'Ex: Commander maintenant, Lien en bio',ar:'مثال: اطلب الآن، رابط في البايو',en:'Ex: Order now, Link in bio'},
+  'pub-market':{fr:'Ex: France, Algérie, Maroc',ar:'مثال: الجزائر، المغرب، فرنسا',en:'Ex: France, Algeria, Morocco'},
+  'pub-price':{fr:'Ex: 1990 DA / 29€',ar:'مثال: 1990 دج',en:'Ex: 1990 DA / $29'},
+  'an-delivery':{fr:'Ex: 350 DA',ar:'مثال: 350 دج',en:'Ex: 350 DA / $3'},
+  'an-adcost':{fr:'Ex: 500 DA/jour',ar:'مثال: 500 دج/يوم',en:'Ex: $10/day'},
+  'lp-review-name':{fr:'Nom du client (ex: Ahmed B.)',ar:'اسم العميل (مثال: أحمد ب.)',en:'Customer name (ex: Ahmed B.)'},
+  'lp-review-text':{fr:'Son avis...',ar:'تقييمه...',en:'Their review...'},
   'an-context':{fr:'Ex: Vu viral TikTok, concurrent sur Amazon...',ar:'مثال: انتشر على تيك توك...',en:'Ex: Went viral on TikTok, competitor on Amazon...'},
   'an-niche-other':{fr:'Décrivez votre niche...',ar:'صف تخصصك...',en:'Describe your niche...'},
   'ri-lp':{fr:'Ex: Rends plus urgent, ajoute des emojis...',ar:'مثال: اجعله أكثر إلحاحاً...',en:'Ex: Make it more urgent, add emojis...'},
@@ -2767,6 +3059,10 @@ const PH = {
 function translatePH() {
   Object.entries(PH).forEach(([id,vals])=>{ const e=document.getElementById(id); if(e) e.placeholder=vals[lang]||vals.fr; });
   document.querySelectorAll('.upload-ph span[data-i18n="upload_hint"]').forEach(e=>{ e.textContent=(T[lang]||T.fr).upload_hint; });
+  const namePH=(PH['lp-review-name'][lang]||PH['lp-review-name'].fr);
+  const textPH=(PH['lp-review-text'][lang]||PH['lp-review-text'].fr);
+  document.querySelectorAll('.lp-review-name-ph').forEach(e=>{ e.placeholder=namePH; });
+  document.querySelectorAll('.lp-review-text-ph').forEach(e=>{ e.placeholder=textPH; });
 }
 
 // ── CUSTOMER PORTAL ──────────────────────────────────────────
